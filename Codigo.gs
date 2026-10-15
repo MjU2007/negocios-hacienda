@@ -5,7 +5,9 @@
 
 const ARCHIVO = 'negocios-hacienda.html'; // nombre del archivo de la página
 // La página se toma de GitHub: cada cambio que haga Claude aparece solo en este mismo link.
-const FUENTE = 'https://raw.githubusercontent.com/MjU2007/negocios-hacienda/main/' + ARCHIVO;
+const BASE = 'https://raw.githubusercontent.com/MjU2007/negocios-hacienda/main/';
+const FUENTE = BASE + ARCHIVO;
+const ICONO = BASE + 'icono.png'; // ícono de la pestaña del navegador
 
 // Columnas que se ven en cada pestaña. La última columna ("datos") guarda todo el detalle.
 const HOJAS = {
@@ -37,6 +39,7 @@ function doGet() {
   libro_(); // crea la planilla de datos la primera vez
   return HtmlService.createHtmlOutput(html)
     .setTitle('Negocios de hacienda')
+    .setFaviconUrl(ICONO)
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
 
@@ -61,13 +64,18 @@ function libro_() {
   return ss;
 }
 
+// Si la página pide guardar algo nuevo, se crea su pestaña sola (no hace falta tocar este código).
+function cols_(nombre) {
+  if (!/^[a-z]{1,30}$/.test(String(nombre))) throw new Error('Nombre de pestaña inválido');
+  return HOJAS[nombre] || ['id', 'fecha', 'quién', 'negocio', 'detalle', 'datos'];
+}
+
 function hoja_(nombre) {
-  if (!HOJAS[nombre]) throw new Error('Pestaña desconocida: ' + nombre);
   const ss = libro_();
   let sh = ss.getSheetByName(nombre);
   if (!sh) sh = ss.insertSheet(nombre);
   if (sh.getLastRow() === 0) {
-    sh.appendRow(HOJAS[nombre]);
+    sh.appendRow(cols_(nombre));
     sh.setFrozenRows(1);
   }
   return sh;
@@ -89,7 +97,7 @@ function texto_(s, max) {
 }
 
 function leer_(nombre) {
-  const n = HOJAS[nombre].length;
+  const n = cols_(nombre).length;
   return filas_(hoja_(nombre), n).filter(function (f) { return f[0]; }).map(function (f) {
     let d = {};
     try { d = JSON.parse(f[nombre === 'negocios' ? 2 : n - 1]); } catch (e) {}
@@ -106,7 +114,8 @@ function fila_(nombre, id, b) {
     const que = (b.cambios || []).map(function (c) { return c.l + ': ' + c.de + ' → ' + c.a; }).join(' · ') || b.tipo || '';
     return [id, fecha, texto_(b.quien, 30), texto_(b.negName), texto_(que, 500), JSON.stringify(b)];
   }
-  return [id, fecha, texto_(b.quien, 30), texto_(b.negName), texto_(b.nombre), JSON.stringify(b)];
+  if (nombre === 'versiones') return [id, fecha, texto_(b.quien, 30), texto_(b.negName), texto_(b.nombre), JSON.stringify(b)];
+  return [id, fecha, texto_(b.quien, 30), texto_(b.negName), texto_(b.texto || b.nombre || '', 500), JSON.stringify(b)];
 }
 
 // La página pregunta cada pocos segundos si hubo cambios.
@@ -114,7 +123,9 @@ function cambios(rev) {
   const r = PropertiesService.getScriptProperties().getProperty('rev') || '0';
   if (rev === r) return null;
   const data = {};
-  Object.keys(HOJAS).forEach(function (k) { data[k] = leer_(k); });
+  const nombres = Object.keys(HOJAS);
+  libro_().getSheets().forEach(function (s) { const k = s.getName(); if (/^[a-z]{1,30}$/.test(k) && nombres.indexOf(k) < 0) nombres.push(k); });
+  nombres.forEach(function (k) { data[k] = leer_(k); });
   return { rev: r, data: data };
 }
 
