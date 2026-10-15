@@ -824,6 +824,7 @@ function tramos(s){
   const gC=sis==='feed'?0:Z('gdp'), gF=sis==='feed'?Z('gdp'):sis==='mix'?Z('gdpF'):0;
   return {sis,mC,mF,gC,gF,kC:gC*mC*D,kF:gF*mF*D,pf:Z('pc')+(gC*mC+gF*mF)*D};
 }
+const TOROS_REF=100/28; // 1 toro cada 28 vacas, a campo
 function modelCria(s){
   const N=k=>isNum(s[k])?s[k]:NaN, Z=k=>isNum(s[k])?s[k]:0, r={cria:true,tipoCria:true};
   const V=N('vacas'), v=1+Z('varVenta')/100, pm=isNum(s.machos)?s.machos/100:0.5, pdes=N('pdesC');
@@ -832,7 +833,7 @@ function modelCria(s){
   r.rep=Math.min(r.hem,V*(Z('desc')+Z('mortV'))/100); r.hemV=r.hem-r.rep; r.vd=V*Z('desc')/100;
   r.ingTer=(r.mach*pdes*N('pTro')+r.hemV*pdes*Z('pTra'))*v; r.ingVd=r.vd*Z('pVd')*Z('pVdKg')*v; r.ing=r.ingTer+r.ingVd;
   r.kgV=(r.mach+r.hemV)*pdes+r.vd*Z('pVd');
-  r.nToros=V>0&&Z('toros')>0?Math.max(1,Math.round(V*Z('toros')/100)):0;
+  const tR=isNum(s.toros)?s.toros:TOROS_REF; r.nToros=V>0&&tR>0?Math.max(1,Math.round(V*tR/100)):0;
   r.dir=V*(Z('sanV')+Z('alV')+Z('mobV')+Z('otrosV'))+r.nToros*Z('ctoro')+Z('ha')*Z('arrHa');
   r.cvp=Z('cv')/100; r.cv=r.ing*r.cvp; r.gv=(r.mach+r.hemV+r.vd)*Z('gv'); r.gven=r.cv+r.gv;
   r.ct=r.dir+r.gven; r.mb=r.ing-r.ct;
@@ -971,7 +972,7 @@ prim('gdp',2);
 prim('gdpF',2);
 // en cría, comisión, gastos de venta, cambio de precio y tasa usan los mismos datos que el resto
 const alias=(id,k,d)=>{L[id]={g:()=>st[k],s:v=>{st[k]=v},clear:()=>{st[k]=null},d};};
-L.nToros={g:()=>st.vacas>0&&st.toros>0?Math.max(1,Math.round(st.vacas*st.toros/100)):0,dep:['vacas','toros'],s:v=>{ if(st.vacas>0) st.toros=Math.max(0,v)/st.vacas*100; },clear:()=>{st.toros=null},d:0};
+L.nToros={g:()=>{ const t=isNum(st.toros)?st.toros:TOROS_REF; return st.vacas>0&&t>0?Math.max(1,Math.round(st.vacas*t/100)):0; },dep:['vacas'],s:v=>{ if(st.vacas>0) st.toros=Math.max(0,v)/st.vacas*100; },clear:()=>{st.toros=null},d:0};
 alias('cvC','cv',1); alias('gvC','gv',0); alias('varC','varVenta',1); alias('tasaC','tasa',1);
 const pfOf=()=>tramos(st).pf;
 const fac=()=>st.vista==='jaula'?(st.cab||0):1;
