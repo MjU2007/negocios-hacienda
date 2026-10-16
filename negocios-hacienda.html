@@ -621,7 +621,8 @@ tr[hidden]{display:none}
       <button class="btn sm" type="button" id="refCriaBtn">Volver a los valores sugeridos</button></div></td></tr>
     <tr><td><span class="lbl">Vacas</span><span class="hint">Vientres en servicio</span></td><td><span class="field"><input class="in s" id="vacas" inputmode="decimal"><span class="u">vacas</span></span></td></tr>
     <tr><td><span class="lbl">Toros</span><span class="hint">Referencia a campo: 1 toro cada 28 vacas</span></td><td><span class="field"><input class="in s" id="nToros" inputmode="numeric"><span class="u">toros</span></span><span class="eq" id="e-toros"></span></td></tr>
-    <tr><td><span class="lbl">Hectáreas que ocupa el rodeo</span><span class="hint">Para el resultado por hectárea</span></td><td><span class="field"><input class="in " id="ha" inputmode="decimal"><span class="u">ha</span></span><span class="eq" id="e-ha"></span></td></tr>
+    <tr><td><span class="lbl">Vacas por hectárea</span><span class="hint">Carga del campo</span></td><td><span class="field"><input class="in " id="carga" inputmode="decimal"><span class="u">vacas/ha</span></span><span class="eq" id="e-carga"></span></td></tr>
+    <tr><td><span class="lbl">Hectáreas que ocupa el rodeo</span><span class="hint">Se calcula con las vacas y la carga</span></td><td><span class="field"><input class="in " id="ha" inputmode="decimal"><span class="u">ha</span></span><span class="eq" id="e-ha"></span></td></tr>
     <tr><td><span class="lbl">Valor de cada vaca</span><span class="hint">Es la plata que tenés en el rodeo. Vaca usada preñada: $1.593.487 (sem. 39)</span></td><td><span class="field"><span class="u">$</span><input class="in " id="valVaca" inputmode="decimal"><span class="u">/vaca</span></span></td></tr>
     <tr><td><span class="lbl">Mortandad de vacas por año</span></td><td><span class="field"><input class="in s" id="mortV" inputmode="decimal"><span class="u">%</span></span></td></tr>
   </tbody></table></div>
@@ -766,13 +767,13 @@ const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:nu
   alKg:null,alMes:null,san:null,serv:null,tacto:null,mob:null,otros:null,cv:null,gv:null,
   tasa:null,inf:null,vista:'cab',fijo:'gdp',
   tipo:'recria',sistema:'campo',mesesF:null,gdpF:null,conv:null,pRac:null,diaF:null,
-  vacas:null,toros:null,ha:null,valVaca:null,mortV:null,destC:null,pdesC:null,machos:null,desc:null,pVd:null,
+  vacas:null,toros:null,ha:null,carga:null,valVaca:null,mortV:null,destC:null,pdesC:null,machos:null,desc:null,pVd:null,
   pTro:null,pTra:null,pVdKg:null,sanV:null,alV:null,mobV:null,ctoro:null,otrosV:null,arrHa:null};
 const TIPOS={cria:'Cría',recria:'Recría',invernada:'Invernada / engorde'};
 const SISTEMAS={campo:'a campo',feed:'a corral (feedlot)',mix:'mix campo + corral'};
 // Valores sugeridos para un rodeo de cría (precios De Campo a Campo, sep-2026; costos estimados)
 const REF_CRIA={txt:'Ternero 160–180 kg a $6.610/kg y ternera 170–190 kg a $5.902/kg; vaca a faena a $3.060/kg; vaca usada preñada a $1.593.487 (De Campo a Campo). Costos por vaca estimados para un sistema pastoril.',
-  v:{vacas:100,toros:100/28,ha:140,valVaca:1593487,mortV:2,destC:80,pdesC:170,machos:50,desc:18,pVd:420,pTro:6610,pTra:5902,pVdKg:3060,cv:4,gv:12000,varVenta:0,
+  v:{vacas:100,toros:100/28,carga:0.7,valVaca:1593487,mortV:2,destC:80,pdesC:170,machos:50,desc:18,pVd:420,pTro:6610,pTra:5902,pVdKg:3060,cv:4,gv:12000,varVenta:0,
      sanV:35000,alV:150000,mobV:60000,ctoro:1500000,otrosV:20000,arrHa:0,tasa:6}};
 // Valores sugeridos por sistema (recría / invernada)
 const REF_SIS={
@@ -826,6 +827,9 @@ function tramos(s){
   return {sis,mC,mF,gC,gF,kC:gC*mC*D,kF:gF*mF*D,pf:Z('pc')+(gC*mC+gF*mF)*D};
 }
 const TOROS_REF=100/28; // 1 toro cada 28 vacas, a campo
+// Carga (vacas por ha): las hectáreas se calculan con las vacas. Negocios viejos tenían solo las hectáreas.
+const CARGA=s=>isNum(s.carga)?s.carga:(isNum(s.ha)&&s.ha>0&&s.vacas>0?s.vacas/s.ha:null);
+const HA=s=>{ const c=CARGA(s); return c>0&&s.vacas>0?s.vacas/c:(isNum(s.ha)?s.ha:null); };
 function modelCria(s){
   const N=k=>isNum(s[k])?s[k]:NaN, Z=k=>isNum(s[k])?s[k]:0, r={cria:true,tipoCria:true};
   const V=N('vacas'), v=1+Z('varVenta')/100, pm=isNum(s.machos)?s.machos/100:0.5, pdes=N('pdesC');
@@ -835,11 +839,11 @@ function modelCria(s){
   r.ingTer=(r.mach*pdes*N('pTro')+r.hemV*pdes*Z('pTra'))*v; r.ingVd=r.vd*Z('pVd')*Z('pVdKg')*v; r.ing=r.ingTer+r.ingVd;
   r.kgV=(r.mach+r.hemV)*pdes+r.vd*Z('pVd');
   const tR=isNum(s.toros)?s.toros:TOROS_REF; r.nToros=V>0&&tR>0?Math.max(1,Math.round(V*tR/100)):0;
-  r.dir=V*(Z('sanV')+Z('alV')+Z('mobV')+Z('otrosV'))+r.nToros*Z('ctoro')+Z('ha')*Z('arrHa');
+  r.dir=V*(Z('sanV')+Z('alV')+Z('mobV')+Z('otrosV'))+r.nToros*Z('ctoro')+(HA(s)||0)*Z('arrHa');
   r.cvp=Z('cv')/100; r.cv=r.ing*r.cvp; r.gv=(r.mach+r.hemV+r.vd)*Z('gv'); r.gven=r.cv+r.gv;
   r.ct=r.dir+r.gven; r.mb=r.ing-r.ct;
   r.compraCab=N('valVaca'); r.cpra=V*r.compraCab; r.cp=r.cpra*Z('tasa')/100; r.gr=r.mb-r.cp;
-  r.rent=r.mb/r.cpra; r.rm=(r.gr/r.cpra)/12; r.mbVaca=r.mb/V; r.mbHa=r.mb/N('ha');
+  r.rent=r.mb/r.cpra; r.rm=(r.gr/r.cpra)/12; r.mbVaca=r.mb/V; r.mbHa=r.mb/(HA(s)||NaN);
   const need=(r.dir+r.gv)/(1-r.cvp);
   r.be=((need/v)-r.ingVd/v)/((r.mach+r.hemV)*pdes);
   const precioT=(r.mach*Z('pTro')+r.hemV*Z('pTra'))/Math.max(1e-9,r.mach+r.hemV);
@@ -968,11 +972,13 @@ const prim=(id,d=0)=>{L[id]={g:()=>st[id],s:v=>{st[id]=v},d,clear:()=>{st[id]=nu
 ['cab','pc','pr','entoreObj','dest','pdes','pTer','alKg','alMes','pPren','pVac','pcria','pVcc'].forEach(k=>prim(k,0));
 ['meses','mort','cc','cv','varVenta','tasa','inf','ms'].forEach(k=>prim(k,1));
 prim('gdp',2);
-['vacas','toros','ha','valVaca','pdesC','pVd','pTro','pTra','pVdKg','sanV','alV','mobV','ctoro','otrosV','arrHa','pRac','diaF'].forEach(k=>prim(k,0));
+['vacas','toros','valVaca','pdesC','pVd','pTro','pTra','pVdKg','sanV','alV','mobV','ctoro','otrosV','arrHa','pRac','diaF'].forEach(k=>prim(k,0));
 ['mortV','destC','machos','desc','mesesF','conv'].forEach(k=>prim(k,1));
 prim('gdpF',2);
 // en cría, comisión, gastos de venta, cambio de precio y tasa usan los mismos datos que el resto
 const alias=(id,k,d)=>{L[id]={g:()=>st[k],s:v=>{st[k]=v},clear:()=>{st[k]=null},d};};
+L.carga={g:()=>CARGA(st),s:v=>{st.carga=v;},clear:()=>{st.carga=null;st.ha=null;},d:2};
+L.ha={g:()=>HA(st),s:v=>{ if(st.vacas>0&&v>0){ st.carga=st.vacas/v; } else st.ha=v; },clear:()=>{st.carga=null;st.ha=null;},d:0};
 L.nToros={g:()=>{ const t=isNum(st.toros)?st.toros:TOROS_REF; return st.vacas>0&&t>0?Math.max(1,Math.round(st.vacas*t/100)):0; },dep:['vacas'],s:v=>{ if(st.vacas>0) st.toros=Math.max(0,v)/st.vacas*100; },clear:()=>{st.toros=null},d:0};
 alias('cvC','cv',1); alias('gvC','gv',0); alias('varC','varVenta',1); alias('tasaC','tasa',1);
 const pfOf=()=>tramos(st).pf;
@@ -1000,7 +1006,7 @@ L.gv={g:()=>isNum(st.gv)?st.gv*(st.vista==='jaula'?(st.cab||0)*(1-(st.mort||0)/1
 L.compraT={g:()=>{const c=st.precioPor==='cab'?st.pCcab:(isNum(st.pCkg)&&isNum(st.pc)?st.pCkg*st.pc:null); return isNum(c)?c*fac():null;},
   s:v=>{const f=fac(); if(!(f>0))return; const c=v/f; if(st.precioPor==='cab'||!(st.pc>0)){st.precioPor='cab';st.pCcab=c;} else st.pCkg=c/st.pc;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
 
-const KEYS={cvC:['cv'],gvC:['gv'],varC:['varVenta'],tasaC:['tasa'],pCkg:['pCkg','pCcab'],pCcab:['pCkg','pCcab'],compraT:['pCkg','pCcab'],pVkg:['pVkg','pVcab'],pVcab:['pVkg','pVcab'],pf:['gdp'],kgc:['cab'],nToros:['toros'],pPrenKg:['pPren']};
+const KEYS={cvC:['cv'],gvC:['gv'],varC:['varVenta'],tasaC:['tasa'],pCkg:['pCkg','pCcab'],pCcab:['pCkg','pCcab'],compraT:['pCkg','pCcab'],pVkg:['pVkg','pVcab'],pVcab:['pVkg','pVcab'],pf:['gdp'],kgc:['cab'],nToros:['toros'],ha:['carga'],pPrenKg:['pPren']};
 const autoSet=()=>new Set(st.auto||[]);
 function unAuto(keys){ if(!st.auto) return; const a=autoSet(); keys.forEach(k=>a.delete(k)); st.auto=[...a]; }
 function fmtIn(id){ if((L[id].dep||[]).some(k=>!isNum(st[k]))) return ''; const v=L[id].g(); return isNum(v)?nf(v,L[id].d):''; }
@@ -1148,12 +1154,13 @@ function paintCria(R){
   { const V=isNum(st.vacas)?st.vacas:0, t=(id,v)=>setT(id,v>0?'= '+money(v)+' en el año':'');
     ['sanV','alV','mobV','otrosV'].forEach(k=>t('e-'+k,V>0&&isNum(st[k])?st[k]*V:0));
     t('e-ctoro',isNum(st.ctoro)&&R.nToros>0?st.ctoro*R.nToros:0);
-    t('e-arrHa',isNum(st.arrHa)&&isNum(st.ha)?st.arrHa*st.ha:0);
+    t('e-arrHa',isNum(st.arrHa)&&isNum(HA(st))?st.arrHa*HA(st):0);
     if(V>0) ['sanV','alV','mobV','otrosV'].forEach(k=>{ const e=$('e-'+k); if(e&&e.textContent) e.textContent+=' para las '+nf(V,0)+' vacas'; });
     if(R.nToros>0){ const e=$('e-ctoro'); if(e&&e.textContent) e.textContent+=' para los '+nf(R.nToros,0)+' toros'; }
-    if(isNum(st.ha)){ const e=$('e-arrHa'); if(e&&e.textContent) e.textContent+=' por '+nf(st.ha,0)+' ha'; } }
+    if(isNum(HA(st))){ const e=$('e-arrHa'); if(e&&e.textContent) e.textContent+=' por '+nf(HA(st),0)+' ha'; } }
   setT('e-toros',isNum(R.nToros)&&R.nToros>0&&st.vacas>0?'1 toro cada '+nf(st.vacas/R.nToros,0)+' vacas · referencia a campo: 1 cada 28':'Referencia a campo: 1 toro cada 28 vacas');
-  setT('e-ha',isNum(st.ha)&&st.ha>0&&isNum(R.n)?'= '+nf(R.n/st.ha,2)+' vacas por ha':'');
+  setT('e-ha',isNum(HA(st))&&HA(st)>0&&st.vacas>0?'= '+nf(HA(st)/st.vacas,2)+' ha por vaca':'');
+  setT('e-carga','Referencia Cuenca del Salado: 0,6 a 0,8 (campo natural 0,5)');
   setT('o-ter',cab(R.ter)); setT('o-rep',cab(R.rep)); setT('o-tv',isNum(R.mach)?nf(R.mach,0)+' machos y '+nf(R.hemV,0)+' hembras':'—'); setT('o-vd',cab(R.vd)); setT('o-kgC',isNum(R.kgV)?nf(R.kgV)+' kg':'—');
   setT('o-cvaca',isNum(R.n)&&R.n>0?money(R.dir/R.n):'—'); setT('o-crodeo',money(R.dir));
   setT('rc-ter',money(R.ingTer)); setT('rc-vd',money(R.ingVd)); setT('rc-ing',money(R.ing)); setT('rc-dir',money(R.dir)); setT('rc-gven',money(R.gven)); setT('rc-ct',money(R.ct));
@@ -1267,7 +1274,7 @@ function renderBar(){
   negs.forEach(n=>{const o=document.createElement('option'); o.value=n.id; o.textContent=n.name||'Sin nombre'; s.appendChild(o);});
   s.value=active; if(s.dataset.act!==active){ $('negConfirm').hidden=true; s.dataset.act=active; } syncShadow(); renderHist();
 }
-function loadActive(){ st={...EMPTY,...cur().st}; if(!cur().st||!cur().st.tipo) st.tipo=inferTipo(st.cat); renderBar(); $('negName').value=cur().name||''; setTitle(); applyUI(); renderCmp(); saveLocal(); }
+function loadActive(){ st={...EMPTY,...cur().st}; if(!cur().st||!cur().st.tipo) st.tipo=inferTipo(st.cat); if(!isNum(st.carga)&&isNum(st.ha)&&st.ha>0&&st.vacas>0) st.carga=st.vacas/st.ha; renderBar(); $('negName').value=cur().name||''; setTitle(); applyUI(); renderCmp(); saveLocal(); }
 function switchTo(id){ flush(); active=id; loadActive(); }
 $('negSel').addEventListener('change',e=>switchTo(e.target.value));
 $('negName').addEventListener('input',e=>{const n=cur(); if(!n)return; n.name=e.target.value.slice(0,60); const o=[...$('negSel').options].find(o=>o.value===n.id); if(o) o.textContent=n.name||'Sin nombre'; setTitle(); save();});
