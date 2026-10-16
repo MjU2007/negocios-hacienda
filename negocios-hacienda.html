@@ -234,8 +234,6 @@ section[hidden],.negbar[hidden],.secnav[hidden]{display:none}
   body.cuadros .cal-grid .mh{font-size:.72rem}
   body.cuadros .bar{font-size:.7rem;padding:0 4px}
   body.cuadros input.in,body.cuadros input.in.s{width:6.6em}
-  body.cuadros .board .field .u:last-child{min-width:3.6rem;text-align:left}
-  body.cuadros .board .field>input:last-child,body.cuadros .board .field>select:last-child{margin-right:calc(3.6rem + 4px)}
   body.cuadros .board td .eq{text-align:right;font-size:.74rem;line-height:1.3}
   body.cuadros .board td:last-child:not(:first-child){text-align:right}
   body.cuadros .board .sec-head{border-bottom-color:var(--hembra)}
@@ -249,8 +247,34 @@ section[hidden],.negbar[hidden],.secnav[hidden]{display:none}
   body.cuadros .board .pill{white-space:normal;margin-left:0}
   body.cuadros .board .field .u{font-size:.78rem}
   body.cuadros .cal-grid .rl{font-size:.82rem;overflow:hidden;text-overflow:ellipsis}
+  /* ---- cuadros: estilo de tablero ---- */
+  body.cuadros .board>section:not(#veredicto){padding:18px 20px 16px;border-radius:12px;box-shadow:0 1px 2px color-mix(in srgb,var(--sil) 25%,transparent),0 8px 24px -18px color-mix(in srgb,var(--sil) 55%,transparent)}
+  body.cuadros .board .sec-head{border-bottom:1px solid var(--line);padding-bottom:10px;align-items:center}
+  body.cuadros .board .sec-head h2{font-size:1.25rem;letter-spacing:.01em}
+  body.cuadros .zoom-btn{width:30px;height:30px;padding:0;border-radius:8px;font-size:0;line-height:0;display:inline-flex;align-items:center;justify-content:center}
+  body.cuadros .zoom-btn::before{content:"⤢";font-size:1rem;line-height:1}
+  body.cuadros .board table{border-collapse:collapse;width:100%}
+  body.cuadros .board th,body.cuadros .board td{padding:8px 0;vertical-align:middle;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+  body.cuadros .board tr:last-child>td{border-bottom:0}
+  body.cuadros .board td:first-child{padding-right:12px;color:var(--ink);font-size:.95rem}
+  body.cuadros .board td:last-child:not(:first-child){width:10.5rem;text-align:right}
+  /* casilla única: prefijo, número y unidad dentro del mismo recuadro */
+  body.cuadros .board td .field{display:flex;width:10.5rem;height:32px;box-sizing:border-box;margin-left:auto;align-items:center;gap:4px;padding:0 9px;
+    border:1px solid color-mix(in srgb,var(--input-line) 70%,transparent);border-radius:7px;background:var(--input)}
+  body.cuadros .board td .field:has(input.auto){border-style:dashed}
+  body.cuadros .board td .field:focus-within{outline:2px solid var(--input-line);outline-offset:1px}
+  body.cuadros .board td .field input.in{flex:1;width:auto;min-width:0;border:0;background:transparent;padding:0;outline:none;text-align:right;font-size:.95rem}
+  body.cuadros .board td .field .u{font-size:.72rem;color:var(--muted);white-space:nowrap}
+  body.cuadros .board td .field .u:last-child{width:3.5rem;flex:none;text-align:left}
+  body.cuadros .board td .pill{white-space:nowrap;font-size:.7rem;margin-top:4px}
+  body.cuadros .board td select{width:10.5rem;height:32px;box-sizing:border-box;border-radius:7px;border:1px solid color-mix(in srgb,var(--input-line) 70%,transparent);margin-left:auto;display:block;font-size:.95rem}
+  body.cuadros .board td .eq{text-align:right;font-size:.72rem;line-height:1.3;margin-top:4px;color:var(--muted)}
+  body.cuadros .board td.calc,body.cuadros .board td:last-child.calc{font-variant-numeric:tabular-nums;font-weight:600}
+  body.cuadros .board tr.total>td{border-top:1.5px solid var(--ink);border-bottom:0;font-weight:700}
+  body.cuadros .board tr.sub>td,body.cuadros .board tr.grp>td,body.cuadros .board th[colspan],body.cuadros .board td[colspan]{text-align:left!important}
 }
 .zoom-btn{display:none;margin-left:auto;align-self:center;font:inherit;font-family:var(--display);font-weight:600;font-size:.95rem;padding:3px 10px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.zoom-btn{white-space:nowrap;flex:none}
 .zoom-btn:hover{border-color:var(--hembra);color:var(--hembra)}
 .zoom-btn:focus-visible{outline:3px solid var(--input-line);outline-offset:2px}
 body.cuadros .zoom-btn{display:inline-block}
