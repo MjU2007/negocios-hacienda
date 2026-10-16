@@ -218,9 +218,9 @@ section[hidden],.negbar[hidden],.secnav[hidden]{display:none}
 .board{display:flex;flex-direction:column;gap:40px}
 @media (min-width:1100px){
   body.cuadros .wrap{max-width:1480px}
-  body.cuadros .board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:start}
+  body.cuadros .board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
   body.cuadros #veredicto{grid-column:1/-1}
-  body.cuadros #resultado{grid-column:2/4;grid-row:span 2}
+  body.cuadros #resultado{grid-column:2/4}
   body.cuadros #costos{grid-column:1/2}
   body.cuadros .board>section:not(#veredicto){background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;gap:12px;box-shadow:0 10px 30px -22px color-mix(in srgb,var(--sil) 60%,transparent)}
   body.cuadros .board>section .tbl-wrap,body.cuadros .board>section .cal{border:0;border-radius:0;background:transparent;padding:0}
@@ -233,7 +233,15 @@ section[hidden],.negbar[hidden],.secnav[hidden]{display:none}
   body.cuadros .cal-grid{grid-template-columns:62px repeat(12,minmax(0,1fr));min-width:0;gap:4px 1px}
   body.cuadros .cal-grid .mh{font-size:.72rem}
   body.cuadros .bar{font-size:.7rem;padding:0 4px}
-  body.cuadros input.in{width:6.4em} body.cuadros input.in.s{width:4.2em}
+  body.cuadros input.in,body.cuadros input.in.s{width:6.6em}
+  body.cuadros .board .field .u:last-child{min-width:3.6rem;text-align:left}
+  body.cuadros .board .field>input:last-child,body.cuadros .board .field>select:last-child{margin-right:calc(3.6rem + 4px)}
+  body.cuadros .board td .eq{text-align:right;font-size:.74rem;line-height:1.3}
+  body.cuadros .board td:last-child:not(:first-child){text-align:right}
+  body.cuadros .board .sec-head{border-bottom-color:var(--hembra)}
+  body.cuadros .zoom-btn{white-space:nowrap;flex:none}
+  body.cuadros .board .sec-head h2{min-width:0}
+  body.cuadros .board>section .tbl-wrap{flex:1}
   body.cuadros .kpis{grid-template-columns:1.3fr repeat(3,minmax(0,1fr))}
   body.cuadros .board table.one td:last-child{width:auto}
   body.cuadros .board td{white-space:normal}
@@ -266,7 +274,7 @@ tr[hidden]{display:none}
 .tiporow .seg button{padding:6px 12px}
 .sis-l[hidden],#sisSeg[hidden]{display:none}
 @media (min-width:1100px){
-  body.cuadros #c-res{grid-column:2/4;grid-row:span 2}
+  body.cuadros #c-res{grid-column:2/4}
   body.cuadros #c-costos{grid-column:1/2}
 }
 .brand{display:flex;align-items:center;gap:12px}
@@ -1119,9 +1127,9 @@ function calc(except){
   // costos por cabeza: mostrar cuánto suman para toda la hacienda (o cuánto es por cabeza si se ve la jaula)
   { const n=isNum(st.cab)?st.cab:0, nv=n*(1-(st.mort||0)/100);
     const tot=(k,cnt,txt)=>{ const v=st[k]; if(!isNum(v)||!(v>0)||!(cnt>0)){ setT('e-'+k,''); return; }
-      setT('e-'+k, st.vista==='jaula'?'= '+money(v)+' por cabeza':'= '+money(v*cnt)+' '+txt); };
-    ['fl','san','serv','tacto','mob','otros'].forEach(k=>tot(k,n,'para las '+nf(n,0)+' cab'));
-    tot('gv',nv,'para las '+nf(nv,0)+' vendidas'); }
+      setT('e-'+k, st.vista==='jaula'?'= '+money(v)+' por cabeza':'= '+mill(v*cnt)+' en total ('+txt+')'); };
+    ['fl','san','serv','tacto','mob','otros'].forEach(k=>tot(k,n,nf(n,0)+' cab'));
+    tot('gv',nv,nf(nv,0)+' vendidas'); }
   const g=st.gdp, sisG=st.sistema||'campo'; $('e-gdp').innerHTML= isNum(g)&&st.meses>0&&(sisG==='feed'?g>1.6:g>1.0)?'<span class="pill bad">'+(sisG==='feed'?'muy alto para corral':'difícil a campo')+'</span>':'';
   setT('e-pRac',isNum(st.conv)&&isNum(st.pRac)?'= '+money(st.conv*st.pRac)+' por kilo ganado':'');
   if(R.tipoCria){ paintCria(R); return; }
@@ -1157,16 +1165,13 @@ function calc(except){
 }
 function paintCria(R){
   const ok=R.ok, cab=x=>isNum(x)?nf(x,0)+' cab':'—';
-  { const V=isNum(st.vacas)?st.vacas:0, t=(id,v)=>setT(id,v>0?'= '+money(v)+' en el año':'');
-    ['sanV','alV','mobV','otrosV'].forEach(k=>t('e-'+k,V>0&&isNum(st[k])?st[k]*V:0));
-    t('e-ctoro',isNum(st.ctoro)&&R.nToros>0?st.ctoro*R.nToros:0);
-    t('e-arrHa',isNum(st.arrHa)&&isNum(HA(st))?st.arrHa*HA(st):0);
-    if(V>0) ['sanV','alV','mobV','otrosV'].forEach(k=>{ const e=$('e-'+k); if(e&&e.textContent) e.textContent+=' para las '+nf(V,0)+' vacas'; });
-    if(R.nToros>0){ const e=$('e-ctoro'); if(e&&e.textContent) e.textContent+=' para los '+nf(R.nToros,0)+' toros'; }
-    if(isNum(HA(st))){ const e=$('e-arrHa'); if(e&&e.textContent) e.textContent+=' por '+nf(HA(st),0)+' ha'; } }
-  setT('e-toros',isNum(R.nToros)&&R.nToros>0&&st.vacas>0?'1 toro cada '+nf(st.vacas/R.nToros,0)+' vacas · referencia a campo: 1 cada 28':'Referencia a campo: 1 toro cada 28 vacas');
+  { const V=isNum(st.vacas)?st.vacas:0, t=(id,v,q)=>setT(id,v>0?'= '+mill(v)+' al año ('+q+')':'');
+    ['sanV','alV','mobV','otrosV'].forEach(k=>t('e-'+k,V>0&&isNum(st[k])?st[k]*V:0,nf(V,0)+' vacas'));
+    t('e-ctoro',isNum(st.ctoro)&&R.nToros>0?st.ctoro*R.nToros:0,nf(R.nToros||0,0)+' toros');
+    t('e-arrHa',isNum(st.arrHa)&&isNum(HA(st))?st.arrHa*HA(st):0,nf(HA(st)||0,0)+' ha'); }
+  setT('e-toros',isNum(R.nToros)&&R.nToros>0&&st.vacas>0?'1 cada '+nf(st.vacas/R.nToros,0)+' vacas (ref. 28)':'Ref. a campo: 1 toro cada 28 vacas');
   setT('e-ha',isNum(HA(st))&&HA(st)>0&&st.vacas>0?'= '+nf(HA(st)/st.vacas,2)+' ha por vaca':'');
-  setT('e-carga','Referencia Cuenca del Salado: 0,6 a 0,8 (campo natural 0,5)');
+  setT('e-carga','Ref. Salado: 0,6 a 0,8');
   setT('o-ter',cab(R.ter)); setT('o-rep',cab(R.rep)); setT('o-tv',isNum(R.mach)?nf(R.mach,0)+' machos y '+nf(R.hemV,0)+' hembras':'—'); setT('o-vd',cab(R.vd)); setT('o-kgC',isNum(R.kgV)?nf(R.kgV)+' kg':'—');
   setT('o-cvaca',isNum(R.n)&&R.n>0?money(R.dir/R.n):'—'); setT('o-crodeo',money(R.dir));
   setT('rc-ter',money(R.ingTer)); setT('rc-vd',money(R.ingVd)); setT('rc-ing',money(R.ing)); setT('rc-dir',money(R.dir)); setT('rc-gven',money(R.gven)); setT('rc-ct',money(R.ct));
