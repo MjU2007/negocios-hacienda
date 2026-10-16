@@ -543,7 +543,7 @@ tr[hidden]{display:none}
           <td><span class="field"><span class="u">$</span><input class="in" id="compraT" inputmode="decimal"></span></td></tr>
       <tr><td><span class="lbl">Comisión de compra</span></td><td class="calc" id="o-cc">—</td></tr>
       <tr><td><span class="lbl">Flete de entrada</span><span class="hint">Sugerido: ~$1,2 M por jaula a ~300 km, repartido entre las cabezas</span></td>
-          <td><span class="field"><span class="u">$</span><input class="in" id="fl" inputmode="decimal"></span></td></tr>
+          <td><span class="field"><span class="u">$</span><input class="in" id="fl" inputmode="decimal"></span><span class="eq" id="e-fl"></span></td></tr>
       <tr class="sub"><td colspan="2" id="c-sub-campo">En el campo</td></tr>
       <tr data-sis="campo mix"><td><span class="lbl">Alimentación por kilo producido a campo</span><span class="hint">Pasto + verdeo + suplemento. Referencia: $1.400–2.000/kg</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="alKg" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
@@ -557,20 +557,20 @@ tr[hidden]{display:none}
           <td><span class="field"><span class="u">$</span><input class="in" id="diaF" inputmode="decimal"><span class="u">/día</span></span></td></tr>
       <tr><td><span class="lbl">Alimentación total</span></td><td class="calc" id="o-alim">—</td></tr>
       <tr><td><span class="lbl">Sanidad</span></td>
-          <td><span class="field"><span class="u">$</span><input class="in" id="san" inputmode="decimal"></span></td></tr>
+          <td><span class="field"><span class="u">$</span><input class="in" id="san" inputmode="decimal"></span><span class="eq" id="e-san"></span></td></tr>
       <tr data-show="prenada"><td><span class="lbl">Servicio (IATF o toros)</span></td>
-          <td><span class="field"><span class="u">$</span><input class="in" id="serv" inputmode="decimal"></span></td></tr>
+          <td><span class="field"><span class="u">$</span><input class="in" id="serv" inputmode="decimal"></span><span class="eq" id="e-serv"></span></td></tr>
       <tr data-show="prenada"><td><span class="lbl">Tacto</span></td>
-          <td><span class="field"><span class="u">$</span><input class="in" id="tacto" inputmode="decimal"></span></td></tr>
+          <td><span class="field"><span class="u">$</span><input class="in" id="tacto" inputmode="decimal"></span><span class="eq" id="e-tacto"></span></td></tr>
       <tr><td><span class="lbl">Mano de obra y recorridas</span><span class="hint">Por todo el tiempo en el campo</span></td>
-          <td><span class="field"><span class="u">$</span><input class="in" id="mob" inputmode="decimal"></span></td></tr>
+          <td><span class="field"><span class="u">$</span><input class="in" id="mob" inputmode="decimal"></span><span class="eq" id="e-mob"></span></td></tr>
       <tr><td><span class="lbl">Otros gastos</span></td>
-          <td><span class="field"><span class="u">$</span><input class="in" id="otros" inputmode="decimal"></span></td></tr>
+          <td><span class="field"><span class="u">$</span><input class="in" id="otros" inputmode="decimal"></span><span class="eq" id="e-otros"></span></td></tr>
       <tr class="sub"><td colspan="2">Venta</td></tr>
       <tr><td><span class="lbl">Comisión de venta</span></td>
           <td><span class="field"><input class="in s" id="cv" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-cv"></span></td></tr>
       <tr><td><span class="lbl">Guías, DTE y gastos de venta</span></td>
-          <td><span class="field"><span class="u">$</span><input class="in" id="gv" inputmode="decimal"></span></td></tr>
+          <td><span class="field"><span class="u">$</span><input class="in" id="gv" inputmode="decimal"></span><span class="eq" id="e-gv"></span></td></tr>
       <tr class="total"><td><span class="lbl">Costo total</span></td><td class="calc" id="o-ct">—</td></tr>
     </tbody>
   </table>
@@ -659,12 +659,12 @@ tr[hidden]{display:none}
 <section id="c-costos" class="vneg only-cria">
   <div class="sec-head"><h2>Costos por vaca por año</h2><button type="button" class="zoom-btn" data-zoom="c-costos" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
   <div class="tbl-wrap"><table class="one"><tbody>
-    <tr><td><span class="lbl">Sanidad</span><span class="hint">Vacunas, brucelosis, revisación de toros, antiparasitarios</span></td><td><span class="field"><span class="u">$</span><input class="in " id="sanV" inputmode="decimal"></span></td></tr>
-    <tr><td><span class="lbl">Alimentación</span><span class="hint">Pasturas, verdeos, rollos y suplemento de invierno</span></td><td><span class="field"><span class="u">$</span><input class="in " id="alV" inputmode="decimal"></span></td></tr>
-    <tr><td><span class="lbl">Mano de obra</span></td><td><span class="field"><span class="u">$</span><input class="in " id="mobV" inputmode="decimal"></span></td></tr>
-    <tr><td><span class="lbl">Costo anual por toro</span><span class="hint">Amortización (precio del toro ÷ años de uso) + mantenimiento</span></td><td><span class="field"><span class="u">$</span><input class="in " id="ctoro" inputmode="decimal"><span class="u">/toro</span></span></td></tr>
-    <tr><td><span class="lbl">Otros gastos</span></td><td><span class="field"><span class="u">$</span><input class="in " id="otrosV" inputmode="decimal"></span></td></tr>
-    <tr><td><span class="lbl">Alquiler de la tierra por hectárea y por año</span><span class="hint">Si alquilás, o para comparar contra alquilar tu campo. 0 si es propio y no lo querés contar</span></td><td><span class="field"><span class="u">$</span><input class="in " id="arrHa" inputmode="decimal"><span class="u">/ha</span></span></td></tr>
+    <tr><td><span class="lbl">Sanidad</span><span class="hint">Vacunas, brucelosis, revisación de toros, antiparasitarios</span></td><td><span class="field"><span class="u">$</span><input class="in " id="sanV" inputmode="decimal"></span><span class="eq" id="e-sanV"></span></td></tr>
+    <tr><td><span class="lbl">Alimentación</span><span class="hint">Pasturas, verdeos, rollos y suplemento de invierno</span></td><td><span class="field"><span class="u">$</span><input class="in " id="alV" inputmode="decimal"></span><span class="eq" id="e-alV"></span></td></tr>
+    <tr><td><span class="lbl">Mano de obra</span></td><td><span class="field"><span class="u">$</span><input class="in " id="mobV" inputmode="decimal"></span><span class="eq" id="e-mobV"></span></td></tr>
+    <tr><td><span class="lbl">Costo anual por toro</span><span class="hint">Amortización (precio del toro ÷ años de uso) + mantenimiento</span></td><td><span class="field"><span class="u">$</span><input class="in " id="ctoro" inputmode="decimal"><span class="u">/toro</span></span><span class="eq" id="e-ctoro"></span></td></tr>
+    <tr><td><span class="lbl">Otros gastos</span></td><td><span class="field"><span class="u">$</span><input class="in " id="otrosV" inputmode="decimal"></span><span class="eq" id="e-otrosV"></span></td></tr>
+    <tr><td><span class="lbl">Alquiler de la tierra por hectárea y por año</span><span class="hint">Si alquilás, o para comparar contra alquilar tu campo. 0 si es propio y no lo querés contar</span></td><td><span class="field"><span class="u">$</span><input class="in " id="arrHa" inputmode="decimal"><span class="u">/ha</span></span><span class="eq" id="e-arrHa"></span></td></tr>
     <tr class="total"><td><span class="lbl">Costo por vaca</span><span class="hint">Incluye los toros y el alquiler</span></td><td class="calc" id="o-cvaca">—</td></tr>
     <tr class="total"><td><span class="lbl">Costo de todo el rodeo</span></td><td class="calc" id="o-crodeo">—</td></tr>
   </tbody></table></div>
@@ -1104,6 +1104,12 @@ function calc(except){
   const R=model(st), f=st.vista==='jaula'?R.n:1, ok=R.ok;
   setT('e-cc',isNum(R.cc)&&R.cc>0?'= '+money(R.cc/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
   setT('e-cv',isNum(R.cv)&&R.cv>0?'= '+money(R.cv/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
+  // costos por cabeza: mostrar cuánto suman para toda la hacienda (o cuánto es por cabeza si se ve la jaula)
+  { const n=isNum(st.cab)?st.cab:0, nv=n*(1-(st.mort||0)/100);
+    const tot=(k,cnt,txt)=>{ const v=st[k]; if(!isNum(v)||!(v>0)||!(cnt>0)){ setT('e-'+k,''); return; }
+      setT('e-'+k, st.vista==='jaula'?'= '+money(v)+' por cabeza':'= '+money(v*cnt)+' '+txt); };
+    ['fl','san','serv','tacto','mob','otros'].forEach(k=>tot(k,n,'para las '+nf(n,0)+' cab'));
+    tot('gv',nv,'para las '+nf(nv,0)+' vendidas'); }
   const g=st.gdp, sisG=st.sistema||'campo'; $('e-gdp').innerHTML= isNum(g)&&st.meses>0&&(sisG==='feed'?g>1.6:g>1.0)?'<span class="pill bad">'+(sisG==='feed'?'muy alto para corral':'difícil a campo')+'</span>':'';
   setT('e-pRac',isNum(st.conv)&&isNum(st.pRac)?'= '+money(st.conv*st.pRac)+' por kilo ganado':'');
   if(R.tipoCria){ paintCria(R); return; }
@@ -1139,6 +1145,13 @@ function calc(except){
 }
 function paintCria(R){
   const ok=R.ok, cab=x=>isNum(x)?nf(x,0)+' cab':'—';
+  { const V=isNum(st.vacas)?st.vacas:0, t=(id,v)=>setT(id,v>0?'= '+money(v)+' en el año':'');
+    ['sanV','alV','mobV','otrosV'].forEach(k=>t('e-'+k,V>0&&isNum(st[k])?st[k]*V:0));
+    t('e-ctoro',isNum(st.ctoro)&&R.nToros>0?st.ctoro*R.nToros:0);
+    t('e-arrHa',isNum(st.arrHa)&&isNum(st.ha)?st.arrHa*st.ha:0);
+    if(V>0) ['sanV','alV','mobV','otrosV'].forEach(k=>{ const e=$('e-'+k); if(e&&e.textContent) e.textContent+=' para las '+nf(V,0)+' vacas'; });
+    if(R.nToros>0){ const e=$('e-ctoro'); if(e&&e.textContent) e.textContent+=' para los '+nf(R.nToros,0)+' toros'; }
+    if(isNum(st.ha)){ const e=$('e-arrHa'); if(e&&e.textContent) e.textContent+=' por '+nf(st.ha,0)+' ha'; } }
   setT('e-toros',isNum(R.nToros)&&R.nToros>0&&st.vacas>0?'1 toro cada '+nf(st.vacas/R.nToros,0)+' vacas · referencia a campo: 1 cada 28':'Referencia a campo: 1 toro cada 28 vacas');
   setT('e-ha',isNum(st.ha)&&st.ha>0&&isNum(R.n)?'= '+nf(R.n/st.ha,2)+' vacas por ha':'');
   setT('o-ter',cab(R.ter)); setT('o-rep',cab(R.rep)); setT('o-tv',isNum(R.mach)?nf(R.mach,0)+' machos y '+nf(R.hemV,0)+' hembras':'—'); setT('o-vd',cab(R.vd)); setT('o-kgC',isNum(R.kgV)?nf(R.kgV)+' kg':'—');
