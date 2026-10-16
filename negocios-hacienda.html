@@ -144,7 +144,7 @@ select{font:inherit;padding:4px 8px;border-radius:5px;background:var(--input);co
 .seg button{font:inherit;font-weight:600;font-size:.92rem;padding:5px 12px;border:0;background:transparent;color:var(--ink);cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .seg button:focus-visible{outline:3px solid var(--input-line);outline-offset:-3px}
-.hero{position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(100deg,rgba(12,16,10,.82) 0%,rgba(12,16,10,.6) 38%,rgba(12,16,10,.12) 75%),linear-gradient(0deg,rgba(12,16,10,.35),rgba(12,16,10,0) 40%),var(--photo-hero) center 45%/cover no-repeat;padding:30px 26px 150px;border:1px solid rgba(0,0,0,.25);color:#F7F1E8;min-height:340px}
+.hero{position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(100deg,rgba(12,16,10,.82) 0%,rgba(12,16,10,.6) 38%,rgba(12,16,10,.12) 75%),linear-gradient(0deg,rgba(12,16,10,.35),rgba(12,16,10,0) 40%),var(--photo-hero) center 45%/cover no-repeat;padding:28px 28px 34px;border:1px solid rgba(0,0,0,.25);color:#F7F1E8;min-height:250px}
 .hero h1{color:#FFF8EE;text-shadow:0 2px 18px rgba(0,0,0,.35)}
 .hero .eyebrow{color:#E9D7AE}
 .hero .logo{color:#F0D08A}
@@ -319,6 +319,48 @@ tr[hidden]{display:none}
 .whorow [hidden]{display:none!important}
 #historial,#historial[hidden]{}
 #historial[hidden]{display:none}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.steps li{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.9rem;color:var(--muted);line-height:1.3}
+.steps b{flex:none;width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--hembra);color:var(--bg);font-family:var(--display);font-size:.95rem}
+@media (max-width:820px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.steps{grid-template-columns:1fr}}
+table.sens{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;table-layout:fixed}
+table.sens th,table.sens td{padding:9px 6px;text-align:center;border:1px solid var(--line);font-size:.92rem}
+table.sens thead th{background:color-mix(in srgb,var(--hembra) 10%,transparent);font-weight:700}
+table.sens tbody th{text-align:left;background:color-mix(in srgb,var(--hembra) 6%,transparent);font-weight:600}
+table.sens th.corner{text-align:left;font-size:.78rem;color:var(--muted);font-weight:600;line-height:1.25}
+table.sens td.pos{color:var(--pos)} table.sens td.neg{color:var(--neg)}
+table.sens td.base{outline:2px solid var(--ink);outline-offset:-2px;font-weight:700}
+table.sens .lvl{display:block;font-size:.72rem;color:var(--muted);font-weight:500}
+@media (min-width:1100px){ body.cuadros #sens{grid-column:1/-1} }
+#sens table.sens{display:table!important;width:100%!important;table-layout:fixed}
+#sens table.sens thead{display:table-header-group!important}
+#sens table.sens tbody{display:table-row-group!important}
+#sens table.sens tr{display:table-row!important}
+#sens table.sens th,#sens table.sens td{display:table-cell!important;width:auto!important;padding:9px 6px!important;text-align:center!important;border:1px solid var(--line)!important;white-space:nowrap}
+#sens table.sens th.corner,#sens table.sens tbody th{text-align:left!important;white-space:normal}
+#sens table.sens th.corner{width:22%!important}
+#printHead{display:none}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff!important;color:#000}
+  .hero{min-height:0!important;padding:0 0 8px!important;background:none!important;border:0!important;color:#000}
+  .hero h1,.hero .eyebrow,.hero .logo{color:#000!important;text-shadow:none!important}
+  .hero .lead,.hero .legend,.hero .credit,.viewtabs,.negbar,.secnav,.steps,.refbar .btn,.zoom-btn,#fuentes,#comparar,#historial,.lay,.tbar .seg,.negconfirm{display:none!important}
+  #printHead{display:block;font-size:.85rem;color:#333;margin:0 0 10px}
+  html{font-size:10.5px}
+  .board{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;align-items:start!important}
+  .board>section{break-inside:avoid;page-break-inside:avoid;margin:0!important;box-shadow:none!important;border:1px solid #bbb!important;padding:10px!important;border-radius:8px!important}
+  .board>section[hidden],.board>section.no-cria:not(:only-child)[hidden]{display:none!important}
+  #veredicto,#resultado,#c-res,#sens{grid-column:1/-1!important}
+  .refbar{border:1px solid #bbb!important;padding:6px 10px!important}
+  td .field{width:auto!important;height:auto!important;padding:0!important}
+  .kpis{grid-template-columns:repeat(4,1fr)!important}
+  input.in,.field,select{border:0!important;background:none!important;box-shadow:none!important;color:#000!important;font-style:normal!important;outline:0!important}
+  select{-webkit-appearance:none;appearance:none}
+  .wrap{max-width:none!important;padding:0!important;box-shadow:none!important;background:#fff!important}
+}
+
 .his-wrap{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
 .his-top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
 .his-top select,.his-wrap input{font:inherit;padding:5px 8px;border-radius:5px;border:1.5px solid var(--input-line);background:var(--input);color:var(--input-ink);max-width:100%}
@@ -351,6 +393,7 @@ tr[hidden]{display:none}
 <div class="wrap">
 
 <header>
+  <p id="printHead"></p>
   <div class="hero">
     <div class="hero-text">
   <div class="brand">
@@ -365,10 +408,10 @@ tr[hidden]{display:none}
       <circle cx="25.5" cy="28" r="2.4" fill="currentColor"/><circle cx="38.5" cy="28" r="2.4" fill="currentColor"/>
       <ellipse cx="28" cy="55" rx="1.8" ry="2.4" fill="currentColor"/><ellipse cx="36" cy="55" rx="1.8" ry="2.4" fill="currentColor"/>
     </svg>
-    <div class="eyebrow">Mis negocios de hacienda · precios De Campo a Campo</div>
+    <div class="eyebrow">Evaluación de negocios ganaderos · Cría · Recría · Invernada</div>
   </div>
   <h1 id="negTitle">Mi negocio</h1>
-  <p class="lead">Calculá cuánto deja cada negocio: qué hacienda comprás, cuánto tiempo la tenés en el campo y a cuánto la vendés. Cargá tus números en las celdas amarillas; están enlazadas, así que si cambiás un dato se recalcula todo lo demás.</p>
+  <p class="lead">Simulá un negocio antes de hacerlo: hacienda, tiempo, precios y costos. Obtenés margen bruto, ganancia real, rentabilidad mensual, puntos de equilibrio y sensibilidad, con precios de referencia de mercado.</p>
   <div class="legend">
     <span><i class="sw in"></i>Celda amarilla: la podés cambiar</span>
     <span><i class="sw in auto"></i>Borde punteado: valor sugerido, cambialo si querés</span>
@@ -399,6 +442,7 @@ tr[hidden]{display:none}
       <button class="btn sm" type="button" id="negNew">+ Nuevo negocio</button>
       <button class="btn sm" type="button" id="negDup">Duplicar este</button>
       <button class="btn sm ghost" type="button" id="negDel">Borrar</button>
+      <button class="btn sm" type="button" id="printRep">Imprimir informe / PDF</button>
       <button class="btn sm" type="button" id="verQuick">Guardar versión</button>
       <button class="btn sm" type="button" id="shSend">Pasar negocio</button>
       <button class="btn sm" type="button" id="shRecv">Recibir negocio</button>
@@ -432,9 +476,15 @@ tr[hidden]{display:none}
 </header>
 
 
+<ol class="steps vneg" aria-label="Cómo usar">
+  <li><b>1</b><span>Elegí el tipo de negocio y el sistema</span></li>
+  <li><b>2</b><span>Elegí la categoría: se cargan precios y valores sugeridos</span></li>
+  <li><b>3</b><span>Ajustá las casillas con los datos de tu campo</span></li>
+  <li><b>4</b><span>Revisá resultado, equilibrio y sensibilidad</span></li>
+</ol>
 <nav class="secnav vneg" aria-label="Secciones">
   <div class="seg lay" role="group" aria-label="Forma de ver"><button type="button" id="lay-lista" aria-pressed="false">Lista</button><button type="button" id="lay-cuadros" aria-pressed="true">Cuadros</button></div>
-  <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a>
+  <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a><a href="#sens">Sensibilidad</a>
 </nav>
 <div class="refbar vneg">
   <div class="no-cria">
@@ -732,6 +782,12 @@ tr[hidden]{display:none}
     <tr><td><span class="lbl">Precio promedio del ternero para no perder</span></td><td class="calc" id="rc-be">—</td></tr>
     <tr><td><span class="lbl">Destete mínimo para no perder</span></td><td class="calc" id="rc-bed">—</td></tr>
   </tbody></table></div>
+</section>
+
+<section id="sens" class="vneg">
+  <div class="sec-head"><h2>Análisis de sensibilidad</h2><button type="button" class="zoom-btn" data-zoom="sens" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
+  <p class="note" id="sensNote"></p>
+  <div class="tbl-wrap"><table class="sens" id="sensTbl"></table></div>
 </section>
 
 </div>
@@ -1146,6 +1202,7 @@ function setT(id,txt,sign){const el=$(id); if(!el)return; el.textContent=txt; if
 function calc(except){
   refresh(except);
   const R=model(st), f=st.vista==='jaula'?R.n:1, ok=R.ok;
+  try{ renderSens(); }catch(e){}
   setT('e-cc',isNum(R.cc)&&R.cc>0?'= '+money(R.cc/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
   setT('e-cv',isNum(R.cv)&&R.cv>0?'= '+money(R.cv/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
   // costos por cabeza: mostrar cuánto suman para toda la hacienda (o cuánto es por cabeza si se ve la jaula)
@@ -1300,6 +1357,39 @@ $('lay-lista').addEventListener('click',()=>setLay('lista')); $('lay-cuadros').a
 { let l='cuadros'; try{ l=localStorage.getItem(LAYKEY)||'cuadros'; }catch(e){} setLay(l); }
 $('tab-neg').addEventListener('click',()=>setView('neg')); $('tab-cmp').addEventListener('click',()=>setView('cmp')); $('tab-his').addEventListener('click',()=>setView('his'));
 if(location.hash==='#comparar') setView('cmp');
+
+
+// ================= sensibilidad =================
+function renderSens(){
+  const T=$('sensTbl'); if(!T) return;
+  const cria=st.tipo==='cria';
+  const colV=[-20,-10,0,10,20];
+  let rows, rowLbl, corner, apply, sensVar='el porcentaje de destete';
+  if(cria){
+    const d0=isNum(st.destC)?st.destC:null;
+    rows=[-10,-5,0,5,10]; rowLbl=x=>(x>0?'+':'')+x+' pts<span class="lvl">'+(d0!=null?nf(Math.max(0,Math.min(100,d0+x)),0)+' % destete':'')+'</span>';
+    corner='Destete ↓ · Precio de venta →';
+    apply=(r,c)=>({...st,destC:d0!=null?Math.max(0,Math.min(100,d0+r)):d0,varVenta:(st.varVenta||0)+c});
+  } else if(st.modoVenta==='prenada'||st.modoVenta==='vcc'){
+    const k=st.modoVenta==='prenada'?'pr':'pcria', p0=isNum(st[k])?st[k]:null;
+    rows=[-10,-5,0,5,10]; rowLbl=x=>(x>0?'+':'')+x+' pts<span class="lvl">'+(p0!=null?nf(Math.max(0,Math.min(100,p0+x)),0)+(k==='pr'?' % preñez':' % con cría'):'')+'</span>';
+    corner=(k==='pr'?'Preñez':'Vacas con cría')+' ↓ · Precio de venta →'; sensVar=k==='pr'?'el porcentaje de preñez':'el porcentaje de vacas con cría';
+    apply=(r,c)=>({...st,[k]:p0!=null?Math.max(0,Math.min(100,p0+r)):p0,varVenta:(st.varVenta||0)+c});
+  } else {
+    const g0=st.gdp;
+    rows=[-20,-10,0,10,20]; rowLbl=x=>(x>0?'+':'')+x+' %<span class="lvl">'+(isNum(g0)?nf(g0*(1+x/100),2)+' kg/día':'')+'</span>';
+    corner='Aumento diario ↓ · Precio de venta →'; sensVar='el aumento diario de peso';
+    apply=(r,c)=>({...st,gdp:isNum(g0)?g0*(1+r/100):g0,varVenta:(st.varVenta||0)+c});
+  }
+  const base=model(st);
+  if(!base.ok){ T.innerHTML=''; $('sensNote').textContent='Completá los datos del negocio para ver la sensibilidad.'; return; }
+  $('sensNote').textContent='Ganancia real '+(cria?'del año':'del negocio')+' si cambian el precio de venta y '+sensVar+'. El recuadro marcado es el escenario cargado.';
+  let html='<thead><tr><th class="corner">'+corner+'</th>'+colV.map(c=>'<th>'+(c>0?'+':'')+c+' %</th>').join('')+'</tr></thead><tbody>';
+  rows.forEach(r=>{ html+='<tr><th>'+rowLbl(r)+'</th>'+colV.map(c=>{ const R=model(apply(r,c)); const g=R.ok?R.gr:NaN;
+    return '<td class="'+(isNum(g)?(g>=0?'pos':'neg'):'')+(r===0&&c===0?' base':'')+'">'+(isNum(g)?mill(g):'—')+'</td>'; }).join('')+'</tr>'; });
+  T.innerHTML=html+'</tbody>';
+}
+$('printRep').addEventListener('click',()=>{ flush(); const ph=$('printHead'); if(ph) ph.textContent='Informe: '+((cur()&&cur().name)||'Negocio')+' · generado el '+new Date().toLocaleDateString('es-AR')+' · Negocios de hacienda'; try{ window.print(); }catch(e){ status('Tu navegador no deja imprimir desde acá: usá Ctrl+P'); } });
 
 // ================= barra de negocios =================
 function setTitle(){ const t=$('negTitle'); if(t&&$('comparar').hidden&&$('historial').hidden) t.textContent=(cur()&&cur().name)||'Negocio sin nombre'; }
