@@ -182,8 +182,9 @@ table.one thead th:last-child{text-align:right}
 .catsel{font-family:var(--display);font-weight:700;font-size:1.1rem;min-width:0;max-width:100%}
 .ref{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;white-space:normal}
 .ref .note{flex:1 1 280px;text-align:left}
-tr.refrow td{background:color-mix(in srgb,var(--input-line) 8%,transparent);white-space:normal;text-align:left}
-tr.refrow .negconfirm{margin-top:8px}
+.refbar{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--input-line);border-radius:10px;padding:10px 16px}
+.refbar .negconfirm{margin-top:8px}
+.refbar .note{font-size:.92rem}
 .chk{display:inline-flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-family:var(--body);font-size:.98rem;font-weight:600;color:var(--ink)}
 .chk input{width:18px;height:18px;accent-color:var(--hembra)}
 tr[hidden]{display:none}
@@ -403,6 +404,18 @@ tr[hidden]{display:none}
   <div class="seg lay" role="group" aria-label="Forma de ver"><button type="button" id="lay-lista" aria-pressed="false">Lista</button><button type="button" id="lay-cuadros" aria-pressed="true">Cuadros</button></div>
   <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a>
 </nav>
+<div class="refbar vneg">
+  <div class="no-cria">
+          <div class="ref"><span id="refTxt" class="note"></span>
+          <button class="btn sm" type="button" id="refBtn" disabled>Volver a todos los valores sugeridos</button></div>
+          <div class="negconfirm" id="refConfirm" hidden><span>Esto reemplaza todos los números de este negocio, también los que cargaste vos, por los sugeridos.</span>
+            <button class="btn sm" type="button" id="refYes">Cargar</button><button class="btn sm ghost" type="button" id="refNo">Cancelar</button></div>
+  </div>
+  <div class="only-cria">
+<div class="ref"><span class="note" id="refCria"></span>
+      <button class="btn sm" type="button" id="refCriaBtn">Volver a los valores sugeridos</button></div>
+  </div>
+</div>
 
 <div class="board vneg" id="board">
 <section id="veredicto" class="vneg">
@@ -426,11 +439,6 @@ tr[hidden]{display:none}
     <tbody>
       <tr><td><span class="lbl">Categoría</span><span class="hint">Qué hacienda comprás</span></td>
           <td><select id="cat" class="catsel"><option value="">Elegí una categoría…</option></select></td></tr>
-      <tr class="refrow"><td colspan="2">
-          <div class="ref"><span id="refTxt" class="note"></span>
-          <button class="btn sm" type="button" id="refBtn" disabled>Volver a todos los valores sugeridos</button></div>
-          <div class="negconfirm" id="refConfirm" hidden><span>Esto reemplaza todos los números de este negocio, también los que cargaste vos, por los sugeridos.</span>
-            <button class="btn sm" type="button" id="refYes">Cargar</button><button class="btn sm ghost" type="button" id="refNo">Cancelar</button></div></td></tr>
       <tr><td><span class="lbl">Cabezas</span><span class="hint">Jaula doble: ~80 terneros de 175 kg o ~35 vacas</span></td>
           <td><span class="field"><input class="in s" id="cab" inputmode="numeric"><span class="u">cab</span></span></td></tr>
       <tr><td><span class="lbl">Peso de compra por cabeza</span></td>
@@ -617,8 +625,6 @@ tr[hidden]{display:none}
 <section id="c-rodeo" class="vneg only-cria">
   <div class="sec-head"><h2>Rodeo</h2><button type="button" class="zoom-btn" data-zoom="c-rodeo" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
   <div class="tbl-wrap"><table class="one"><tbody>
-    <tr class="refrow"><td colspan="2"><div class="ref"><span class="note" id="refCria"></span>
-      <button class="btn sm" type="button" id="refCriaBtn">Volver a los valores sugeridos</button></div></td></tr>
     <tr><td><span class="lbl">Vacas</span><span class="hint">Vientres en servicio</span></td><td><span class="field"><input class="in s" id="vacas" inputmode="decimal"><span class="u">vacas</span></span></td></tr>
     <tr><td><span class="lbl">Toros</span><span class="hint">Referencia a campo: 1 toro cada 28 vacas</span></td><td><span class="field"><input class="in s" id="nToros" inputmode="numeric"><span class="u">toros</span></span><span class="eq" id="e-toros"></span></td></tr>
     <tr><td><span class="lbl">Vacas por hectárea</span><span class="hint">Carga del campo</span></td><td><span class="field"><input class="in " id="carga" inputmode="decimal"><span class="u">vacas/ha</span></span><span class="eq" id="e-carga"></span></td></tr>
