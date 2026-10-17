@@ -343,6 +343,42 @@ table.sens .lvl{display:block;font-size:.72rem;color:var(--muted);font-weight:50
 #sens table.sens th.corner,#sens table.sens tbody th{text-align:left!important;white-space:normal}
 #sens table.sens th.corner{width:22%!important}
 #printHead{display:none}
+/* ---- pantalla de inicio ---- */
+#inicio{display:flex;flex-direction:column;gap:28px}
+#inicio[hidden]{display:none}
+.board[hidden],.secnav[hidden],.refbar[hidden]{display:none!important}
+.ini-actions{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}
+.ini-card{display:flex;flex-direction:column;gap:10px;text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 22px 20px;box-shadow:0 1px 2px color-mix(in srgb,var(--sil) 20%,transparent)}
+.ini-card h2{margin:0;font-size:1.35rem}
+.ini-card p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.45}
+.ini-ico{width:42px;height:42px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;background:color-mix(in srgb,var(--hembra) 12%,transparent);color:var(--hembra)}
+.ini-new{border-top:4px solid var(--hembra)}
+.ini-link{cursor:pointer;transition:border-color .15s,transform .15s}
+.ini-link:hover{border-color:var(--hembra);transform:translateY(-2px)}
+.ini-link:focus-visible{outline:3px solid var(--input-line);outline-offset:2px}
+.ini-go{margin-top:auto;font-weight:700;color:var(--hembra);font-size:.92rem}
+.ini-tipos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:auto}
+.ini-tipo{font:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:3px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);transition:border-color .15s,background .15s}
+.ini-tipo:hover{border-color:var(--hembra);background:color-mix(in srgb,var(--hembra) 8%,var(--bg))}
+.ini-tipo b{font-family:var(--display);font-size:1.15rem}
+.ini-tipo small{color:var(--muted);font-size:.8rem;line-height:1.3}
+.ini-sec{display:flex;flex-direction:column;gap:12px}
+.ini-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.ini-head h2{margin:0;font-size:1.3rem}
+.ini-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.ini-neg{font:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;color:var(--ink);transition:border-color .15s,transform .15s}
+.ini-neg:hover{border-color:var(--hembra);transform:translateY(-2px)}
+.ini-neg h3{margin:0;font-family:var(--display);font-size:1.15rem;line-height:1.2}
+.ini-neg .tag{align-self:flex-start;font-size:.74rem;font-weight:700;padding:2px 9px;border-radius:99px;background:color-mix(in srgb,var(--hembra) 12%,transparent);color:var(--hembra)}
+.ini-neg .nums{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
+.ini-neg .nums span{display:block;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.ini-neg .nums b{font-size:1.1rem;font-variant-numeric:tabular-nums}
+.ini-neg .pos{color:var(--pos)} .ini-neg .neg{color:var(--neg)}
+.ini-neg small.upd{color:var(--muted);font-size:.78rem}
+#inicio .steps{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:980px){.ini-actions{grid-template-columns:1fr 1fr}.ini-new{grid-column:1/-1}}
+@media (max-width:600px){.ini-actions{grid-template-columns:1fr}.ini-tipos{grid-template-columns:1fr}#inicio .steps{grid-template-columns:1fr}}
+
 /* ---- comparar ---- */
 .cmp-win{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:12px;background:linear-gradient(100deg,color-mix(in srgb,var(--pos) 16%,var(--surface)),var(--surface));border:1px solid color-mix(in srgb,var(--pos) 35%,transparent)}
 .cmp-win[hidden]{display:none}
@@ -504,6 +540,7 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
 
   </div>
   <div class="viewtabs" role="tablist" aria-label="Vista">
+    <button type="button" role="tab" id="tab-ini" aria-selected="false">Inicio</button>
     <button type="button" role="tab" id="tab-neg" aria-selected="true">Mis negocios</button>
     <button type="button" role="tab" id="tab-cmp" aria-selected="false">Comparar negocios</button>
     <button type="button" role="tab" id="tab-his" aria-selected="false">Historial</button>
@@ -560,12 +597,6 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
 </header>
 
 
-<ol class="steps vneg" aria-label="Cómo usar">
-  <li><b>1</b><span>Elegí el tipo de negocio y el sistema</span></li>
-  <li><b>2</b><span>Elegí la categoría: se cargan precios y valores sugeridos</span></li>
-  <li><b>3</b><span>Ajustá las casillas con los datos de tu campo</span></li>
-  <li><b>4</b><span>Revisá resultado, equilibrio y sensibilidad</span></li>
-</ol>
 <nav class="secnav vneg" aria-label="Secciones">
   <div class="seg lay" role="group" aria-label="Forma de ver"><button type="button" id="lay-lista" aria-pressed="false">Lista</button><button type="button" id="lay-cuadros" aria-pressed="true">Cuadros</button></div>
   <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a><a href="#sens">Sensibilidad</a>
@@ -881,6 +912,46 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
 </section>
 
 </div>
+
+<section id="inicio" class="vini" hidden>
+  <div class="ini-actions">
+    <article class="ini-card ini-new">
+      <span class="ini-ico" aria-hidden="true">＋</span>
+      <h2>Armar un negocio nuevo</h2>
+      <p>Elegí qué tipo de negocio querés evaluar. Se cargan precios de mercado y costos sugeridos para que ajustes con los datos de tu campo.</p>
+      <div class="ini-tipos">
+        <button type="button" class="ini-tipo" data-new="cria"><b>Cría</b><small>Rodeo de vacas, venta de terneros</small></button>
+        <button type="button" class="ini-tipo" data-new="recria"><b>Recría</b><small>Terneros o terneras hasta novillito o vaquillona</small></button>
+        <button type="button" class="ini-tipo" data-new="invernada"><b>Invernada</b><small>Terminación para faena</small></button>
+      </div>
+    </article>
+    <button type="button" class="ini-card ini-link" data-go="cmp">
+      <span class="ini-ico" aria-hidden="true">⇄</span>
+      <h2>Comparar negocios</h2>
+      <p>Poné lado a lado los negocios que armaste y mirá cuál rinde más.</p>
+      <span class="ini-go">Ir a comparar →</span>
+    </button>
+    <button type="button" class="ini-card ini-link" data-go="his">
+      <span class="ini-ico" aria-hidden="true">↺</span>
+      <h2>Historial de cambios</h2>
+      <p>Quién cambió qué y cuándo, con versiones guardadas para volver atrás.</p>
+      <span class="ini-go">Ver historial →</span>
+    </button>
+  </div>
+  <div class="ini-sec">
+    <div class="ini-head"><h2>Tus negocios</h2><span class="note" id="iniCount"></span></div>
+    <div class="ini-list" id="iniList"></div>
+  </div>
+  <div class="ini-sec">
+    <div class="ini-head"><h2>Cómo funciona</h2></div>
+    <ol class="steps" aria-label="Cómo usar">
+  <li><b>1</b><span>Elegí el tipo de negocio y el sistema</span></li>
+  <li><b>2</b><span>Elegí la categoría: se cargan precios y valores sugeridos</span></li>
+  <li><b>3</b><span>Ajustá las casillas con los datos de tu campo</span></li>
+  <li><b>4</b><span>Revisá resultado, equilibrio y sensibilidad</span></li>
+</ol>
+  </div>
+</section>
 
 <section id="comparar" class="vcmp" hidden>
   <div class="sec-head"><h2>Comparar negocios</h2></div>
@@ -1466,10 +1537,11 @@ function paintCmpVisual(rows,best){
 $('cmpAll').addEventListener('click',()=>{cmpSel=negs.map(n=>n.id); saveSel(); renderCmp();});
 $('cmpNone').addEventListener('click',()=>{cmpSel=[]; saveSel(); renderCmp();});
 function setView(v){
-  $('tab-neg').setAttribute('aria-selected',v==='neg'); $('tab-cmp').setAttribute('aria-selected',v==='cmp'); $('tab-his').setAttribute('aria-selected',v==='his');
-  document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vcmp').forEach(e=>e.hidden=v!=='cmp'); document.querySelectorAll('.vhis').forEach(e=>e.hidden=v!=='his');
+  $('tab-ini').setAttribute('aria-selected',v==='ini'); $('tab-neg').setAttribute('aria-selected',v==='neg'); $('tab-cmp').setAttribute('aria-selected',v==='cmp'); $('tab-his').setAttribute('aria-selected',v==='his');
+  document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vcmp').forEach(e=>e.hidden=v!=='cmp'); document.querySelectorAll('.vhis').forEach(e=>e.hidden=v!=='his'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini');
   curView=v;
-  if(v==='cmp'){ flush(); renderCmp(); $('negTitle').textContent='Comparar negocios'; } else if(v==='his'){ flush(); renderHist(); $('negTitle').textContent='Historial de cambios'; } else setTitle();
+  if(v==='ini'){ flush(); renderIni(); $('negTitle').textContent='Negocios de hacienda'; }
+  else if(v==='cmp'){ flush(); renderCmp(); $('negTitle').textContent='Comparar negocios'; } else if(v==='his'){ flush(); renderHist(); $('negTitle').textContent='Historial de cambios'; } else setTitle();
   window.scrollTo({top:0});
 }
 // ---------- ampliar un cuadro ----------
@@ -1495,7 +1567,30 @@ function setLay(l){ document.body.classList.toggle('cuadros',l==='cuadros'); $('
 $('lay-lista').addEventListener('click',()=>setLay('lista')); $('lay-cuadros').addEventListener('click',()=>setLay('cuadros'));
 { let l='cuadros'; try{ l=localStorage.getItem(LAYKEY)||'cuadros'; }catch(e){} setLay(l); }
 $('tab-neg').addEventListener('click',()=>setView('neg')); $('tab-cmp').addEventListener('click',()=>setView('cmp')); $('tab-his').addEventListener('click',()=>setView('his'));
-if(location.hash==='#comparar') setView('cmp');
+
+// ================= pantalla de inicio =================
+function renderIni(){
+  const L=$('iniList'); if(!L) return;
+  $('iniCount').textContent=negs.length===1?'1 negocio':negs.length+' negocios';
+  const tipoTxt=s=>s.tipo==='cria'?'Cría':(TIPOS[s.tipo]||'Recría')+' '+SISTEMAS[s.sistema||'campo'];
+  L.innerHTML=negs.map(n=>{ const s={...EMPTY,...n.st}; if(!(n.st||{}).tipo) s.tipo=inferTipo(s.cat); const R=model(s);
+    const c=v=>isNum(v)?(v>=0?'pos':'neg'):'';
+    return '<button type="button" class="ini-neg" data-open="'+n.id+'"><h3>'+esc(n.name||'Sin nombre')+'</h3>'
+      +'<span class="tag">'+esc(tipoTxt(s))+(s.tipo==='cria'?'':' · '+esc(catName(s.cat)))+'</span>'
+      +'<div class="nums"><div><span>Ganancia real</span><b class="'+c(R.gr)+'">'+(R.ok?mill(R.gr):'—')+'</b></div>'
+      +'<div><span>Por mes</span><b class="'+c(R.rm)+'">'+(R.ok?pct(R.rm,2):'—')+'</b></div></div>'
+      +'<small class="upd">'+(R.ok?(s.tipo==='cria'?nf(R.n,0)+' vacas · por año':nf(R.n,0)+' cabezas · '+nf(R.meses,1)+' meses'):'Faltan datos')+'</small></button>'; }).join('');
+  L.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>{ switchTo(b.dataset.open); setView('neg'); }));
+}
+$('tab-ini').addEventListener('click',()=>setView('ini'));
+document.querySelectorAll('#inicio [data-go]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.go)));
+document.querySelectorAll('#inicio [data-new]').forEach(b=>b.addEventListener('click',()=>{
+  const t=b.dataset.new; setView('neg'); $('negNew').click();
+  const btn=$(t==='cria'?'tp-cria':t==='invernada'?'tp-inv':'tp-recria'); if(btn) btn.click();
+  const n=cur(); if(n){ const nm=(t==='cria'?'Cría':t==='invernada'?'Invernada':'Recría')+' '+(negs.length); n.name=nm; $('negName').value=nm; renderBar(); setTitle(); save(); }
+  $('negName').focus(); $('negName').select(); }));
+
+if(location.hash==='#comparar') setView('cmp'); else setView('ini');
 
 
 
@@ -1577,12 +1672,12 @@ function renderSens(){
 $('printRep').addEventListener('click',()=>{ flush(); const ph=$('printHead'); if(ph) ph.textContent='Informe: '+((cur()&&cur().name)||'Negocio')+' · generado el '+new Date().toLocaleDateString('es-AR')+' · Negocios de hacienda'; try{ window.print(); }catch(e){ status('Tu navegador no deja imprimir desde acá: usá Ctrl+P'); } });
 
 // ================= barra de negocios =================
-function setTitle(){ const t=$('negTitle'); if(t&&$('comparar').hidden&&$('historial').hidden) t.textContent=(cur()&&cur().name)||'Negocio sin nombre'; }
+function setTitle(){ const t=$('negTitle'); if(t&&$('comparar').hidden&&$('historial').hidden&&$('inicio').hidden) t.textContent=(cur()&&cur().name)||'Negocio sin nombre'; }
 function renderBar(){
   negs.sort((a,b)=>(a.created||0)-(b.created||0));
   const s=$('negSel'); s.innerHTML='';
   negs.forEach(n=>{const o=document.createElement('option'); o.value=n.id; o.textContent=n.name||'Sin nombre'; s.appendChild(o);});
-  s.value=active; if(s.dataset.act!==active){ $('negConfirm').hidden=true; s.dataset.act=active; } syncShadow(); renderHist();
+  s.value=active; if(s.dataset.act!==active){ $('negConfirm').hidden=true; s.dataset.act=active; } syncShadow(); renderHist(); if(curView==='ini') renderIni();
 }
 function loadActive(){ st={...EMPTY,...cur().st}; if(!cur().st||!cur().st.tipo) st.tipo=inferTipo(st.cat); if(!isNum(st.carga)&&isNum(st.ha)&&st.ha>0&&st.vacas>0) st.carga=st.vacas/st.ha; renderBar(); $('negName').value=cur().name||''; setTitle(); applyUI(); renderCmp(); saveLocal(); }
 function switchTo(id){ flush(); active=id; loadActive(); }
