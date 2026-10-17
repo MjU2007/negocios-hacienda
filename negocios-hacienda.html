@@ -377,6 +377,30 @@ table.sens .lvl{display:block;font-size:.72rem;color:var(--muted);font-weight:50
 .cmp-chart .row.neg .track i{background:var(--neg)}
 .cmp-chart .row em{font-style:normal;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
 .cmp-h{margin:6px 0 0;font-family:var(--display);font-size:1.15rem}
+/* tabla de detalle de comparar */
+table.cmp{border-collapse:separate;border-spacing:0}
+table.cmp th,table.cmp td{text-align:center!important;padding:12px 14px;border-bottom:1px solid color-mix(in srgb,var(--line) 75%,transparent);background:var(--surface)!important}
+table.cmp td:first-child,table.cmp th:first-child{text-align:left!important}
+table.cmp thead th{padding:16px 14px 14px;border-bottom:2px solid var(--line)}
+table.cmp thead th .lnk{display:block;margin:0 auto;font-family:var(--display);font-size:1.12rem;font-weight:700;text-decoration:none;color:var(--ink)}
+table.cmp thead th .lnk:hover{text-decoration:underline}
+table.cmp thead th small{display:block;margin-top:3px;font-size:.78rem;color:var(--muted);font-weight:500}
+table.cmp thead th.lbl-h{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);vertical-align:bottom}
+table.cmp thead th.best{box-shadow:inset 0 4px 0 var(--pos);background:color-mix(in srgb,var(--pos) 6%,var(--surface))!important}
+table.cmp .rk{display:inline-block;margin-bottom:6px;font-family:var(--display);font-weight:700;font-size:.78rem;padding:2px 10px;border-radius:99px;background:color-mix(in srgb,var(--line) 60%,transparent);color:var(--muted)}
+table.cmp .rk.one{background:var(--pos);color:#fff}
+table.cmp tbody tr:nth-child(even) td{background:var(--surface)!important}
+table.cmp tbody tr:hover td{background:color-mix(in srgb,var(--hembra) 4%,var(--surface))!important}
+table.cmp tbody tr.grp:nth-child(n) td,table.cmp tbody tr.grp:hover td{background:color-mix(in srgb,var(--hembra) 6%,var(--surface))!important;padding:18px 14px 6px;border-bottom:1px solid var(--line);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--hembra)}
+table.cmp td .cl{display:block}
+table.cmp td .ch{display:block;font-size:.76rem;color:var(--muted);margin-top:2px}
+table.cmp tr.key td{font-weight:700;font-size:1.05rem;background:color-mix(in srgb,var(--hembra) 5%,var(--surface))!important}
+table.cmp td .top{display:inline-block;padding:3px 12px;border-radius:99px;background:color-mix(in srgb,var(--pos) 13%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pos) 35%,transparent)}
+table.cmp td .top::after{content:" ✓";color:var(--pos);font-size:.8em}
+table.cmp .act{background:var(--surface)!important}
+.cmp-legend{font-size:.82rem;color:var(--muted);margin:-4px 0 0}
+.cmp-legend span{display:inline-block;padding:1px 10px;border-radius:99px;background:color-mix(in srgb,var(--pos) 13%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--pos) 35%,transparent);color:var(--ink);font-weight:600}
+
 table.cmp tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--line) 22%,var(--surface))}
 table.cmp tbody tr:nth-child(even) td.act{background:color-mix(in srgb,var(--pos) 10%,var(--surface))}
 table.cmp .act{background:color-mix(in srgb,var(--pos) 7%,var(--surface))}
@@ -870,6 +894,7 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
   <div id="cmpCards" class="cmp-cards"></div>
   <div id="cmpCharts" class="cmp-charts"></div>
   <h3 class="cmp-h" id="cmpDetH">Detalle completo</h3>
+  <p class="cmp-legend" id="cmpLeg"><span>✓</span> marca el mejor valor de cada fila.</p>
   <div class="tbl-wrap" id="cmpWrap"><table class="cmp" id="cmpTbl"></table></div>
 </section>
 
@@ -1368,35 +1393,44 @@ function renderCmp(){
   const pick=$('cmpPick');
   pick.innerHTML=negs.map(n=>'<label class="pick-item"><input type="checkbox" data-id="'+n.id+'"'+(cmpSel.includes(n.id)?' checked':'')+'><span><b>'+esc(n.name||'Sin nombre')+'</b><small>'+esc((n.st||{}).tipo==='cria'?'Cría':((TIPOS[(n.st||{}).tipo]||'Recría')+' · '+catName((n.st||{}).cat)))+'</small></span></label>').join('');
   pick.querySelectorAll('input').forEach(c=>c.addEventListener('change',()=>{const id=c.dataset.id; cmpSel=c.checked?[...new Set([...cmpSel,id])]:cmpSel.filter(x=>x!==id); saveSel(); renderCmp();}));
-  const rows=negs.filter(n=>cmpSel.includes(n.id)).map(n=>{const s2={...EMPTY,...n.st}; if(!(n.st||{}).tipo) s2.tipo=inferTipo(s2.cat); return {n,R:model(s2)};});
+  const rows=negs.filter(n=>cmpSel.includes(n.id)).map(n=>{const s2={...EMPTY,...n.st}; if(!(n.st||{}).tipo) s2.tipo=inferTipo(s2.cat); return {n,R:model(s2)};})
+    .sort((a,b)=>(b.R.ok?b.R.rm:-1e9)-(a.R.ok?a.R.rm:-1e9));
   $('cmpWrap').hidden=rows.length===0;
   $('cmpNote').textContent= negs.length<2 ? 'Todavía tenés un solo negocio. Creá otro con “+ Nuevo negocio” o “Duplicar este” para poder comparar.'
     : rows.length===0 ? 'Tildá los negocios que querés comparar.'
     : rows.length===1 ? 'Tildá al menos otro negocio para compararlo.'
     : 'El que más rinde se mide por la rentabilidad por mes, que compara negocios de distinta duración. Tocá el nombre de uno para abrirlo.';
-  $('cmpDetH').hidden=rows.length===0;
+  $('cmpDetH').hidden=rows.length===0; $('cmpLeg').hidden=rows.length<2;
   if(!rows.length){ t.innerHTML=''; paintCmpVisual([],null); return; }
   const best=rows.length>1?rows.filter(x=>x.R.ok).sort((a,b)=>b.R.rm-a.R.rm)[0]:null;
-  let h='<thead><tr><th>Negocio</th>'+rows.map(x=>'<th class="'+(best&&x===best?'best':'')+'"><button type="button" class="lnk" data-id="'+x.n.id+'">'+esc(x.n.name||'Sin nombre')+'</button>'+(best&&x===best?'<span class="pill ok">el que más rinde</span>':'')+'</th>').join('')+'</tr></thead><tbody>';
-  const row=(lbl,fn,cls)=>{h+='<tr'+(cls?' class="'+cls+'"':'')+'><td>'+lbl+'</td>'+rows.map(x=>'<td class="'+(best&&x===best?'act':'')+'">'+fn(x.R,x.n.st)+'</td>').join('')+'</tr>';};
+  const okR=rows.filter(x=>x.R.ok).sort((a,b)=>b.R.rm-a.R.rm);
+  const tipoTxt=s=>s.tipo==='cria'?'Cría':(TIPOS[s.tipo]||'Recría')+' '+SISTEMAS[s.sistema||'campo'];
+  let h='<thead><tr><th class="lbl-h">Concepto</th>'+rows.map(x=>{ const rk=okR.indexOf(x)+1, s={...EMPTY,...x.n.st};
+    return '<th class="'+(best&&x===best?'best':'')+'">'+(rk&&okR.length>1?'<span class="rk'+(rk===1?' one':'')+'">'+rk+'º</span>':'')
+      +'<button type="button" class="lnk" data-id="'+x.n.id+'">'+esc(x.n.name||'Sin nombre')+'</button><small>'+esc(tipoTxt(s))+'</small></th>'; }).join('')+'</tr></thead><tbody>';
+  // fila: etiqueta (+ explicación), valores; si se indica, marca el mejor valor de la fila
+  const row=(lbl,fn,o={})=>{ let top=null;
+    if(o.v&&rows.length>1){ const vals=rows.map(x=>x.R.ok?o.v(x.R):NaN).filter(isNum); if(vals.length>1) top=Math.max(...vals); }
+    h+='<tr'+(o.key?' class="key"':'')+'><td><span class="cl">'+lbl+'</span>'+(o.hint?'<span class="ch">'+o.hint+'</span>':'')+'</td>'
+      +rows.map(x=>{ const v=o.v&&x.R.ok?o.v(x.R):NaN, isTop=top!==null&&isNum(v)&&v===top;
+        return '<td>'+(isTop?'<span class="top">'+fn(x.R,x.n.st)+'</span>':fn(x.R,x.n.st))+'</td>'; }).join('')+'</tr>'; };
   const sg=(v,txt)=>'<span class="'+(isNum(v)?(v>0?'pos':v<0?'neg':''):'')+'">'+txt+'</span>';
   const grp=t=>{h+='<tr class="grp"><td colspan="'+(rows.length+1)+'">'+t+'</td></tr>';};
   grp('El negocio');
-  row('Tipo',(R,s)=>esc(s.tipo==='cria'?'Cría':(TIPOS[s.tipo]||'Recría')+' '+SISTEMAS[s.sistema||'campo']));
   row('Categoría',(R,s)=>esc(s.tipo==='cria'?'Rodeo de vacas':catName(s.cat)));
   row('Cabezas',R=>nf(R.n));
-  row('Meses',R=>nf(R.meses,1));
-  row('Peso de compra → venta',(R,s)=>isNum(s.pc)&&isNum(R.meses)?nf(R.pc)+' → '+nf(R.pf)+' kg':'—');
+  row('Duración',R=>isNum(R.meses)?nf(R.meses,1)+' meses':'—');
+  row('Peso de compra → venta',(R,s)=>isNum(s.pc)&&isNum(R.meses)&&s.tipo!=='cria'?nf(R.pc)+' → '+nf(R.pf)+' kg':'—');
   grp('La plata');
-  row('Plata en hacienda',R=>mill(R.cpra));
-  row('Costo total',R=>R.ok?mill(R.ct):'—');
+  row('Plata invertida',R=>mill(R.cpra),{hint:'Lo que ponés en hacienda'});
+  row('Costo total',R=>R.ok?mill(R.ct):'—',{hint:'Compra, gastos y venta'});
   row('Ingreso por ventas',R=>R.ok?mill(R.ing):'—');
   grp('El resultado');
-  row('Margen bruto',R=>R.ok?sg(R.mb,mill(R.mb)):'—');
-  row('Ganancia real',R=>R.ok?sg(R.gr,mill(R.gr)):'—','key');
-  row('Por cabeza',R=>R.ok?money(R.gr/R.n):'—');
-  row('Rentabilidad sobre lo invertido',R=>R.ok?sg(R.rent,pct(R.rent)):'—');
-  row('Rentabilidad por mes',R=>R.ok?sg(R.rm,pct(R.rm,2)):'—','key');
+  row('Margen bruto',R=>R.ok?sg(R.mb,mill(R.mb)):'—',{v:R=>R.mb,hint:'Ingresos menos costos'});
+  row('Ganancia real',R=>R.ok?sg(R.gr,mill(R.gr)):'—',{v:R=>R.gr,key:1,hint:'Margen menos el costo de la plata'});
+  row('Ganancia por cabeza',R=>R.ok&&R.n>0?money(R.gr/R.n):'—',{v:R=>R.n>0?R.gr/R.n:NaN});
+  row('Rentabilidad sobre lo invertido',R=>R.ok?sg(R.rent,pct(R.rent)):'—',{v:R=>R.rent});
+  row('Rentabilidad por mes',R=>R.ok?sg(R.rm,pct(R.rm,2)):'—',{v:R=>R.rm,key:1,hint:'La que sirve para comparar negocios de distinta duración'});
   t.innerHTML=h+'</tbody>';
   paintCmpVisual(rows,best);
   t.querySelectorAll('button.lnk').forEach(b=>b.addEventListener('click',()=>{switchTo(b.dataset.id); setView('neg');}));
