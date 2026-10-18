@@ -343,6 +343,20 @@ table.sens .lvl{display:block;font-size:.72rem;color:var(--muted);font-weight:50
 #sens table.sens th.corner,#sens table.sens tbody th{text-align:left!important;white-space:normal}
 #sens table.sens th.corner{width:22%!important}
 #printHead{display:none}
+.sanrow td{padding-top:4px!important;padding-right:0!important}
+.sanplan{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.sanplan[hidden]{display:none}
+.sanplan .sp-h,.sanplan .sp-r{display:grid;grid-template-columns:minmax(0,1fr) 3rem 5.4rem 5.6rem;gap:6px;align-items:center;font-size:.84rem}
+.sanplan .sp-r>span:first-child{overflow-wrap:anywhere;line-height:1.25}
+.board td .seg{white-space:nowrap}
+.board td .seg button{font-size:.85rem;padding:5px 10px}
+.sanplan .sp-h{font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.sanplan .sp-h span:not(:first-child),.sanplan .sp-r span.t{text-align:right}
+.sanplan input{font:inherit;font-size:.85rem;width:100%;box-sizing:border-box;text-align:right;padding:3px 6px;border-radius:5px;border:1px solid color-mix(in srgb,var(--input-line) 70%,transparent);background:var(--input);color:var(--input-ink)}
+.sanplan .sp-r span.t{font-variant-numeric:tabular-nums;font-weight:600}
+.sanplan .sp-tot{display:flex;justify-content:space-between;border-top:1.5px solid var(--ink);padding-top:6px;font-weight:700;font-size:.9rem}
+.sanplan .sp-note{font-size:.75rem;color:var(--muted)}
+
 /* ---- flujo de fondos ---- */
 .flu-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .flu-kpi{background:color-mix(in srgb,var(--hembra) 6%,var(--surface));border:1px solid color-mix(in srgb,var(--hembra) 16%,transparent);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:3px}
@@ -666,6 +680,8 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
           <td><span class="field"><span class="u">$</span><input class="in" id="pCkg" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
       <tr><td><span class="lbl">Precio de compra por cabeza</span><span class="hint">Cargá el que uses; el otro se calcula con el peso</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="pCcab" inputmode="decimal"><span class="u">/cab</span></span></td></tr>
+      <tr><td><span class="lbl">Desbaste en la compra</span><span class="hint">Se descuenta del peso para pagar. Remate feria: 0–3 %; compra directa pesando en el campo: 3–8 %</span></td>
+          <td><span class="field"><input class="in s" id="dC" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-dC"></span></td></tr>
       <tr><td><span class="lbl">Comisión de compra</span></td>
           <td><span class="field"><input class="in s" id="cc" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-cc"></span></td></tr>
     </tbody>
@@ -694,6 +710,12 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
           <td><span class="field"><input class="in s" id="mesesF" inputmode="decimal"><span class="u">meses</span></span></td></tr>
       <tr><td><span class="lbl" id="l-gdp">Aumento diario de peso</span><span class="hint" id="h-gdp">A campo: terneros 0,6–0,8 · terneras 0,4–0,55 · vacas casi nada</span></td>
           <td><span class="field"><input class="in s" id="gdp" inputmode="decimal"><span class="u">kg/día</span></span><span class="eq" id="e-gdp"></span></td></tr>
+      <tr data-sis="campo mix"><td><span class="lbl">Aumento diario</span><span class="hint">Por estación: el pasto crece poco en invierno y mucho en primavera</span></td>
+          <td><div class="seg" role="group" aria-label="Cómo cargar el aumento diario"><button type="button" id="es-par" aria-pressed="true">Parejo</button><button type="button" id="es-est" aria-pressed="false">Por estación</button></div></td></tr>
+      <tr data-sis="campo mix" data-est="on"><td><span class="lbl">Verano (dic–feb)</span></td><td><span class="field"><input class="in s" id="gdpVer" inputmode="decimal"><span class="u">kg/día</span></span></td></tr>
+      <tr data-sis="campo mix" data-est="on"><td><span class="lbl">Otoño (mar–may)</span></td><td><span class="field"><input class="in s" id="gdpOto" inputmode="decimal"><span class="u">kg/día</span></span></td></tr>
+      <tr data-sis="campo mix" data-est="on"><td><span class="lbl">Invierno (jun–ago)</span></td><td><span class="field"><input class="in s" id="gdpInv" inputmode="decimal"><span class="u">kg/día</span></span></td></tr>
+      <tr data-sis="campo mix" data-est="on"><td><span class="lbl">Primavera (sep–nov)</span></td><td><span class="field"><input class="in s" id="gdpPri" inputmode="decimal"><span class="u">kg/día</span></span><span class="eq" id="e-est"></span></td></tr>
       <tr data-sis="mix"><td><span class="lbl">Aumento diario en el corral</span><span class="hint">Terminación a corral: 1,2–1,4 kg/día</span></td>
           <td><span class="field"><input class="in s" id="gdpF" inputmode="decimal"><span class="u">kg/día</span></span></td></tr>
       <tr><td><span class="lbl">Peso final por cabeza</span></td>
@@ -722,6 +744,8 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
           <td><span class="field"><span class="u">$</span><input class="in" id="pVkg" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
       <tr data-show="kilo"><td><span class="lbl">Precio de venta por cabeza</span><span class="hint">Cargá el que uses; el otro se calcula con el peso final</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="pVcab" inputmode="decimal"><span class="u">/cab</span></span></td></tr>
+      <tr><td><span class="lbl">Desbaste en la venta</span><span class="hint">Se descuenta del peso al vender por kilo. Remate feria: 0–3 %; a frigorífico pesando en el campo: 5–8 %</span></td>
+          <td><span class="field"><input class="in s" id="dV" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-dV"></span></td></tr>
       <tr class="sub" data-show="prenada"><td colspan="2">Servicio y preñez</td></tr>
       <tr data-show="prenada"><td><span class="lbl">Meses de servicio hasta el tacto</span><span class="hint">Están dentro de los meses en el campo</span></td>
           <td><span class="field"><input class="in s" id="ms" inputmode="decimal"><span class="u">meses</span></span></td></tr>
@@ -773,7 +797,7 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
       <tr><td><span class="lbl">Flete de entrada</span><span class="hint">Sugerido: ~$1,2 M por jaula a ~300 km, repartido entre las cabezas</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="fl" inputmode="decimal"></span><span class="eq" id="e-fl"></span></td></tr>
       <tr class="sub"><td colspan="2" id="c-sub-campo">En el campo</td></tr>
-      <tr data-sis="campo mix"><td><span class="lbl">Alimentación por kilo producido a campo</span><span class="hint">Pasto + verdeo + suplemento. Referencia: $1.400–2.000/kg</span></td>
+      <tr data-sis="campo mix"><td><span class="lbl">Alimentación por kilo producido a campo</span><span class="hint">Pasto y verdeos (el suplemento va aparte). Referencia: $1.400–2.000/kg</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="alKg" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
       <tr data-sis="campo mix"><td><span class="lbl">Alimentación por cabeza y por mes a campo</span><span class="hint">Para hacienda que no engorda (vacas) o pastaje</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="alMes" inputmode="decimal"><span class="u">/mes</span></span></td></tr>
@@ -783,9 +807,17 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
           <td><span class="field"><span class="u">$</span><input class="in" id="pRac" inputmode="decimal"><span class="u">/kg</span></span><span class="eq" id="e-pRac"></span></td></tr>
       <tr data-sis="feed mix"><td><span class="lbl">Gastos de corral por cabeza y por día</span><span class="hint">Personal, sanidad, mixer, estructura. Si es hotelería, lo que te cobran aparte del alimento</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="diaF" inputmode="decimal"><span class="u">/día</span></span></td></tr>
+      <tr data-sis="campo mix"><td><span class="lbl">Suplemento invernal</span><span class="hint">Grano, silo o rollo para cubrir el bache de invierno</span></td>
+          <td><span class="field"><input class="in s" id="supKg" inputmode="decimal"><span class="u">kg/día</span></span></td></tr>
+      <tr data-sis="campo mix"><td><span class="lbl">Días de suplemento</span></td>
+          <td><span class="field"><input class="in s" id="supDias" inputmode="decimal"><span class="u">días</span></span></td></tr>
+      <tr data-sis="campo mix"><td><span class="lbl">Precio del suplemento</span><span class="hint">Maíz ~$296/kg (De Campo a Campo, sem. 39)</span></td>
+          <td><span class="field"><span class="u">$</span><input class="in" id="supPrecio" inputmode="decimal"><span class="u">/kg</span></span><span class="eq" id="e-sup"></span></td></tr>
       <tr><td><span class="lbl">Alimentación total</span></td><td class="calc" id="o-alim">—</td></tr>
       <tr><td><span class="lbl">Sanidad</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="san" inputmode="decimal"></span><span class="eq" id="e-san"></span></td></tr>
+      <tr class="sanrow"><td colspan="2"><button type="button" class="linkbtn" id="sanTog">Detallar plan sanitario</button>
+        <div class="sanplan" id="sanPlan" hidden></div></td></tr>
       <tr data-show="prenada"><td><span class="lbl">Servicio (IATF o toros)</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="serv" inputmode="decimal"></span><span class="eq" id="e-serv"></span></td></tr>
       <tr data-show="prenada"><td><span class="lbl">Tacto</span></td>
@@ -1056,7 +1088,8 @@ const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:nu
   tasa:null,inf:null,vista:'cab',fijo:'gdp',
   tipo:'recria',sistema:'campo',mesesF:null,gdpF:null,conv:null,pRac:null,diaF:null,
   vacas:null,toros:null,ha:null,carga:null,valVaca:null,mortV:null,destC:null,pdesC:null,machos:null,desc:null,pVd:null,
-  pTro:null,pTra:null,pVdKg:null,sanV:null,alV:null,mobV:null,ctoro:null,otrosV:null,arrHa:null};
+  pTro:null,pTra:null,pVdKg:null,sanV:null,alV:null,mobV:null,ctoro:null,otrosV:null,arrHa:null,
+  estac:false,gdpVer:null,gdpOto:null,gdpInv:null,gdpPri:null,supKg:null,supDias:null,supPrecio:null,dC:null,dV:null,sanDet:false,sanPlan:null};
 const TIPOS={cria:'Cría',recria:'Recría',invernada:'Invernada / engorde'};
 const SISTEMAS={campo:'a campo',feed:'a corral (feedlot)',mix:'mix campo + corral'};
 // Valores sugeridos para un rodeo de cría (precios De Campo a Campo, sep-2026; costos estimados)
@@ -1070,7 +1103,7 @@ const REF_SIS={
 };
 const inferTipo=c=>['novillito','novillo','vaca','vacaPren','vacaCria'].includes(c)?'invernada':'recria';
 // Valores sugeridos para cualquier negocio nuevo (los podés cambiar)
-const BASE={cab:80,mort:1,cc:3,fl:15000,cv:4,gv:12000,tasa:6,inf:1.7,varVenta:0,alKg:1500,alMes:0,san:30000,mob:30000,otros:0};
+const BASE={cab:80,mort:1,cc:3,fl:15000,cv:4,gv:12000,tasa:6,inf:1.7,varVenta:0,alKg:1500,alMes:0,san:30000,mob:30000,otros:0,supKg:1.5,supDias:90,supPrecio:296,dC:2,dV:3};
 const STRUCT=['precioPor','ventaPor','modoVenta','conCria'];
 // Valores sugeridos por categoría. Precios: De Campo a Campo (informes semanales AZ Group, sep-2026).
 // Flete estimado ~$1,2 M por jaula a ~300 km, repartido entre las cabezas que entran.
@@ -1108,10 +1141,17 @@ function parse(s){ s=String(s).trim().replace(/\s/g,'').replace(/\$/g,'').replac
 
 // ================= modelo =================
 // Tiempo y kilos según el sistema: a campo, a corral o mix (campo y después corral)
+// aumento diario por estación: verano dic–feb, otoño mar–may, invierno jun–ago, primavera sep–nov
+const EST_K=['gdpVer','gdpVer','gdpOto','gdpOto','gdpOto','gdpInv','gdpInv','gdpInv','gdpPri','gdpPri','gdpPri','gdpVer'];
+const estOn=s=>!!s.estac&&(s.sistema||'campo')!=='feed';
+function gdpMes(s,t){ // aumento del mes t (desde la compra) a campo
+  if(!estOn(s)) return isNum(s.gdp)?s.gdp:0;
+  const m=((isNum(s.mesCompra)?s.mesCompra:1)-1+Math.floor(t))%12, v=s[EST_K[m]]; return isNum(v)?v:0; }
+function gdpProm(s,mC){ if(!(mC>0)) return isNum(s.gdp)?s.gdp:0; let a=0; for(let t=0;t<mC;t++){ const len=Math.min(1,mC-t); a+=gdpMes(s,t)*len; } return a/mC; }
 function tramos(s){
   const Z=k=>isNum(s[k])?s[k]:0, sis=s.sistema||'campo', M=Z('meses');
   const mF=sis==='feed'?M:sis==='mix'?Math.min(Z('mesesF'),M):0, mC=M-mF;
-  const gC=sis==='feed'?0:Z('gdp'), gF=sis==='feed'?Z('gdp'):sis==='mix'?Z('gdpF'):0;
+  const gC=sis==='feed'?0:(estOn(s)?gdpProm(s,mC):Z('gdp')), gF=sis==='feed'?Z('gdp'):sis==='mix'?Z('gdpF'):0;
   return {sis,mC,mF,gC,gF,kC:gC*mC*D,kF:gF*mF*D,pf:Z('pc')+(gC*mC+gF*mF)*D};
 }
 const TOROS_REF=100/28; // 1 toro cada 28 vacas, a campo
@@ -1144,29 +1184,31 @@ function model(s){
   if(s.tipo==='cria') return modelCria(s);
   const N=k=>isNum(s[k])?s[k]:NaN, Z=k=>isNum(s[k])?s[k]:0;
   const r={}, T=tramos(s); r.T=T;
-  r.n=N('cab'); r.pc=Z('pc'); r.meses=N('meses'); r.gdp=Z('gdp');
+  r.n=N('cab'); r.pc=Z('pc'); r.meses=N('meses'); r.gdp=estOn(s)?T.gC:Z('gdp');
+  const dC=Z('dC')/100, dV=Z('dV')/100; r.dC=dC; r.dV=dV;
   r.pf=T.pf;
-  r.compraCab=s.precioPor==='cab'?N('pCcab'):(isNum(s.pc)?s.pc*N('pCkg'):NaN);
+  r.compraCab=s.precioPor==='cab'?N('pCcab'):(isNum(s.pc)?s.pc*(1-dC)*N('pCkg'):NaN);
   r.vivF=1-Z('mort')/100; r.viv=r.n*r.vivF;
   const v=1+Z('varVenta')/100;
   r.pren=s.modoVenta==='prenada'; r.vcc=s.modoVenta==='vcc';
   if(r.vcc){
     r.pr=Z('pcria')/100; r.nPren=r.viv*r.pr; r.nVac=r.viv*(1-r.pr);
-    r.ingPren=r.nPren*N('pVcc')*v; r.ingVac=r.nVac*r.pf*Z('pVac')*v; r.ingMain=r.ingPren+r.ingVac;
+    r.ingPren=r.nPren*N('pVcc')*v; r.ingVac=r.nVac*r.pf*(1-dV)*Z('pVac')*v; r.ingMain=r.ingPren+r.ingVac;
   } else if(r.pren){
     r.pr=Z('pr')/100; r.nPren=r.viv*r.pr; r.nVac=r.viv*(1-r.pr);
-    r.ingPren=r.nPren*N('pPren')*v; r.ingVac=r.nVac*r.pf*Z('pVac')*v; r.ingMain=r.ingPren+r.ingVac;
+    r.ingPren=r.nPren*N('pPren')*v; r.ingVac=r.nVac*r.pf*(1-dV)*Z('pVac')*v; r.ingMain=r.ingPren+r.ingVac;
   } else {
-    r.ventaCab=s.ventaPor==='cab'?N('pVcab'):r.pf*N('pVkg');
+    r.ventaCab=s.ventaPor==='cab'?N('pVcab'):r.pf*(1-dV)*N('pVkg');
     r.ingMain=r.viv*r.ventaCab*v;
   }
   r.cria=!!s.conCria&&!r.vcc;
   r.nTer=r.cria?r.viv*Z('dest')/100:0;
-  r.ingCria=r.cria?r.nTer*Z('pdes')*Z('pTer')*v:0;
+  r.ingCria=r.cria?r.nTer*Z('pdes')*(1-dV)*Z('pTer')*v:0;
   r.ing=r.ingMain+r.ingCria;
   r.compra=r.n*r.compraCab; r.cc=r.compra*Z('cc')/100; r.fl=r.n*Z('fl'); r.cpra=r.compra+r.cc+r.fl;
   r.kp=Math.max(0,r.pf-r.pc);
-  r.alim=r.n*(T.kC*Z('alKg')+Z('alMes')*T.mC+T.kF*Z('conv')*Z('pRac')+Z('diaF')*T.mF*D);
+  r.sup=(s.sistema||'campo')==='feed'?0:Z('supKg')*Z('supDias')*Z('supPrecio');
+  r.alim=r.n*(T.kC*Z('alKg')+Z('alMes')*T.mC+T.kF*Z('conv')*Z('pRac')+Z('diaF')*T.mF*D+r.sup);
   r.rec=r.alim+r.n*(Z('san')+(r.pren?Z('serv')+Z('tacto'):0)+Z('mob')+Z('otros'));
   r.cvp=Z('cv')/100; r.cv=r.ing*r.cvp; r.gv=r.viv*Z('gv'); r.gven=r.cv+r.gv;
   r.ct=r.cpra+r.rec+r.gven; r.mb=r.ing-r.ct; r.rent=r.mb/r.ct;
@@ -1175,11 +1217,11 @@ function model(s){
   r.gr=r.mb-r.cp; r.rm=(r.gr/r.ct)/m;
   r.nom=r.ing*Math.pow(1+inf,m)-r.cpra-r.rec*Math.pow(1+inf,m/2)-r.gven*Math.pow(1+inf,m);
   const need=(r.cpra+r.rec+r.gv)/(1-r.cvp), needMain=(need-r.ingCria)/v;
-  if(r.pren||r.vcc){ r.be=(needMain-r.nVac*r.pf*Z('pVac'))/r.nPren; r.beU=r.vcc?'/cab con cría':'/cab preñada'; }
+  if(r.pren||r.vcc){ r.be=(needMain-r.nVac*r.pf*(1-dV)*Z('pVac'))/r.nPren; r.beU=r.vcc?'/cab con cría':'/cab preñada'; }
   else if(s.ventaPor==='cab'){ r.be=needMain/r.viv; r.beU='/cab'; }
-  else { r.be=needMain/(r.viv*r.pf); r.beU='/kg'; }
+  else { r.be=needMain/(r.viv*r.pf*(1-dV)); r.beU='/kg'; }
   r.pmaxCab=(r.ing*(1-r.cvp)-r.gv-r.fl-r.rec)/(r.n*(1+Z('cc')/100));
-  r.pmaxKg=r.pmaxCab/r.pc;
+  r.pmaxKg=r.pmaxCab/(r.pc*(1-dC));
   r.pe=r.pren&&isNum(s.ms)?r.pc+r.gdp*Math.max(0,(isNum(r.meses)?r.meses:0)-s.ms)*D:NaN;
   r.ok=isNum(r.ing)&&r.ing>0&&isNum(r.ct)&&isNum(r.meses)&&r.meses>0;
   return r;
@@ -1259,7 +1301,7 @@ const L={};
 const prim=(id,d=0)=>{L[id]={g:()=>st[id],s:v=>{st[id]=v},d,clear:()=>{st[id]=null}};};
 ['cab','pc','pr','entoreObj','dest','pdes','pTer','alKg','alMes','pPren','pVac','pcria','pVcc'].forEach(k=>prim(k,0));
 ['meses','mort','cc','cv','varVenta','tasa','inf','ms'].forEach(k=>prim(k,1));
-prim('gdp',2);
+prim('gdp',2); ['gdpVer','gdpOto','gdpInv','gdpPri','supKg'].forEach(k=>prim(k,2)); ['supDias','supPrecio'].forEach(k=>prim(k,0)); ['dC','dV'].forEach(k=>prim(k,1));
 ['vacas','toros','valVaca','pdesC','pVd','pTro','pTra','pVdKg','sanV','alV','mobV','ctoro','otrosV','arrHa','pRac','diaF'].forEach(k=>prim(k,0));
 ['mortV','destC','machos','desc','mesesF','conv'].forEach(k=>prim(k,1));
 prim('gdpF',2);
@@ -1270,31 +1312,33 @@ L.ha={g:()=>HA(st),s:v=>{ if(st.vacas>0&&v>0){ st.carga=st.vacas/v; } else st.ha
 L.nToros={g:()=>{ const t=isNum(st.toros)?st.toros:TOROS_REF; return st.vacas>0&&t>0?Math.max(1,Math.round(st.vacas*t/100)):0; },dep:['vacas'],s:v=>{ if(st.vacas>0) st.toros=Math.max(0,v)/st.vacas*100; },clear:()=>{st.toros=null},d:0};
 alias('cvC','cv',1); alias('gvC','gv',0); alias('varC','varVenta',1); alias('tasaC','tasa',1);
 const pfOf=()=>tramos(st).pf;
+function setGdpProm(v){ if(estOn(st)){ const T=tramos(st), a=T.gC; ['gdpVer','gdpOto','gdpInv','gdpPri'].forEach(k=>{ st[k]=a>0&&isNum(st[k])?st[k]*v/a:v; }); } st.gdp=v; }
+L.gdp={g:()=>estOn(st)?tramos(st).gC:st.gdp,s:v=>setGdpProm(v),clear:()=>{st.gdp=null},d:2};
 const fac=()=>st.vista==='jaula'?(st.cab||0):1;
 // cabezas ↔ kilos
 L.kgc={g:()=>st.cab*st.pc,dep:['cab','pc'],s:v=>{if(st.pc>0) st.cab=Math.max(1,Math.round(v/st.pc));},d:0};
 // precio de compra por kilo ↔ por cabeza
-L.pCkg={g:()=>st.precioPor==='kg'?st.pCkg:(st.pc>0&&isNum(st.pCcab)?st.pCcab/st.pc:null),s:v=>{st.precioPor='kg';st.pCkg=v;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
-L.pCcab={g:()=>st.precioPor==='cab'?st.pCcab:(isNum(st.pCkg)&&isNum(st.pc)?st.pCkg*st.pc:null),s:v=>{st.precioPor='cab';st.pCcab=v;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
+L.pCkg={g:()=>st.precioPor==='kg'?st.pCkg:(st.pc>0&&isNum(st.pCcab)?st.pCcab/(st.pc*(1-(st.dC||0)/100)):null),s:v=>{st.precioPor='kg';st.pCkg=v;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
+L.pCcab={g:()=>st.precioPor==='cab'?st.pCcab:(isNum(st.pCkg)&&isNum(st.pc)?st.pCkg*st.pc*(1-(st.dC||0)/100):null),s:v=>{st.precioPor='cab';st.pCcab=v;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
 // meses y peso de compra respetan "mantener fijo: peso final"
 for(const k of ['meses','pc']){ const d=k==='meses'?1:0;
   L[k]={g:()=>st[k],d,clear:()=>{st[k]=null},s:v=>{const pf=pfOf(); st[k]=v; if(st.fijo==='peso'&&st.meses>0&&isNum(st.gdp)) L.pf.s(pf);}}; }
 // peso final ↔ aumento diario
 L.pf={g:pfOf,dep:['pc','meses'],s:v=>{ const T=tramos(st);
-  if(T.sis==='mix'){ if(T.mC>0) st.gdp=Math.max(0,(v-(st.pc||0)-T.kF)/(T.mC*D)); else if(T.mF>0) st.gdpF=Math.max(0,(v-(st.pc||0))/(T.mF*D)); }
-  else if(st.meses>0) st.gdp=Math.max(0,(v-(st.pc||0))/(st.meses*D)); },d:0};
+  if(T.sis==='mix'){ if(T.mC>0) setGdpProm(Math.max(0,(v-(st.pc||0)-T.kF)/(T.mC*D))); else if(T.mF>0) st.gdpF=Math.max(0,(v-(st.pc||0))/(T.mF*D)); }
+  else if(st.meses>0){ const g=Math.max(0,(v-(st.pc||0))/(st.meses*D)); if(T.sis==='feed') st.gdp=g; else setGdpProm(g); } },d:0};
 // precio de venta por kilo ↔ por cabeza
-L.pVkg={g:()=>st.ventaPor==='kg'?st.pVkg:(isNum(st.pVcab)&&pfOf()>0?st.pVcab/pfOf():null),s:v=>{st.ventaPor='kg';st.pVkg=v;},clear:()=>{st.pVkg=null;st.pVcab=null;},d:0};
-L.pVcab={g:()=>st.ventaPor==='cab'?st.pVcab:(isNum(st.pVkg)&&pfOf()>0?st.pVkg*pfOf():null),s:v=>{st.ventaPor='cab';st.pVcab=v;},clear:()=>{st.pVkg=null;st.pVcab=null;},d:0};
+L.pVkg={g:()=>st.ventaPor==='kg'?st.pVkg:(isNum(st.pVcab)&&pfOf()>0?st.pVcab/(pfOf()*(1-(st.dV||0)/100)):null),s:v=>{st.ventaPor='kg';st.pVkg=v;},clear:()=>{st.pVkg=null;st.pVcab=null;},d:0};
+L.pVcab={g:()=>st.ventaPor==='cab'?st.pVcab:(isNum(st.pVkg)&&pfOf()>0?st.pVkg*pfOf()*(1-(st.dV||0)/100):null),s:v=>{st.ventaPor='cab';st.pVcab=v;},clear:()=>{st.pVkg=null;st.pVcab=null;},d:0};
 L.pPrenKg={g:()=>isNum(st.pPren)&&pfOf()>0?st.pPren/pfOf():null,s:v=>{if(pfOf()>0) st.pPren=v*pfOf();},clear:()=>{st.pPren=null},d:0};
 // costos: por cabeza o por jaula
 ['fl','san','serv','tacto','mob','otros'].forEach(k=>{L[k]={g:()=>isNum(st[k])?st[k]*fac():null,s:v=>{const f=fac(); if(f>0) st[k]=v/f;},clear:()=>{st[k]=null},d:0};});
 L.gv={g:()=>isNum(st.gv)?st.gv*(st.vista==='jaula'?(st.cab||0)*(1-(st.mort||0)/100):1):null,
   s:v=>{const f=st.vista==='jaula'?(st.cab||0)*(1-(st.mort||0)/100):1; if(f>0) st.gv=v/f;},clear:()=>{st.gv=null},d:0};
-L.compraT={g:()=>{const c=st.precioPor==='cab'?st.pCcab:(isNum(st.pCkg)&&isNum(st.pc)?st.pCkg*st.pc:null); return isNum(c)?c*fac():null;},
+L.compraT={g:()=>{const c=st.precioPor==='cab'?st.pCcab:(isNum(st.pCkg)&&isNum(st.pc)?st.pCkg*st.pc*(1-(st.dC||0)/100):null); return isNum(c)?c*fac():null;},
   s:v=>{const f=fac(); if(!(f>0))return; const c=v/f; if(st.precioPor==='cab'||!(st.pc>0)){st.precioPor='cab';st.pCcab=c;} else st.pCkg=c/st.pc;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
 
-const KEYS={cvC:['cv'],gvC:['gv'],varC:['varVenta'],tasaC:['tasa'],pCkg:['pCkg','pCcab'],pCcab:['pCkg','pCcab'],compraT:['pCkg','pCcab'],pVkg:['pVkg','pVcab'],pVcab:['pVkg','pVcab'],pf:['gdp'],kgc:['cab'],nToros:['toros'],ha:['carga'],pPrenKg:['pPren']};
+const KEYS={gdp:['gdp','gdpVer','gdpOto','gdpInv','gdpPri'],cvC:['cv'],gvC:['gv'],varC:['varVenta'],tasaC:['tasa'],pCkg:['pCkg','pCcab'],pCcab:['pCkg','pCcab'],compraT:['pCkg','pCcab'],pVkg:['pVkg','pVcab'],pVcab:['pVkg','pVcab'],pf:['gdp'],kgc:['cab'],nToros:['toros'],ha:['carga'],pPrenKg:['pPren']};
 const autoSet=()=>new Set(st.auto||[]);
 function unAuto(keys){ if(!st.auto) return; const a=autoSet(); keys.forEach(k=>a.delete(k)); st.auto=[...a]; }
 function fmtIn(id){ if((L[id].dep||[]).some(k=>!isNum(st[k]))) return ''; const v=L[id].g(); return isNum(v)?nf(v,L[id].d):''; }
@@ -1375,11 +1419,14 @@ function applyUI(){
   $('tipoNote').textContent= esCria ? 'Cría: tenés un rodeo de vacas propio y vendés los terneros al destete y las vacas de descarte. El resultado es por año.'
     : st.tipo==='invernada' ? 'Invernada / engorde: comprás hacienda recriada o flaca y la terminás para faena, '+SISTEMAS[sis]+'.'
     : 'Recría: comprás terneros destetados y los hacés crecer hasta novillito o vaquillona, '+SISTEMAS[sis]+'.';
-  document.querySelectorAll('[data-show],[data-sis]').forEach(el=>{
+  document.querySelectorAll('[data-show],[data-sis],[data-est]').forEach(el=>{
     const w=el.dataset.show, m=st.modoVenta||'kilo';
     const hShow= !w?false: w==='cria'?(!st.conCria||m==='vcc'): w==='nocc'?m==='vcc': !w.split(' ').includes(m);
     const hSis= el.dataset.sis? !el.dataset.sis.split(' ').includes(sis) : false;
-    el.hidden=hShow||hSis;});
+    const hEst= el.dataset.est==='on'? !st.estac : false;
+    el.hidden=hShow||hSis||hEst;});
+  pr('es-par',!st.estac); pr('es-est',!!st.estac);
+  paintSanPlan();
   $('l-gdp').textContent= sis==='feed'?'Aumento diario en el corral': sis==='mix'?'Aumento diario a campo':'Aumento diario de peso';
   $('h-gdp').textContent= sis==='feed'?'Recría a corral: 0,8–1,0 · terminación: 1,2–1,4':'A campo: terneros 0,6–0,8 · terneras 0,4–0,55 · vacas casi nada';
   $('c-sub-campo').textContent= sis==='campo'?'En el campo': sis==='feed'?'En el corral':'A campo y en el corral';
@@ -1397,6 +1444,13 @@ function calc(except){
   refresh(except);
   const R=model(st), f=st.vista==='jaula'?R.n:1, ok=R.ok;
   try{ renderSens(); }catch(e){}
+  if(st.tipo!=='cria'){
+    const n=isNum(st.cab)?st.cab:0, sup=(st.supKg||0)*(st.supDias||0)*(st.supPrecio||0);
+    setT('e-sup',sup>0?'= '+money(sup)+' por cabeza · '+mill(sup*n)+' en total':'');
+    setT('e-dC',st.dC>0&&isNum(st.pc)?'Se pagan '+nf(st.pc*(1-st.dC/100),0)+' kg por cabeza':'');
+    setT('e-dV',st.dV>0&&R.pf>0?'Se cobran '+nf(R.pf*(1-st.dV/100),0)+' kg por cabeza':'');
+    setT('e-est',estOn(st)&&R.meses>0?'Promedio del período: '+nf(R.T.gC,2)+' kg/día':'');
+  }
   try{ paintMini(R); }catch(e){}
   try{ renderFlujo(R); }catch(e){ console.error(e); }
   setT('e-cc',isNum(R.cc)&&R.cc>0?'= '+money(R.cc/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
@@ -1687,9 +1741,13 @@ function flujo(s,R){
   for(let k=1;k<=Mc;k++){
     const len=Math.min(1,M-(k-1)), t0=k-1, inC=t0<T.mC;
     const camp=inC?Math.min(len,T.mC-t0):0, feed=len-camp;
-    let al=n*(T.gC*D*camp*Z('alKg')+Z('alMes')*camp)+n*(T.gF*D*feed*Z('conv')*Z('pRac')+Z('diaF')*D*feed);
+    const gm=estOn(s)?gdpMes(s,t0):T.gC;
+    let al=n*(gm*D*camp*Z('alKg')+Z('alMes')*camp)+n*(T.gF*D*feed*Z('conv')*Z('pRac')+Z('diaF')*D*feed);
     add(k,-al,null); add(k,-n*(Z('mob')+Z('otros'))*len/M,null);
   }
+  if(R.sup>0){ // suplemento: en los meses de invierno (jun–ago) que caen en el campo; si no hay, repartido
+    const m0=(isNum(s.mesCompra)?s.mesCompra:1)-1, inv=[]; for(let k=1;k<=Mc;k++){ const mm=(m0+k-1)%12; if(k-1<T.mC&&mm>=5&&mm<=7) inv.push(k); }
+    const ks=inv.length?inv:Array.from({length:Math.max(1,Math.ceil(T.mC))},(_,i)=>i+1); ks.forEach((k,i)=>add(k,-n*R.sup/ks.length,i===0?'Suplemento invernal':null)); }
   if(R.pren){ const ks=Math.max(1,Math.ceil(M-Z('ms'))); add(Math.min(ks,Mc),-n*Z('serv'),'Servicio'); add(Mc,-n*Z('tacto'),'Tacto'); }
   add(Mc,R.ing-R.gven,'Venta (neta de comisión y gastos)');
   const m0=(isNum(s.mesCompra)?s.mesCompra:1)-1;
@@ -1732,6 +1790,36 @@ function renderFlujo(R){
     +F.rows.map((r,i)=>'<tr><td>'+F.labels[i]+(r.det.length?'<small>'+esc(r.det.join(' · '))+'</small>':'')+'</td><td>'+(r.s>0?mill(-r.s):'—')+'</td><td>'+(r.e>0?mill(r.e):'—')+'</td><td class="'+c(net[i])+'">'+mill(net[i])+'</td><td class="'+c(cum[i])+'">'+mill(cum[i])+'</td></tr>').join('')+'</tbody>';
 }
 
+
+// ================= aumento por estación y plan sanitario =================
+const EST_FORMA={gdpVer:1.1,gdpOto:0.85,gdpInv:0.5,gdpPri:1.5};
+$('es-par').addEventListener('click',()=>{ if(!st.estac) return; const T=tramos(st); st.gdp=T.gC; st.estac=false; unAuto(['estac']); applyUI(); save(); });
+$('es-est').addEventListener('click',()=>{ if(st.estac) return; const g=isNum(st.gdp)?st.gdp:0.6, T0=tramos(st);
+  st.estac=true; Object.entries(EST_FORMA).forEach(([k,f])=>{ if(!isNum(st[k])) st[k]=f; });
+  // se ajusta la forma para que el promedio del período sea el aumento que ya tenías: no cambia el peso final
+  const a=tramos(st).gC; if(a>0) ['gdpVer','gdpOto','gdpInv','gdpPri'].forEach(k=>{ st[k]=Math.round(st[k]*g/a*100)/100; });
+  st.gdp=g; applyUI(); save(); });
+const SAN_BASE=[['Aftosa',2,1400],['Clostridiales',2,1200],['Queratoconjuntivitis',1,1500],['Antiparasitario',3,2500],['Vitaminas y minerales',2,1500],['Brucelosis (hembras)',1,1800],['Veterinario',1,10000]];
+const HEMBRAS=['ternera','vaquillona','vaca','vacaPren','vacaCria'];
+function sanTotal(p){ return (p||[]).reduce((a,x)=>a+(isNum(x[1])?x[1]:0)*(isNum(x[2])?x[2]:0),0); }
+function paintSanPlan(){
+  const box=$('sanPlan'), tog=$('sanTog'); if(!box) return;
+  const on=!!st.sanDet&&Array.isArray(st.sanPlan);
+  box.hidden=!on; tog.textContent=on?'Usar un solo número para sanidad':'Detallar plan sanitario';
+  const sanIn=$('san'); if(sanIn) sanIn.readOnly=on;
+  if(!on){ box.innerHTML=''; return; }
+  box.innerHTML='<div class="sp-h"><span>Producto</span><span>Dosis</span><span>$ por dosis</span><span>$ por cab</span></div>'
+    +st.sanPlan.map((x,i)=>'<div class="sp-r"><span>'+esc(x[0])+'</span><input data-i="'+i+'" data-c="1" inputmode="decimal" value="'+(isNum(x[1])?nf(x[1],0):'')+'"><input data-i="'+i+'" data-c="2" inputmode="decimal" value="'+(isNum(x[2])?nf(x[2],0):'')+'"><span class="t">'+money((x[1]||0)*(x[2]||0))+'</span></div>').join('')
+    +'<div class="sp-tot"><span>Sanidad por cabeza</span><span>'+money(sanTotal(st.sanPlan))+'</span></div><span class="sp-note">Clostridiales: mancha, gangrena y enterotoxemia. Vitaminas y minerales: cobre y ADE. Precios estimados por dosis: cargá los de tu veterinaria.</span>';
+}
+$('sanTog').addEventListener('click',()=>{
+  if(st.sanDet){ st.sanDet=false; }
+  else { if(!Array.isArray(st.sanPlan)) st.sanPlan=SAN_BASE.map(x=>[x[0],(x[0].startsWith('Brucelosis')&&!HEMBRAS.includes(st.cat))?0:x[1],x[2]]); st.sanDet=true; st.san=sanTotal(st.sanPlan); unAuto(['san']); }
+  applyUI(); calc(); save(); });
+$('sanPlan').addEventListener('change',e=>{ const t=e.target; if(!t.dataset||t.dataset.i==null) return;
+  const v=parse(t.value), i=+t.dataset.i, c=+t.dataset.c; st.sanPlan=st.sanPlan.map(r=>r.slice()); st.sanPlan[i][c]=isNum(v)?v:0;
+  st.san=sanTotal(st.sanPlan); paintSanPlan(); calc(); save(); });
+
 // ================= sensibilidad =================
 function renderSens(){
   const T=$('sensTbl'); if(!T) return;
@@ -1749,10 +1837,10 @@ function renderSens(){
     corner=(k==='pr'?'Preñez':'Vacas con cría')+' ↓ · Precio de venta →'; sensVar=k==='pr'?'el porcentaje de preñez':'el porcentaje de vacas con cría';
     apply=(r,c)=>({...st,[k]:p0!=null?Math.max(0,Math.min(100,p0+r)):p0,varVenta:(st.varVenta||0)+c});
   } else {
-    const g0=st.gdp;
-    rows=[-20,-10,0,10,20]; rowLbl=x=>(x>0?'+':'')+x+' %<span class="lvl">'+(isNum(g0)?nf(g0*(1+x/100),2)+' kg/día':'')+'</span>';
+    const g0=st.gdp, gp=estOn(st)?tramos(st).gC:g0;
+    rows=[-20,-10,0,10,20]; rowLbl=x=>(x>0?'+':'')+x+' %<span class="lvl">'+(isNum(gp)?nf(gp*(1+x/100),2)+' kg/día':'')+'</span>';
     corner='Aumento diario ↓ · Precio de venta →'; sensVar='el aumento diario de peso';
-    apply=(r,c)=>({...st,gdp:isNum(g0)?g0*(1+r/100):g0,varVenta:(st.varVenta||0)+c});
+    apply=(r,c)=>{ const f=1+r/100, o={...st,gdp:isNum(g0)?g0*f:g0,varVenta:(st.varVenta||0)+c}; ['gdpVer','gdpOto','gdpInv','gdpPri'].forEach(k=>{ if(isNum(o[k])) o[k]*=f; }); return o; };
   }
   const base=model(st);
   if(!base.ok){ T.innerHTML=''; $('sensNote').textContent='Completá los datos del negocio para ver la sensibilidad.'; return; }
@@ -1801,7 +1889,8 @@ const OKK=new Set([...Object.keys(EMPTY),'auto']);
 function cleanSt(s){ const o={}; if(!s||typeof s!=='object') return null; Object.keys(s).forEach(k=>{ if(!OKK.has(k)) return; const v=s[k];
   if(v===null||typeof v==='boolean'||(typeof v==='number'&&isFinite(v))) o[k]=v;
   else if(typeof v==='string') o[k]=v.slice(0,40);
-  else if(k==='auto'&&Array.isArray(v)) o[k]=v.filter(x=>typeof x==='string'&&OKK.has(x)); }); return o; }
+  else if(k==='auto'&&Array.isArray(v)) o[k]=v.filter(x=>typeof x==='string'&&OKK.has(x));
+  else if(k==='sanPlan'&&Array.isArray(v)) o[k]=v.slice(0,20).filter(x=>Array.isArray(x)).map(x=>[String(x[0]).slice(0,60),Number(x[1])||0,Number(x[2])||0]); }); return o; }
 let shAllOn=false;
 function shFill(){ flush(); const list=shAllOn?negs:[cur()]; $('shCode').value=enc({v:1,negs:list.map(n=>({name:n.name,st:n.st}))});
   $('shOne').setAttribute('aria-pressed',String(!shAllOn)); $('shAll').setAttribute('aria-pressed',String(shAllOn)); $('shMsg1').textContent=''; }
@@ -1871,12 +1960,13 @@ $('whoIn').addEventListener('keydown',e=>{ if(e.key==='Enter') setWho(e.target.v
 showWho();
 
 // Nombres y unidades de cada dato, tomados de la página misma.
-const LBL_FIX={toros:'Toros cada 100 vacas',tipo:'Tipo de negocio',sistema:'Sistema',modoVenta:'Forma de venta',precioPor:'Compra por',ventaPor:'Venta por',conCria:'Con cría al pie',inf:'Inflación esperada',name:'Nombre'};
+const LBL_FIX={estac:'Aumento por estación',sanDet:'Plan sanitario detallado',sanPlan:'Plan sanitario',toros:'Toros cada 100 vacas',tipo:'Tipo de negocio',sistema:'Sistema',modoVenta:'Forma de venta',precioPor:'Compra por',ventaPor:'Venta por',conCria:'Con cría al pie',inf:'Inflación esperada',name:'Nombre'};
 const VAL_FIX={cria:'Cría',recria:'Recría',inv:'Invernada',campo:'A campo',feed:'Feedlot',mix:'Mix',kilo:'Por kilo',prenada:'Preñada',vcc:'Vaca con cría al pie',kg:'kilo',cab:'cabeza',jaula:'jaula'};
 const SKIP=new Set(['auto','vista','fijo']);
 function lblOf(k){ if(LBL_FIX[k]) return LBL_FIX[k]; const e=document.getElementById(k); const t=e&&e.closest('tr')&&e.closest('tr').querySelector('.lbl'); return t?t.textContent.trim():k; }
 function valOf(k,v){
   if(v===null||v===undefined||v==='') return '—';
+  if(Array.isArray(v)) return 'total '+money(sanTotal(v))+' por cabeza';
   if(typeof v==='boolean') return v?'Sí':'No';
   const e=document.getElementById(k);
   if(e&&e.tagName==='SELECT'){ const o=[...e.options].find(o=>o.value===String(v)); if(o) return o.textContent.trim(); }
