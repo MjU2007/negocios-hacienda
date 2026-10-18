@@ -434,7 +434,15 @@ table.flu-tbl td small{display:block;color:var(--muted);font-size:.74rem;white-s
 #inicio{display:flex;flex-direction:column;gap:28px}
 #inicio[hidden]{display:none}
 .board[hidden],.secnav[hidden],.refbar[hidden]{display:none!important}
-.ini-actions{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}
+.ini-actions{display:grid;grid-template-columns:1fr;gap:16px}
+.ini-new{display:grid!important;grid-template-columns:auto 1fr;grid-template-areas:'ico t' 'ico p' 'tipos tipos';column-gap:16px;align-items:start}
+.ini-new .ini-ico{grid-area:ico}
+.ini-new h2{grid-area:t}
+.ini-new p{grid-area:p}
+.ini-new .ini-tipos{grid-area:tipos;margin-top:8px}
+.ini-tipo{padding:16px 18px}
+.ini-tipo b{font-size:1.3rem}
+.ini-tipo small{font-size:.86rem}
 .ini-card{display:flex;flex-direction:column;gap:10px;text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 22px 20px;box-shadow:0 1px 2px color-mix(in srgb,var(--sil) 20%,transparent)}
 .ini-card h2{margin:0;font-size:1.35rem}
 .ini-card p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.45}
@@ -463,7 +471,7 @@ table.flu-tbl td small{display:block;color:var(--muted);font-size:.74rem;white-s
 .ini-neg .pos{color:var(--pos)} .ini-neg .neg{color:var(--neg)}
 .ini-neg small.upd{color:var(--muted);font-size:.78rem}
 #inicio .steps{grid-template-columns:repeat(4,minmax(0,1fr))}
-@media (max-width:980px){.ini-actions{grid-template-columns:1fr 1fr}.ini-new{grid-column:1/-1}}
+
 @media (max-width:600px){.ini-actions{grid-template-columns:1fr}.ini-tipos{grid-template-columns:1fr}#inicio .steps{grid-template-columns:1fr}}
 
 /* ---- comparar ---- */
@@ -1068,18 +1076,6 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
         <button type="button" class="ini-tipo" data-new="invernada"><b>Invernada</b><small>Terminación para faena</small></button>
       </div>
     </article>
-    <button type="button" class="ini-card ini-link" data-go="cmp">
-      <span class="ini-ico" aria-hidden="true">⇄</span>
-      <h2>Comparar negocios</h2>
-      <p>Poné lado a lado los negocios que armaste y mirá cuál rinde más.</p>
-      <span class="ini-go">Ir a comparar →</span>
-    </button>
-    <button type="button" class="ini-card ini-link" data-go="his">
-      <span class="ini-ico" aria-hidden="true">↺</span>
-      <h2>Historial de cambios</h2>
-      <p>Quién cambió qué y cuándo, con versiones guardadas para volver atrás.</p>
-      <span class="ini-go">Ver historial →</span>
-    </button>
   </div>
   <div class="ini-sec">
     <div class="ini-head"><h2>Tus negocios</h2><span class="note" id="iniCount"></span></div>
