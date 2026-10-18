@@ -596,6 +596,35 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
 .calc{font-weight:600}
 .eq{display:block;font-size:.8rem;color:var(--muted);font-weight:400;margin-top:2px}
 @media (max-width:480px){input.in{width:6.3em} input.in.s{width:4.2em} th,td{padding:7px 8px} td:first-child{min-width:120px}}
+
+/* ---- estilo cálido (opción 3) ---- */
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#F6EFE1;--surface:#FFFCF6;--line:#E3D6BC;--chip:#F0E5CF}}
+:root[data-theme="light"]{--bg:#F6EFE1;--surface:#FFFCF6;--line:#E3D6BC;--chip:#F0E5CF}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .wrap{background:linear-gradient(180deg,#F8F1E3,#F3E9D5)!important}
+  :root:not([data-theme="dark"]) .board td .field{background:#FFF1C9!important;border-color:#D9A63A!important}
+  :root:not([data-theme="dark"]) table.cmp tr.grp td{color:#7A5A10!important}
+  :root:not([data-theme="dark"]) .viewtabs{background:#FFF8EA;border-color:#E3D6BC}}
+.viewtabs button[aria-selected="true"]{background:linear-gradient(90deg,var(--tc,#2F7A3B),color-mix(in srgb,var(--tc,#2F7A3B) 70%,#C08A1E))}
+.board>section:not(#veredicto),.ini-card,.ini-neg,.cmp-card,.cmp-chart,.his-wrap,.negbar,.refbar,.pick,.steps li{border:1.5px solid color-mix(in srgb,var(--tc) 45%,var(--line))!important;background:var(--surface)!important}
+.ini-neg.t-cria,.cmp-card.t-cria{border-top:4px solid var(--c-cria)!important}
+.ini-neg.t-recria,.cmp-card.t-recria{border-top:4px solid var(--c-recria)!important}
+.ini-neg.t-inv,.cmp-card.t-inv{border-top:4px solid var(--c-inv)!important}
+.cmp-card.best{border:2px solid var(--pos)!important;border-top:4px solid var(--pos)!important}
+.negbar,.refbar{border-left:5px solid var(--tc)!important}
+@media (min-width:1100px){ body.cuadros .board>section:not(#veredicto) .sec-head{background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 16%,transparent),transparent);margin:-18px -20px 4px;padding:14px 20px 12px!important;border-radius:10px 10px 0 0;border-bottom:1.5px solid color-mix(in srgb,var(--tc) 50%,transparent)!important} }
+.board .sec-head h2{color:color-mix(in srgb,var(--tc) 75%,var(--ink))}
+.kpis .kpi{border-width:1.5px!important}
+.kpi.main{background:linear-gradient(135deg,color-mix(in srgb,var(--pos) 22%,var(--surface)),color-mix(in srgb,var(--pos) 8%,var(--surface)))!important}
+.kpis .kpi:nth-child(2){background:linear-gradient(135deg,color-mix(in srgb,var(--c-cielo) 22%,var(--surface)),var(--surface))!important}
+.kpis .kpi:nth-child(3){background:linear-gradient(135deg,color-mix(in srgb,var(--c-inv) 24%,var(--surface)),var(--surface))!important}
+.kpis .kpi:nth-child(4){background:linear-gradient(135deg,color-mix(in srgb,var(--c-cria) 16%,var(--surface)),var(--surface))!important;border-color:color-mix(in srgb,var(--c-cria) 22%,transparent)!important}
+.mini{background:linear-gradient(135deg,color-mix(in srgb,var(--tc) 14%,var(--surface)),color-mix(in srgb,var(--c-inv) 8%,var(--surface)))!important}
+.cmp-chart .row:nth-child(2):not(.neg) .track i{background:var(--c-recria)!important}.cmp-chart .row:nth-child(3):not(.neg) .track i{background:var(--c-cielo)!important}.cmp-chart .row:nth-child(4):not(.neg) .track i{background:var(--c-inv)!important}.cmp-chart .row:nth-child(5):not(.neg) .track i{background:var(--c-cria)!important}
+.mini .bar-r:nth-child(1) i{background:var(--c-recria)!important}.mini .bar-r:nth-child(2) i{background:var(--c-cielo)!important}.mini .bar-r:nth-child(3) i{background:var(--c-inv)!important}.mini .bar-r:nth-child(4) i{background:var(--c-cria)!important}.mini .bar-r:nth-child(5) i{background:#6B5B95!important}.mini .bar-r:nth-child(6) i{background:#8A9A5B!important}.mini .bar-r:nth-child(7) i{background:#7C8A99!important}
+.steps b{background:linear-gradient(135deg,var(--c-recria),var(--c-inv))}
+.ini-ico{background:linear-gradient(135deg,color-mix(in srgb,var(--c-recria) 22%,transparent),color-mix(in srgb,var(--c-inv) 22%,transparent))!important}
+table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mix(in srgb,var(--c-inv) 18%,var(--surface)),var(--surface))!important}
+@media print{ .wrap,body{background:#fff!important} .board>section .sec-head{background:none!important;margin:0!important;padding:0 0 6px!important} }
 </style>
 
 <div class="wrap">
