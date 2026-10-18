@@ -343,6 +343,15 @@ table.sens .lvl{display:block;font-size:.72rem;color:var(--muted);font-weight:50
 #sens table.sens th.corner,#sens table.sens tbody th{text-align:left!important;white-space:normal}
 #sens table.sens th.corner{width:22%!important}
 #printHead{display:none}
+/* ---- ⓘ explicaciones ---- */
+.info-b{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;margin-left:6px;border-radius:50%;border:1.3px solid color-mix(in srgb,var(--hembra) 55%,transparent);color:var(--hembra);font:700 11px/1 var(--display,sans-serif);cursor:pointer;vertical-align:1px;flex:none;text-transform:none;letter-spacing:0}
+.info-b:hover,.info-b[aria-expanded="true"]{background:var(--hembra);color:var(--bg);border-color:var(--hembra)}
+.info-b:focus-visible{outline:2px solid var(--input-line);outline-offset:2px}
+#infoPop{position:absolute;z-index:60;max-width:300px;background:var(--ink);color:var(--bg);font-size:.86rem;line-height:1.45;padding:10px 12px;border-radius:9px;box-shadow:0 10px 30px -10px rgba(0,0,0,.45);text-transform:none;letter-spacing:0;font-weight:400}
+#infoPop[hidden]{display:none}
+#infoPop b{display:block;margin-bottom:3px;font-family:var(--display)}
+@media print{.info-b,#infoPop{display:none!important}}
+
 .sanrow td{padding-top:4px!important;padding-right:0!important}
 .sanplan{margin-top:8px;display:flex;flex-direction:column;gap:6px}
 .sanplan[hidden]{display:none}
@@ -1453,6 +1462,7 @@ function calc(except){
   }
   try{ paintMini(R); }catch(e){}
   try{ renderFlujo(R); }catch(e){ console.error(e); }
+  setTimeout(()=>{ try{ infoScan(); }catch(e){} },0);
   setT('e-cc',isNum(R.cc)&&R.cc>0?'= '+money(R.cc/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
   setT('e-cv',isNum(R.cv)&&R.cv>0?'= '+money(R.cv/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
   // costos por cabeza: mostrar cuánto suman para toda la hacienda (o cuánto es por cabeza si se ve la jaula)
@@ -1586,7 +1596,7 @@ function renderCmp(){
   row('Rentabilidad sobre lo invertido',R=>R.ok?sg(R.rent,pct(R.rent)):'—',{v:R=>R.rent});
   row('Rentabilidad por mes',R=>R.ok?sg(R.rm,pct(R.rm,2)):'—',{v:R=>R.rm,key:1,hint:'La que sirve para comparar negocios de distinta duración'});
   t.innerHTML=h+'</tbody>';
-  paintCmpVisual(rows,best);
+  paintCmpVisual(rows,best); try{ infoScan($('comparar')); }catch(e){}
   t.querySelectorAll('button.lnk').forEach(b=>b.addEventListener('click',()=>{switchTo(b.dataset.id); setView('neg');}));
 }
 
@@ -1820,6 +1830,69 @@ $('sanPlan').addEventListener('change',e=>{ const t=e.target; if(!t.dataset||t.d
   const v=parse(t.value), i=+t.dataset.i, c=+t.dataset.c; st.sanPlan=st.sanPlan.map(r=>r.slice()); st.sanPlan[i][c]=isNum(v)?v:0;
   st.san=sanTotal(st.sanPlan); paintSanPlan(); calc(); save(); });
 
+
+// ================= ⓘ explicaciones de términos =================
+const GLOS=[
+ ['Ganancia real','Lo que queda después de pagar todo y de descontar lo que esa misma plata habría rendido en otra inversión. Es la ganancia "de verdad".'],
+ ['Margen bruto','Ingresos por ventas menos todos los costos (compra, campo y venta). Todavía no descuenta el costo de tener la plata inmovilizada.'],
+ ['Rentabilidad por mes','Ganancia real dividida por la plata puesta y por los meses que dura. Sirve para comparar negocios de distinta duración.'],
+ ['Rentabilidad sobre lo invertido','Margen bruto dividido por todo lo que se gastó, sin importar cuánto dura el negocio.'],
+ ['Rentabilidad sobre la plata en el rodeo','Ganancia real del año dividida por lo que valen las vacas.'],
+ ['Costo de la plata','Lo que esa plata rendiría en otro lado (a la tasa real que cargás) mientras está metida en hacienda.'],
+ ['TIR anual','Tasa interna de retorno: el interés anual que rinde la plata puesta, teniendo en cuenta cuándo sale y cuándo vuelve cada peso.'],
+ ['Plata máxima puesta','Lo máximo que vas a tener invertido en algún momento del negocio, sumando compra y gastos hasta que entra la venta.'],
+ ['Se recupera en','El mes en que lo que entró ya cubre todo lo que se puso.'],
+ ['Contra la alternativa','Diferencia entre la TIR del negocio y lo que rendiría la misma plata en otra inversión a la tasa real que cargaste.'],
+ ['Desbaste','Porcentaje que se descuenta del peso al pesar la hacienda, porque el animal tiene la panza llena (comida y agua). Se paga o se cobra el peso con ese descuento.'],
+ ['Vacas por hectárea','Carga del campo: cuántas vacas sostiene cada hectárea en el año. Depende del pasto: más pasto, más carga.'],
+ ['Hectáreas que ocupa','Superficie que necesita el rodeo según la carga. Se calcula con las vacas y las vacas por hectárea.'],
+ ['Aumento diario','Cuántos kilos gana cada animal por día. A campo depende mucho de la estación: poco en invierno, mucho en primavera.'],
+ ['Mortandad','Porcentaje de animales que se mueren o se pierden en el período. Se compran pero no se venden.'],
+ ['Preñez al tacto','Porcentaje de hembras que quedan preñadas, según el tacto del veterinario. Las vacías se venden más baratas.'],
+ ['Peso mínimo para entorar','Peso desde el que una vaquillona se puede poner en servicio (con el toro o IATF). Suele ser ~62 % del peso adulto.'],
+ ['Meses de servicio','Tiempo desde que entra el toro (o la inseminación) hasta el tacto.'],
+ ['Destete','Porcentaje de terneros que se logran destetar por cada vaca en servicio. Es el índice más importante de la cría.'],
+ ['Descarte de vacas','Vacas viejas o vacías que salen del rodeo cada año y se venden para faena.'],
+ ['Terneras que quedan para reposición','Hembras que se quedan para reemplazar a las vacas que se descartan o se mueren.'],
+ ['Comisión de compra','Lo que cobra la consignataria o el rematador sobre el valor de la compra.'],
+ ['Comisión de venta','Lo que cobra la consignataria o el rematador sobre el valor de la venta.'],
+ ['Guías, DTE','Documentos y tasas para mover la hacienda (DTE de SENASA, guías municipales) y otros gastos por cabeza al vender.'],
+ ['Suplemento invernal','Comida extra (grano, silo, rollo) para cubrir el invierno, cuando el pasto casi no crece.'],
+ ['Kilos producidos','Kilos que gana cada animal desde que se compra hasta que se vende.'],
+ ['Precio de venta mínimo para no perder','Precio al que tendrías que vender para que el margen dé cero.'],
+ ['Precio de compra máximo','Lo máximo que podrías pagar por cabeza para que el margen dé cero.'],
+ ['Precio promedio del ternero para no perder','Precio por kilo del ternero al que el resultado del año da cero.'],
+ ['Destete mínimo para no perder','Porcentaje de destete por debajo del cual la cría pierde plata.'],
+ ['Margen bruto con inflación','El margen expresado en pesos del día de la venta, con la inflación esperada. Infla los números pero no es ganancia real.'],
+ ['Cambio esperado del precio de venta','Cuánto creés que va a subir o bajar el precio de venta en términos reales (por encima o por debajo de la inflación).'],
+ ['Plata a poner en la compra','Lo que hay que poner al comprar: hacienda, comisión y flete.'],
+ ['Plata en el rodeo','Lo que valen las vacas: es la plata que tenés invertida en la cría.'],
+];
+function glosFor(t){ t=(t||'').replace(/\s+/g,' ').trim(); for(const [k,v] of GLOS){ if(t.toLowerCase().startsWith(k.toLowerCase())) return [k,v]; } return null; }
+const infoPop=document.createElement('div'); infoPop.id='infoPop'; infoPop.setAttribute('role','tooltip'); infoPop.hidden=true; document.body.appendChild(infoPop);
+let infoBtn=null;
+function infoClose(){ infoPop.hidden=true; if(infoBtn) infoBtn.setAttribute('aria-expanded','false'); infoBtn=null; }
+function infoScan(root){
+  (root||document).querySelectorAll('.board .lbl, .kpi .k, .flu-kpi > span, .mini .kv span, table.cmp td .cl').forEach(el=>{
+    if(el.querySelector('.info-b')) return;
+    const g=glosFor(el.textContent); if(!g) return;
+    const b=document.createElement('button'); b.type='button'; b.className='info-b'; b.textContent='i'; b.setAttribute('aria-label','Qué es: '+g[0]); b.setAttribute('aria-expanded','false');
+    b.dataset.t=g[0]; b.dataset.d=g[1]; el.appendChild(b); });
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.info-b');
+  if(!b){ if(!e.target.closest('#infoPop')) infoClose(); return; }
+  e.preventDefault(); e.stopPropagation();
+  if(infoBtn===b){ infoClose(); return; }
+  infoClose(); infoBtn=b; b.setAttribute('aria-expanded','true');
+  infoPop.innerHTML='<b>'+esc(b.dataset.t)+'</b>'+esc(b.dataset.d); infoPop.hidden=false;
+  const r=b.getBoundingClientRect(), w=Math.min(300,window.innerWidth-24);
+  let x=r.left+window.scrollX-12; x=Math.max(12+window.scrollX,Math.min(x,window.scrollX+window.innerWidth-w-12));
+  infoPop.style.width=w+'px'; infoPop.style.left=x+'px'; infoPop.style.top=(r.bottom+window.scrollY+8)+'px';
+},true);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') infoClose(); });
+window.addEventListener('resize',infoClose);
+
 // ================= sensibilidad =================
 function renderSens(){
   const T=$('sensTbl'); if(!T) return;
@@ -1963,7 +2036,7 @@ showWho();
 const LBL_FIX={estac:'Aumento por estación',sanDet:'Plan sanitario detallado',sanPlan:'Plan sanitario',toros:'Toros cada 100 vacas',tipo:'Tipo de negocio',sistema:'Sistema',modoVenta:'Forma de venta',precioPor:'Compra por',ventaPor:'Venta por',conCria:'Con cría al pie',inf:'Inflación esperada',name:'Nombre'};
 const VAL_FIX={cria:'Cría',recria:'Recría',inv:'Invernada',campo:'A campo',feed:'Feedlot',mix:'Mix',kilo:'Por kilo',prenada:'Preñada',vcc:'Vaca con cría al pie',kg:'kilo',cab:'cabeza',jaula:'jaula'};
 const SKIP=new Set(['auto','vista','fijo']);
-function lblOf(k){ if(LBL_FIX[k]) return LBL_FIX[k]; const e=document.getElementById(k); const t=e&&e.closest('tr')&&e.closest('tr').querySelector('.lbl'); return t?t.textContent.trim():k; }
+function lblOf(k){ if(LBL_FIX[k]) return LBL_FIX[k]; const e=document.getElementById(k); const t=e&&e.closest('tr')&&e.closest('tr').querySelector('.lbl'); return t?[...t.childNodes].filter(n=>!(n.classList&&n.classList.contains('info-b'))).map(n=>n.textContent).join('').trim():k; }
 function valOf(k,v){
   if(v===null||v===undefined||v==='') return '—';
   if(Array.isArray(v)) return 'total '+money(sanTotal(v))+' por cabeza';
