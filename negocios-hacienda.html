@@ -334,7 +334,7 @@ table.sens th.corner{text-align:left;font-size:.78rem;color:var(--muted);font-we
 table.sens td.pos{color:var(--pos)} table.sens td.neg{color:var(--neg)}
 table.sens td.base{outline:2px solid var(--ink);outline-offset:-2px;font-weight:700}
 table.sens .lvl{display:block;font-size:.72rem;color:var(--muted);font-weight:500}
-@media (min-width:1100px){ body.cuadros #sens{grid-column:1/-1} }
+@media (min-width:1100px){ body.cuadros #sens,body.cuadros #flujo{grid-column:1/-1} }
 #sens table.sens{display:table!important;width:100%!important;table-layout:fixed}
 #sens table.sens thead{display:table-header-group!important}
 #sens table.sens tbody{display:table-row-group!important}
@@ -343,6 +343,25 @@ table.sens .lvl{display:block;font-size:.72rem;color:var(--muted);font-weight:50
 #sens table.sens th.corner,#sens table.sens tbody th{text-align:left!important;white-space:normal}
 #sens table.sens th.corner{width:22%!important}
 #printHead{display:none}
+/* ---- flujo de fondos ---- */
+.flu-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.flu-kpi{background:color-mix(in srgb,var(--hembra) 6%,var(--surface));border:1px solid color-mix(in srgb,var(--hembra) 16%,transparent);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:3px}
+.flu-kpi span{font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.flu-kpi b{font-family:var(--display);font-size:1.45rem;line-height:1.15;font-variant-numeric:tabular-nums}
+.flu-kpi small{color:var(--muted);font-size:.8rem;line-height:1.3}
+.flu-kpi .pos{color:var(--pos)} .flu-kpi .neg{color:var(--neg)}
+.flu-chart svg{width:100%;height:auto;display:block}
+.flu-chart .lg{display:flex;gap:16px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:6px}
+.flu-chart .lg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.flu-det summary{cursor:pointer;font-weight:700;color:var(--hembra);padding:6px 0}
+table.flu-tbl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.flu-tbl th,table.flu-tbl td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);font-size:.9rem;white-space:nowrap}
+table.flu-tbl th:first-child,table.flu-tbl td:first-child{text-align:left}
+table.flu-tbl thead th{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+table.flu-tbl td.pos{color:var(--pos)} table.flu-tbl td.neg{color:var(--neg)}
+table.flu-tbl td small{display:block;color:var(--muted);font-size:.74rem;white-space:normal;text-align:left}
+@media (max-width:820px){.flu-kpis{grid-template-columns:1fr 1fr}}
+
 /* ---- pantalla de inicio ---- */
 #inicio{display:flex;flex-direction:column;gap:28px}
 #inicio[hidden]{display:none}
@@ -472,7 +491,8 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
   .board{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;align-items:start!important}
   .board>section{break-inside:avoid;page-break-inside:avoid;margin:0!important;box-shadow:none!important;border:1px solid #bbb!important;padding:10px!important;border-radius:8px!important}
   .board>section[hidden],.board>section.no-cria:not(:only-child)[hidden]{display:none!important}
-  #veredicto,#resultado,#c-res,#sens{grid-column:1/-1!important}
+  #veredicto,#resultado,#c-res,#sens,#flujo{grid-column:1/-1!important}
+  .flu-det{display:none}
   .refbar{border:1px solid #bbb!important;padding:6px 10px!important}
   td .field{width:auto!important;height:auto!important;padding:0!important}
   .kpis{grid-template-columns:repeat(4,1fr)!important}
@@ -599,7 +619,7 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
 
 <nav class="secnav vneg" aria-label="Secciones">
   <div class="seg lay" role="group" aria-label="Forma de ver"><button type="button" id="lay-lista" aria-pressed="false">Lista</button><button type="button" id="lay-cuadros" aria-pressed="true">Cuadros</button></div>
-  <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a><a href="#sens">Sensibilidad</a>
+  <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a><a href="#flujo">Flujo de fondos</a><a href="#sens">Sensibilidad</a>
 </nav>
 <div class="refbar vneg">
   <div class="no-cria">
@@ -903,6 +923,14 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
     <tr><td><span class="lbl">Precio promedio del ternero para no perder</span></td><td class="calc" id="rc-be">—</td></tr>
     <tr><td><span class="lbl">Destete mínimo para no perder</span></td><td class="calc" id="rc-bed">—</td></tr>
   </tbody></table></div>
+</section>
+
+<section id="flujo" class="vneg">
+  <div class="sec-head"><h2>Flujo de fondos e inversión</h2><button type="button" class="zoom-btn" data-zoom="flujo" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
+  <p class="note" id="fluNote"></p>
+  <div class="flu-kpis" id="fluKpis"></div>
+  <div class="flu-chart" id="fluChart"></div>
+  <details class="flu-det"><summary>Ver mes a mes</summary><div class="tbl-wrap"><table class="flu-tbl" id="fluTbl"></table></div></details>
 </section>
 
 <section id="sens" class="vneg">
@@ -1370,6 +1398,7 @@ function calc(except){
   const R=model(st), f=st.vista==='jaula'?R.n:1, ok=R.ok;
   try{ renderSens(); }catch(e){}
   try{ paintMini(R); }catch(e){}
+  try{ renderFlujo(R); }catch(e){ console.error(e); }
   setT('e-cc',isNum(R.cc)&&R.cc>0?'= '+money(R.cc/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
   setT('e-cv',isNum(R.cv)&&R.cv>0?'= '+money(R.cv/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
   // costos por cabeza: mostrar cuánto suman para toda la hacienda (o cuánto es por cabeza si se ve la jaula)
@@ -1637,6 +1666,70 @@ function paintMini(R){
       vend>0&&R.pf>0?['Precio promedio logrado','$ '+nf(R.ing/(vend*R.pf),0)+'/kg']:null,
       R.n>0?['Margen por cabeza',money(R.mb/R.n)]:null]));
   }
+}
+
+
+// ================= flujo de fondos =================
+// Arma los movimientos de plata mes a mes con los mismos datos del modelo (pesos de hoy).
+function flujo(s,R){
+  if(!R||!R.ok) return null;
+  const Z=k=>isNum(s[k])?s[k]:0, out=[];
+  const add=(k,v,txt)=>{ while(out.length<=k) out.push({e:0,s:0,det:[]}); if(v>0) out[k].e+=v; else out[k].s+=-v; if(txt) out[k].det.push(txt); };
+  if(R.cria){
+    const V=R.n; add(0,-R.cpra,'Compra de vacas');
+    const mens=R.dir/12; for(let k=1;k<=12;k++) add(k,-mens,k===1?'Costos del rodeo (todos los meses)':null);
+    const kv=8; add(kv,R.ing-R.gven,'Venta de terneros y descarte');
+    add(12,R.cpra,'Valor de las vacas al cierre del año');
+    return {rows:out,labels:out.map((_,k)=>k===0?'Inicio':'Mes '+k),cria:true};
+  }
+  const T=tramos(s), M=R.meses, n=R.n, Mc=Math.ceil(M-1e-9);
+  add(0,-R.cpra,'Compra, comisión y flete'); add(0,-n*Z('san'),'Sanidad');
+  for(let k=1;k<=Mc;k++){
+    const len=Math.min(1,M-(k-1)), t0=k-1, inC=t0<T.mC;
+    const camp=inC?Math.min(len,T.mC-t0):0, feed=len-camp;
+    let al=n*(T.gC*D*camp*Z('alKg')+Z('alMes')*camp)+n*(T.gF*D*feed*Z('conv')*Z('pRac')+Z('diaF')*D*feed);
+    add(k,-al,null); add(k,-n*(Z('mob')+Z('otros'))*len/M,null);
+  }
+  if(R.pren){ const ks=Math.max(1,Math.ceil(M-Z('ms'))); add(Math.min(ks,Mc),-n*Z('serv'),'Servicio'); add(Mc,-n*Z('tacto'),'Tacto'); }
+  add(Mc,R.ing-R.gven,'Venta (neta de comisión y gastos)');
+  const m0=(isNum(s.mesCompra)?s.mesCompra:1)-1;
+  return {rows:out,labels:out.map((_,k)=>{ const mm=(m0+k)%12; return MES[mm].charAt(0).toUpperCase()+MES[mm].slice(1); })};
+}
+function tirMensual(cf){
+  const npv=r=>cf.reduce((a,v,i)=>a+v/Math.pow(1+r,i),0);
+  let lo=-0.9, hi=1; if(npv(lo)*npv(hi)>0) return NaN;
+  for(let i=0;i<200;i++){ const mid=(lo+hi)/2; if(npv(lo)*npv(mid)<=0) hi=mid; else lo=mid; }
+  return (lo+hi)/2;
+}
+function renderFlujo(R){
+  const K=$('fluKpis'); if(!K) return;
+  const F=flujo(st,R);
+  if(!F){ K.innerHTML=''; $('fluChart').innerHTML=''; $('fluTbl').innerHTML=''; $('fluNote').textContent='Completá los datos del negocio para ver el flujo de fondos.'; return; }
+  const net=F.rows.map(x=>x.e-x.s); let acc=0; const cum=net.map(v=>acc+=v);
+  const peak=Math.min(0,...cum), irr=tirMensual(net), tirA=isNum(irr)?Math.pow(1+irr,12)-1:NaN;
+  const rec=cum.findIndex((v,i)=>i>0&&v>=0&&cum.slice(i).every(x=>x>=0));
+  const alt=(isNum(st.tasa)?st.tasa:0)/100;
+  $('fluNote').textContent=(F.cria?'Primer año del rodeo: se compran las vacas, se pagan los costos todos los meses, se venden terneros y descarte al destete y al cierre las vacas siguen siendo tuyas (se cuentan por su valor). ':'Cuándo sale y cuándo entra la plata, mes a mes. ')+'Todo en pesos de hoy.';
+  const c=v=>isNum(v)?(v>=0?'pos':'neg'):'';
+  K.innerHTML=
+    '<div class="flu-kpi"><span>Plata máxima puesta</span><b>'+mill(-peak)+'</b><small>El momento de mayor desembolso</small></div>'
+   +'<div class="flu-kpi"><span>Se recupera en</span><b>'+(rec>0?F.labels[rec]:'—')+'</b><small>'+(rec>0?(F.cria?'Mes '+rec+' del año':'A los '+rec+' meses de la compra'):'No se recupera en el período')+'</small></div>'
+   +'<div class="flu-kpi"><span>TIR anual</span><b class="'+c(tirA)+'">'+(isNum(tirA)?pct(tirA,1):'—')+'</b><small>Rendimiento real de la plata puesta, por año</small></div>'
+   +'<div class="flu-kpi"><span>Contra la alternativa</span><b class="'+c(tirA-alt)+'">'+(isNum(tirA)?(tirA>=alt?'+':'−')+nf(Math.abs(tirA-alt)*100,1)+' pts':'—')+'</b><small>Frente a una inversión al '+nf(alt*100,1)+' % anual real</small></div>';
+  // gráfico: barras de neto por mes y línea del acumulado
+  const W=860,H=250,pl=58,pr=14,pt=14,pb=30, n=net.length, iw=W-pl-pr, ih=H-pt-pb;
+  const mx=Math.max(...net.map(Math.abs),...cum.map(Math.abs))||1, y=v=>pt+ih/2-(v/mx)*(ih/2), bw=Math.min(36,iw/n*0.6), x=i=>pl+iw*(i+0.5)/n;
+  let g='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Flujo de fondos por mes">';
+  [-1,-0.5,0,0.5,1].forEach(f=>{ const yy=y(f*mx); g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+yy+'" y2="'+yy+'" stroke="currentColor" stroke-opacity="'+(f===0?0.45:0.12)+'"/>'
+    +'<text x="'+(pl-8)+'" y="'+(yy+4)+'" text-anchor="end" font-size="11" fill="currentColor" fill-opacity=".6">'+(f===0?'0':(f>0?'':'−')+nf(Math.abs(f*mx)/1e6,0)+' M')+'</text>'; });
+  net.forEach((v,i)=>{ const y0=y(0), y1=y(v); g+='<rect x="'+(x(i)-bw/2)+'" y="'+Math.min(y0,y1)+'" width="'+bw+'" height="'+Math.max(1,Math.abs(y1-y0))+'" rx="3" fill="'+(v>=0?'var(--pos)':'var(--neg)')+'" fill-opacity=".85"><title>'+F.labels[i]+': '+mill(v)+'</title></rect>';
+    g+='<text x="'+x(i)+'" y="'+(H-10)+'" text-anchor="middle" font-size="11" fill="currentColor" fill-opacity=".7">'+F.labels[i].replace('Mes ','M')+'</text>'; });
+  g+='<polyline fill="none" stroke="var(--hembra)" stroke-width="2.5" points="'+cum.map((v,i)=>x(i)+','+y(v)).join(' ')+'"/>';
+  cum.forEach((v,i)=>{ g+='<circle cx="'+x(i)+'" cy="'+y(v)+'" r="3.5" fill="var(--hembra)"><title>Acumulado '+F.labels[i]+': '+mill(v)+'</title></circle>'; });
+  g+='</svg><div class="lg"><span><i style="background:var(--neg)"></i>Sale plata</span><span><i style="background:var(--pos)"></i>Entra plata</span><span><i style="background:var(--hembra);height:3px;border-radius:2px"></i>Acumulado</span></div>';
+  $('fluChart').innerHTML=g;
+  $('fluTbl').innerHTML='<thead><tr><th>Mes</th><th>Sale</th><th>Entra</th><th>Neto</th><th>Acumulado</th></tr></thead><tbody>'
+    +F.rows.map((r,i)=>'<tr><td>'+F.labels[i]+(r.det.length?'<small>'+esc(r.det.join(' · '))+'</small>':'')+'</td><td>'+(r.s>0?mill(-r.s):'—')+'</td><td>'+(r.e>0?mill(r.e):'—')+'</td><td class="'+c(net[i])+'">'+mill(net[i])+'</td><td class="'+c(cum[i])+'">'+mill(cum[i])+'</td></tr>').join('')+'</tbody>';
 }
 
 // ================= sensibilidad =================
