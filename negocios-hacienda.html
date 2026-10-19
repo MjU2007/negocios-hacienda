@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="es">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NEGOCIOS DE HACIENDA</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Cg%20fill='none'%20stroke='%232E6A3E'%20stroke-width='4'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M19%2019%20C12%2015%205%2017%203%2022%20C8%2026%2014%2026%2019%2024'/%3E%3Cpath%20d='M45%2019%20C52%2015%2059%2017%2061%2022%20C56%2026%2050%2026%2045%2024'/%3E%3Cpath%20d='M20%2014%20C26%209%2038%209%2044%2014%20C47%2020%2047%2030%2045%2038%20C44%2045%2042%2049%2040%2052%20L24%2052%20C22%2049%2020%2045%2019%2038%20C17%2030%2017%2020%2020%2014%20Z'/%3E%3Cpath%20d='M22%2050%20C22%2056%2026%2060%2032%2060%20C38%2060%2042%2056%2042%2050'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -890,7 +889,7 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
       <tr><td><span class="lbl">Flete de entrada</span><span class="hint">Sugerido: ~$1,2 M por jaula a ~300 km, repartido entre las cabezas</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="fl" inputmode="decimal"></span><span class="eq" id="e-fl"></span></td></tr>
       <tr class="sub"><td colspan="2" id="c-sub-campo">En el campo</td></tr>
-      <tr data-sis="campo mix"><td><span class="lbl">Alimentación por kilo producido a campo</span><span class="hint">Pasto y verdeos (el suplemento va aparte). Referencia: $1.400–2.000/kg</span></td>
+      <tr data-sis="campo mix"><td><span class="lbl">Alimentación por kilo producido a campo</span><span class="hint">Pasto y verdeos (el suplemento va aparte). Referencia: $1.800–2.500/kg</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="alKg" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
       <tr data-sis="campo mix"><td><span class="lbl">Alimentación por cabeza y por mes a campo</span><span class="hint">Para hacienda que no engorda (vacas) o pastaje</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="alMes" inputmode="decimal"><span class="u">/mes</span></span></td></tr>
@@ -919,6 +918,13 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
           <td><span class="field"><span class="u">$</span><input class="in" id="mob" inputmode="decimal"></span><span class="eq" id="e-mob"></span></td></tr>
       <tr><td><span class="lbl">Otros gastos</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="otros" inputmode="decimal"></span><span class="eq" id="e-otros"></span></td></tr>
+      <tr class="sub"><td colspan="2">Tierra y estructura</td></tr>
+      <tr data-sis="campo mix"><td><span class="lbl">Cabezas por hectárea</span><span class="hint">Cuántas hectáreas ocupa la hacienda mientras está a campo</span></td>
+          <td><span class="field"><input class="in s" id="cargaR" inputmode="decimal"><span class="u">cab/ha</span></span><span class="eq" id="e-cargaR"></span></td></tr>
+      <tr data-sis="campo mix"><td><span class="lbl">Alquiler de la tierra por hectárea y por año</span><span class="hint">Aunque el campo sea propio: es lo que se deja de cobrar por no alquilarlo. Ref. Salado: ~3,5 kg de novillo/ha/mes ≈ $178.000/ha/año</span></td>
+          <td><span class="field"><span class="u">$</span><input class="in" id="arrR" inputmode="decimal"><span class="u">/ha</span></span><span class="eq" id="e-arrR"></span></td></tr>
+      <tr><td><span class="lbl">Estructura y administración</span><span class="hint">Asesor, camioneta, alambrados, aguadas, impuestos del campo. Por cabeza y por mes</span></td>
+          <td><span class="field"><span class="u">$</span><input class="in" id="estMes" inputmode="decimal"><span class="u">/mes</span></span><span class="eq" id="e-estMes"></span></td></tr>
       <tr class="sub"><td colspan="2">Venta</td></tr>
       <tr><td><span class="lbl">Comisión de venta</span></td>
           <td><span class="field"><input class="in s" id="cv" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-cv"></span></td></tr>
@@ -945,6 +951,7 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
       <tr class="sub"><td colspan="2">Lo que gastás</td></tr>
       <tr><td><span class="lbl">Compra + comisión + flete</span></td><td class="calc" id="r-cpra">—</td></tr>
       <tr><td><span class="lbl">En el campo</span><span class="hint">Alimento, sanidad, servicio, mano de obra, otros</span></td><td class="calc" id="r-rec">—</td></tr>
+      <tr><td><span class="lbl">Tierra y estructura</span><span class="hint" id="r-tie-h">Alquiler de la tierra y gastos fijos</span></td><td class="calc" id="r-tie">—</td></tr>
       <tr><td><span class="lbl">Comisión y gastos de venta</span></td><td class="calc" id="r-gven">—</td></tr>
       <tr class="total"><td><span class="lbl">Costo total</span></td><td class="calc" id="r-ct">—</td></tr>
       <tr class="sub"><td colspan="2">Lo que ganás</td></tr>
@@ -1142,8 +1149,9 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
       <li>Recría de hembras hasta el primer entore: <a href="https://www.produccion-animal.com.ar/informacion_tecnica/cria/05-manejo_de_la_hembra_hasta_el_primer_entore.pdf" target="_blank" rel="noopener">Sitio Argentino de Producción Animal</a>. Inflación esperada: <a href="https://www.canal26.com/economia/2026/09/05/las-proyecciones-de-los-analistas-del-banco-central-para-lo-que-resta-del-2026-que-espera-el-mercado-para-la-inflacion-y-el-dolar/" target="_blank" rel="noopener">REM del BCRA</a>.</li>
           <li>Novillo de invernada (+300 kg): <a href="https://www.grupoguarino.com.ar/invernada/" target="_blank" rel="noopener">Grupo Guarino, invernada semana del 12 al 18/10/2026</a>. Novillo gordo en el Mercado Agroganadero: <a href="https://www.decamponoticias.com/mercado-de-invernada-terneros-pesados/" target="_blank" rel="noopener">De Campo a Campo, semana del 5 al 9/10/2026</a>.</li>
           <li>Toros a faena: <a href="https://ruralnet.com.ar/mag-precios-16-octubre-2026/" target="_blank" rel="noopener">Mercado Agroganadero, 16/10/2026 (Ruralnet)</a>. Toros PC en remates: <a href="https://www.defrentealcampo.com.ar/wp-content/uploads/2026/03/Informe-Mensual-Angus-Enero-2026.pdf" target="_blank" rel="noopener">Informe Mensual Angus, enero 2026</a>.</li>
+          <li>Alquiler de la tierra: índice novillo arrendamiento $4.241/kg y rango de 3 a 6 kg de novillo/ha/mes para campos ganaderos: <a href="https://www.consignatarias.com.ar/como-se-calcula-el-canon-de-arrendamiento" target="_blank" rel="noopener">Consignatarias.com.ar (16/10/2026)</a>. Se toman 3,5 kg/ha/mes para la Cuenca del Salado.</li>
     </ol>
-    <p>Sanidad, servicio, tacto, mano de obra, fletes, comisiones, mortandad y aumentos diarios son estimaciones de un sistema pastoril típico: reemplazalos por los de tu campo. El flete sugerido supone ~$1,2 M por jaula a ~300 km. En feedlot, la ración se toma a precio de maíz (~$296.000/t, De Campo a Campo sem. 39) con conversiones de ~8 kg (recría) y ~6,5 kg (terminación) por kilo ganado, en línea con los costos de Engormix ($2.500 y $1.900 por kilo producido); los gastos de corral por día son estimados. En cría, los costos por vaca, el costo de los toros y el destete sugerido (80%) son estimaciones de un rodeo bien manejado; el resultado no incluye la tierra salvo que cargues un alquiler. No hay precio publicado del novillo de invernada ni de “otra hacienda”. No es asesoramiento financiero.</p>
+    <p>Los resultados son antes de impuestos (Ganancias e Ingresos Brutos). Estructura y administración, carga por hectárea, sanidad, servicio, tacto, mano de obra, fletes, comisiones, mortandad y aumentos diarios son estimaciones de un sistema pastoril típico: reemplazalos por los de tu campo. El flete sugerido supone ~$1,2 M por jaula a ~300 km. En feedlot, la ración se toma a precio de maíz (~$296.000/t, De Campo a Campo sem. 39) con conversiones de ~8 kg (recría) y ~6,5 kg (terminación) por kilo ganado, en línea con los costos de Engormix ($2.500 y $1.900 por kilo producido); los gastos de corral por día son estimados. En cría, los costos por vaca, el costo de los toros y el destete sugerido (80%) son estimaciones de un rodeo bien manejado; el resultado no incluye la tierra salvo que cargues un alquiler. No hay precio publicado del novillo de invernada ni de “otra hacienda”. No es asesoramiento financiero.</p>
   </div>
 </section>
 
@@ -1168,7 +1176,7 @@ const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:nu
   mesCompra:4,meses:null,gdp:null,mort:null,
   modoVenta:'kilo',ventaPor:'kg',pVkg:null,pVcab:null,ms:null,entoreObj:null,pr:null,pPren:null,pVac:null,
   conCria:false,pcria:null,pVcc:null,dest:null,pdes:null,pTer:null,varVenta:null,
-  alKg:null,alMes:null,san:null,serv:null,tacto:null,mob:null,otros:null,cv:null,gv:null,
+  alKg:null,alMes:null,cargaR:null,estMes:null,san:null,serv:null,tacto:null,mob:null,otros:null,cv:null,gv:null,
   tasa:null,inf:null,vista:'cab',fijo:'gdp',
   tipo:'recria',sistema:'campo',mesesF:null,gdpF:null,conv:null,pRac:null,diaF:null,
   vacas:null,toros:null,ha:null,carga:null,valVaca:null,mortV:null,destC:null,pdesC:null,machos:null,desc:null,pVd:null,
@@ -1177,9 +1185,11 @@ const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:nu
 const TIPOS={cria:'Cría',recria:'Recría',invernada:'Invernada / engorde'};
 const SISTEMAS={campo:'a campo',feed:'a corral (feedlot)',mix:'mix campo + corral'};
 // Valores sugeridos para un rodeo de cría (precios De Campo a Campo, sep-2026; costos estimados)
+// Tierra: ~3,5 kg de novillo por ha y por mes (campo ganadero de la Cuenca del Salado) × índice novillo arrendamiento $4.241/kg (16/10/2026)
+const ARR_REF=178000, EST_REF=6000;
 const REF_CRIA={txt:'Ternero 160–180 kg a $6.610/kg y ternera 170–190 kg a $5.902/kg; vaca a faena a $3.060/kg; vaca usada preñada a $1.593.487 (De Campo a Campo). Costos por vaca estimados para un sistema pastoril.',
   v:{vacas:100,toros:100/28,carga:0.7,valVaca:1593487,mortV:2,destC:80,pdesC:170,machos:50,desc:18,pVd:420,pTro:6610,pTra:5902,pVdKg:3060,cv:4,gv:12000,varVenta:0,
-     sanV:35000,alV:150000,mobV:60000,ctoro:1500000,otrosV:20000,arrHa:0,tasa:6}};
+     sanV:35000,alV:150000,mobV:60000,ctoro:1500000,otrosV:20000,arrHa:ARR_REF,tasa:6}};
 // Valores sugeridos por sistema (recría / invernada)
 const REF_SIS={
   feed:{recria:{meses:4.5,gdp:0.9,conv:8.4,pRac:296,diaF:600},invernada:{meses:3.5,gdp:1.3,conv:6.5,pRac:296,diaF:600}},
@@ -1187,35 +1197,35 @@ const REF_SIS={
 };
 const inferTipo=c=>['novillito','novillo','vaca','vacaPren','vacaCria','toro'].includes(c)?'invernada':'recria';
 // Valores sugeridos para cualquier negocio nuevo (los podés cambiar)
-const BASE={cab:80,mort:1,cc:3,fl:15000,cv:4,gv:12000,tasa:6,inf:1.7,varVenta:0,alKg:1500,alMes:0,san:30000,mob:30000,otros:0,supKg:1.5,supDias:90,supPrecio:296,dC:2,dV:3};
+const BASE={cab:80,mort:1,cc:3,fl:15000,cv:4,gv:12000,tasa:6,inf:1.7,varVenta:0,alKg:2000,alMes:0,san:30000,mob:30000,otros:0,cargaR:1.2,arrHa:ARR_REF,estMes:EST_REF,supKg:1.5,supDias:90,supPrecio:296,dC:2,dV:3};
 const STRUCT=['precioPor','ventaPor','modoVenta','conCria'];
 // Valores sugeridos por categoría. Precios: De Campo a Campo (informes semanales AZ Group, sep-2026).
 // Flete estimado ~$1,2 M por jaula a ~300 km, repartido entre las cabezas que entran.
 const REF={
   ternero:{txt:'Ternero 160–180 kg a $6.610/kg y novillito 300–330 kg a $5.424/kg (De Campo a Campo, sem. 39). Recría a campo de ~6 meses a 0,68 kg/día y venta del recriado.',
-    v:{cab:80,pc:175,pCkg:6610,meses:6,gdp:0.68,mort:1.5,modoVenta:'kilo',pVkg:5424,fl:15000,san:30000,mob:30000,alKg:1500}},
+    v:{cargaR:1.5,cab:80,pc:175,pCkg:6610,meses:6,gdp:0.68,mort:1.5,modoVenta:'kilo',pVkg:5424,fl:15000,san:30000,mob:30000,alKg:2000}},
   ternera:{txt:'Ternera 170–190 kg a $5.902/kg (sem. 36) y vaquillona con garantía de preñez a $2.558.533 (sem. 39). Recría hasta el entore de diciembre, servicio, tacto y venta preñada: ~10 meses.',
-    v:{cab:80,pc:175,pCkg:5902,meses:10,gdp:0.5,mort:1.5,modoVenta:'prenada',ms:3,entoreObj:280,pr:85,pPren:2558533,pVac:4333,fl:15000,san:45000,serv:60000,tacto:6000,mob:50000,alKg:1500}},
+    v:{cargaR:1.5,cab:80,pc:175,pCkg:5902,meses:10,gdp:0.5,mort:1.5,modoVenta:'prenada',ms:3,entoreObj:280,pr:80,pPren:2558533,pVac:4333,fl:15000,san:45000,serv:60000,tacto:6000,mob:50000,alKg:2000}},
   novillito:{txt:'Novillito 300–330 kg a $5.424/kg (sem. 39) y novillito gordo a $4.572/kg (Mercado Agroganadero, sem. 37). Terminación a campo hasta ~410 kg.',
-    v:{cab:45,pc:300,pCkg:5424,meses:6,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:4572,fl:27000,san:25000,mob:30000,alKg:1500}},
+    v:{cargaR:1.2,cab:45,pc:300,pCkg:5424,meses:6,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:4572,fl:27000,san:25000,mob:30000,alKg:2000}},
   vaquillona:{txt:'Vaquillona 250–290 kg a $5.389/kg y vaquillona con garantía de preñez a $2.558.533 (sem. 39). Entore, tacto y venta preñada: ~6 meses.',
-    v:{cab:50,pc:270,pCkg:5389,meses:6,gdp:0.35,mort:1,modoVenta:'prenada',ms:3,entoreObj:280,pr:88,pPren:2558533,pVac:4333,fl:24000,san:40000,serv:60000,tacto:6000,mob:30000,alKg:1500}},
+    v:{cargaR:1.2,cab:50,pc:270,pCkg:5389,meses:6,gdp:0.35,mort:1,modoVenta:'prenada',ms:3,entoreObj:280,pr:82,pPren:2558533,pVac:4333,fl:24000,san:40000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
   novillo:{txt:'Novillo de invernada (+300 kg) a $5.000/kg (Grupo Guarino, 12–18/10) y novillo gordo a $4.157/kg (Mercado Agroganadero, 5–9/10). Terminación a campo de ~5 meses.',
-    v:{cab:35,pc:380,pCkg:5000,meses:5,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:4157,fl:34000,san:20000,mob:25000,alKg:1500}},
+    v:{cargaR:1,cab:35,pc:380,pCkg:5000,meses:5,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:4157,fl:34000,san:20000,mob:25000,alKg:2000}},
   vaca:{txt:'Vaca sin servicio a $1.170.068/cab (sem. 37) y vaca a faena a $3.060/kg (Mercado Agroganadero, sem. 37). Engorde a campo de ~4 meses.',
-    v:{cab:35,precioPor:'cab',pCcab:1170068,pc:400,meses:4,gdp:0.7,mort:1,modoVenta:'kilo',pVkg:3060,fl:34000,san:15000,mob:20000,alKg:1000,alMes:0}},
+    v:{cargaR:0.9,cab:35,precioPor:'cab',pCcab:1170068,pc:400,meses:4,gdp:0.7,mort:1,modoVenta:'kilo',pVkg:3060,fl:34000,san:15000,mob:20000,alKg:1300,alMes:0}},
   vacaPren:{txt:'Vaca nueva preñada a $2.313.938/cab y vaca usada preñada a $1.593.487/cab (sem. 39); ternero a $6.610/kg; vaca nueva con cría a $1.508.478/cab (sem. 37). Pare, cría, destete, se vuelve a preñar y se vende con el ternero: ~10 meses.',
-    v:{cab:35,precioPor:'cab',pCcab:2313938,pc:430,meses:10,gdp:0.03,mort:1,modoVenta:'prenada',ms:3,pr:85,pPren:1593487,pVac:3060,conCria:true,dest:90,pdes:170,pTer:6610,fl:34000,alKg:0,alMes:15000,san:35000,serv:30000,tacto:6000,mob:45000}},
+    v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:2313938,pc:430,meses:10,gdp:0.03,mort:1,modoVenta:'prenada',ms:3,pr:85,pPren:1593487,pVac:3060,conCria:true,dest:90,pdes:170,pTer:6610,fl:34000,alKg:0,alMes:15000,san:35000,serv:30000,tacto:6000,mob:45000}},
   vacaCria:{txt:'Vaca nueva con cría al pie a $1.508.478/cab (sem. 37); ternero a $6.610/kg y vaca a faena a $3.060/kg (Mercado Agroganadero). Se desteta el ternero y se venden los dos: ~5 meses.',
-    v:{cab:35,precioPor:'cab',pCcab:1508478,pc:430,meses:5,gdp:0.03,mort:1,modoVenta:'kilo',pVkg:3060,conCria:true,dest:95,pdes:170,pTer:6610,fl:34000,alKg:0,alMes:15000,san:30000,mob:25000}},
+    v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:1508478,pc:430,meses:5,gdp:0.03,mort:1,modoVenta:'kilo',pVkg:3060,conCria:true,dest:95,pdes:170,pTer:6610,fl:34000,alKg:0,alMes:15000,san:30000,mob:25000}},
   torito_rep:{txt:'Toritos para reproductores: toro PC Angus a $5.668.304 por cabeza en promedio (remates temporada 2025, Asociación Argentina de Angus). Recría de terneros enteros de buena genética hasta ~2 años; precio de compra estimado. Incluye revisación andrológica y registros en otros gastos. Ojo: no todos califican como reproductores (suele quedar ~70 %); si querés contemplarlo, bajá el precio promedio de venta.',
-    v:{cab:30,pc:200,pCkg:7000,meses:18,gdp:0.6,mort:2,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,fl:15000,san:60000,mob:60000,otros:120000,alKg:1500}},
+    v:{cargaR:1.3,cab:30,pc:200,pCkg:7000,meses:18,gdp:0.6,mort:2,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,fl:15000,san:60000,mob:60000,otros:120000,alKg:2000}},
   torito_fae:{txt:'Toritos a faena: el torito entero se paga ~10 % menos que el novillito (novillito a $4.427/kg en el Mercado Agroganadero, 16/10/2026; precio de venta estimado). Ternero entero a $6.610/kg (De Campo a Campo, sem. 39). Recría a campo de ~12 meses. Si los castrás, evaluálo como recría de terneros.',
-    v:{cab:40,pc:200,pCkg:6610,meses:12,gdp:0.7,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:3985,fl:15000,san:30000,mob:40000,otros:0,alKg:1500}},
+    v:{cargaR:1.3,cab:40,pc:200,pCkg:6610,meses:12,gdp:0.7,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:3985,fl:15000,san:30000,mob:40000,otros:0,alKg:2000}},
   toro_rep:{txt:'Toros para reproductores: venta a $5.668.304 por cabeza (toro PC Angus, promedio de remates temporada 2025). Compra de toros jóvenes por cabeza, estimada. Incluye revisación andrológica en otros gastos.',
-    v:{cab:20,pc:600,precioPor:'cab',pCcab:4500000,meses:6,gdp:0.4,mort:1,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,fl:40000,san:40000,mob:30000,otros:80000,alKg:1500}},
+    v:{cargaR:0.8,cab:20,pc:600,precioPor:'cab',pCcab:4500000,meses:6,gdp:0.4,mort:1,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,fl:40000,san:40000,mob:30000,otros:80000,alKg:2000}},
   toro_fae:{txt:'Toros a faena: toro a $3.562/kg (Mercado Agroganadero, 16/10/2026). Toro comprado flaco y terminado a campo en ~3 meses; precio de compra estimado ~10 % por debajo del toro gordo.',
-    v:{cab:30,pc:600,pCkg:3200,meses:3,gdp:0.8,mort:1,modoVenta:'kilo',ventaPor:'kg',pVkg:3562,fl:40000,san:15000,mob:20000,otros:0,alKg:1500}},
+    v:{cargaR:0.8,cab:30,pc:600,pCkg:3200,meses:3,gdp:0.8,mort:1,modoVenta:'kilo',ventaPor:'kg',pVkg:3562,fl:40000,san:15000,mob:20000,otros:0,alKg:2000}},
   otro:{txt:'Sin precios de referencia para esta categoría: cargá los tuyos. Los costos tienen valores sugeridos generales.',v:{}}
 };
 const KEYDEF={...EMPTY};
@@ -1301,7 +1311,10 @@ function model(s){
   r.kp=Math.max(0,r.pf-r.pc);
   r.sup=(s.sistema||'campo')==='feed'?0:Z('supKg')*Z('supDias')*Z('supPrecio');
   r.alim=r.n*(T.kC*Z('alKg')+Z('alMes')*T.mC+T.kF*Z('conv')*Z('pRac')+Z('diaF')*T.mF*D+r.sup);
-  r.rec=r.alim+r.n*(Z('san')+(r.pren?Z('serv')+Z('tacto'):0)+Z('mob')+Z('otros'));
+  r.campo=r.alim+r.n*(Z('san')+(r.pren?Z('serv')+Z('tacto'):0)+Z('mob')+Z('otros'));
+  // tierra (lo que cuesta, o lo que se dejaría de cobrar alquilándola) mientras está a campo, y estructura
+  r.ha=Z('cargaR')>0&&r.n>0?r.n/Z('cargaR'):0; r.tierra=r.ha*Z('arrHa')*T.mC/12; r.estr=r.n*Z('estMes')*(isNum(r.meses)?r.meses:0);
+  r.tie=r.tierra+r.estr; r.rec=r.campo+r.tie;
   r.cvp=Z('cv')/100; r.cv=r.ing*r.cvp; r.gv=r.viv*Z('gv'); r.gven=r.cv+r.gv;
   r.ct=r.cpra+r.rec+r.gven; r.mb=r.ing-r.ct; r.rent=r.mb/r.ct;
   const tasa=Z('tasa')/100, inf=Z('inf')/100, m=r.meses;
@@ -1357,6 +1370,22 @@ function migrate(n){
   return [{id:newId(),name:nm('terneras'),st:h,created:(n.created||Date.now()),touched:true},
           {id:newId(),name:nm('terneros'),st:m,created:(n.created||Date.now())+1,touched:true}];
 }
+// Negocios guardados antes de sumar la tierra y la estructura: se completan con los valores sugeridos
+// y se corrigen los sugeridos viejos que eran optimistas (solo si siguen con ese valor exacto).
+function migTierra(n){
+  const o=n&&n.st; if(!o||typeof o!=='object'||('estMes' in o)) return false;
+  const s={...o}, a=new Set(s.auto||[]), set=(k,v)=>{ s[k]=v; a.add(k); };
+  const tipo=s.tipo||inferTipo(s.cat);
+  if(!(isNum(s.arrHa)&&s.arrHa>0)) set('arrHa',ARR_REF);
+  if(tipo==='cria'){ s.estMes=null; }
+  else {
+    const r=refFor({...EMPTY,...s}); set('cargaR',r&&r.v&&r.v.cargaR||1.2); set('estMes',EST_REF);
+    if(s.alKg===1500) set('alKg',2000); else if(s.alKg===1000) set('alKg',1300);
+    if(s.cat==='ternera'&&s.pr===85) set('pr',80);
+    if(s.cat==='vaquillona'&&s.pr===88) set('pr',82);
+  }
+  s.auto=[...a]; n.st=s; return true;
+}
 (function loadLocal(){
   let sv=null;
   try{const o=JSON.parse(localStorage.getItem(LKEY)||'null'); if(o&&Array.isArray(o.negs)&&o.negs.length){negs=o.negs; active=o.active; sv=o.seedV||null;}}catch(e){}
@@ -1365,6 +1394,7 @@ function migrate(n){
   else if(sv!==SEED_V){ seedCopy().forEach(s=>{ const i=negs.findIndex(n=>n.id===s.id); if(i>=0){ if(!negs[i].synced) negs[i]=s; } else negs.push(s); }); }
   if(negs.some(n=>isOld(n.st))){ const out=[]; negs.forEach(n=>{ if(isOld(n.st)){ const mm=migrate(n); mm.forEach(x=>x.fromMig=true); if(n.id===active) active=mm[0].id; out.push(...mm);} else out.push(n); }); negs=out; }
   if(!negs.length) negs=[{id:newId(),name:'Negocio 1',st:{...EMPTY},created:Date.now()}];
+  negs.forEach(migTierra);
   if(!cur()) active=negs[0].id;
 })();
 let st={...EMPTY,...cur().st};
@@ -1396,13 +1426,13 @@ const prim=(id,d=0)=>{L[id]={g:()=>st[id],s:v=>{st[id]=v},d,clear:()=>{st[id]=nu
 prim('gdp',2); ['gdpVer','gdpOto','gdpInv','gdpPri','supKg'].forEach(k=>prim(k,2)); ['supDias','supPrecio'].forEach(k=>prim(k,0)); ['dC','dV'].forEach(k=>prim(k,1));
 ['vacas','toros','valVaca','pdesC','pVd','pTro','pTra','pVdKg','sanV','alV','mobV','ctoro','otrosV','arrHa','pRac','diaF'].forEach(k=>prim(k,0));
 ['mortV','destC','machos','desc','mesesF','conv'].forEach(k=>prim(k,1));
-prim('gdpF',2);
+prim('gdpF',2); prim('cargaR',1); prim('estMes',0);
 // en cría, comisión, gastos de venta, cambio de precio y tasa usan los mismos datos que el resto
 const alias=(id,k,d)=>{L[id]={g:()=>st[k],s:v=>{st[k]=v},clear:()=>{st[k]=null},d};};
 L.carga={g:()=>CARGA(st),s:v=>{st.carga=v;},clear:()=>{st.carga=null;st.ha=null;},d:2};
 L.ha={g:()=>HA(st),s:v=>{ if(st.vacas>0&&v>0){ st.carga=st.vacas/v; } else st.ha=v; },clear:()=>{st.carga=null;st.ha=null;},d:0};
 L.nToros={g:()=>{ const t=isNum(st.toros)?st.toros:TOROS_REF; return st.vacas>0&&t>0?Math.max(1,Math.round(st.vacas*t/100)):0; },dep:['vacas'],s:v=>{ if(st.vacas>0) st.toros=Math.max(0,v)/st.vacas*100; },clear:()=>{st.toros=null},d:0};
-alias('cvC','cv',1); alias('gvC','gv',0); alias('varC','varVenta',1); alias('tasaC','tasa',1);
+alias('arrR','arrHa',0); alias('cvC','cv',1); alias('gvC','gv',0); alias('varC','varVenta',1); alias('tasaC','tasa',1);
 const pfOf=()=>tramos(st).pf;
 function setGdpProm(v){ if(estOn(st)){ const T=tramos(st), a=T.gC; ['gdpVer','gdpOto','gdpInv','gdpPri'].forEach(k=>{ st[k]=a>0&&isNum(st[k])?st[k]*v/a:v; }); } st.gdp=v; }
 L.gdp={g:()=>estOn(st)?tramos(st).gC:st.gdp,s:v=>setGdpProm(v),clear:()=>{st.gdp=null},d:2};
@@ -1430,7 +1460,7 @@ L.gv={g:()=>isNum(st.gv)?st.gv*(st.vista==='jaula'?(st.cab||0)*(1-(st.mort||0)/1
 L.compraT={g:()=>{const c=st.precioPor==='cab'?st.pCcab:(isNum(st.pCkg)&&isNum(st.pc)?st.pCkg*st.pc*(1-(st.dC||0)/100):null); return isNum(c)?c*fac():null;},
   s:v=>{const f=fac(); if(!(f>0))return; const c=v/f; if(st.precioPor==='cab'||!(st.pc>0)){st.precioPor='cab';st.pCcab=c;} else st.pCkg=c/st.pc;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
 
-const KEYS={gdp:['gdp','gdpVer','gdpOto','gdpInv','gdpPri'],cvC:['cv'],gvC:['gv'],varC:['varVenta'],tasaC:['tasa'],pCkg:['pCkg','pCcab'],pCcab:['pCkg','pCcab'],compraT:['pCkg','pCcab'],pVkg:['pVkg','pVcab'],pVcab:['pVkg','pVcab'],pf:['gdp'],kgc:['cab'],nToros:['toros'],ha:['carga'],pPrenKg:['pPren']};
+const KEYS={arrR:['arrHa'],gdp:['gdp','gdpVer','gdpOto','gdpInv','gdpPri'],cvC:['cv'],gvC:['gv'],varC:['varVenta'],tasaC:['tasa'],pCkg:['pCkg','pCcab'],pCcab:['pCkg','pCcab'],compraT:['pCkg','pCcab'],pVkg:['pVkg','pVcab'],pVcab:['pVkg','pVcab'],pf:['gdp'],kgc:['cab'],nToros:['toros'],ha:['carga'],pPrenKg:['pPren']};
 const autoSet=()=>new Set(st.auto||[]);
 function unAuto(keys){ if(!st.auto) return; const a=autoSet(); keys.forEach(k=>a.delete(k)); st.auto=[...a]; }
 function fmtIn(id){ if((L[id].dep||[]).some(k=>!isNum(st[k]))) return ''; const v=L[id].g(); return isNum(v)?nf(v,L[id].d):''; }
@@ -1555,7 +1585,10 @@ function calc(except){
     const tot=(k,cnt,txt)=>{ const v=st[k]; if(!isNum(v)||!(v>0)||!(cnt>0)){ setT('e-'+k,''); return; }
       setT('e-'+k, st.vista==='jaula'?'= '+money(v)+' por cabeza':'= '+mill(v*cnt)+' en total ('+txt+')'); };
     ['fl','san','serv','tacto','mob','otros'].forEach(k=>tot(k,n,nf(n,0)+' cab'));
-    tot('gv',nv,nf(nv,0)+' vendidas'); }
+    tot('gv',nv,nf(nv,0)+' vendidas');
+    setT('e-cargaR',R.ha>0?'= '+nf(R.ha,0)+' ha':'');
+    setT('e-arrR',R.tierra>0?'= '+mill(R.tierra)+' por '+nf(R.T?R.T.mC:0,1)+' meses a campo':'');
+    setT('e-estMes',R.estr>0?'= '+mill(R.estr)+' en total':''); }
   const g=st.gdp, sisG=st.sistema||'campo'; $('e-gdp').innerHTML= isNum(g)&&st.meses>0&&(sisG==='feed'?g>1.6:g>1.0)?'<span class="pill bad">'+(sisG==='feed'?'muy alto para corral':'difícil a campo')+'</span>':'';
   setT('e-pRac',isNum(st.conv)&&isNum(st.pRac)?'= '+money(st.conv*st.pRac)+' por kilo ganado':'');
   if(R.tipoCria){ paintCria(R); return; }
@@ -1571,7 +1604,7 @@ function calc(except){
   setT('r-pren',R.pren||R.vcc?nf(R.nPren,0)+' cab':'—'); setT('r-vac',R.pren||R.vcc?nf(R.nVac,0)+' cab':'—'); setT('r-pren-l',R.vcc?'Vacas con cría al pie':'Preñadas');
   setT('r-main-l',R.vcc?'Venta de vacas con cría y vacías':R.pren?'Venta de preñadas y vacías':'Venta de la hacienda');
   setT('r-main',money(R.ingMain)); setT('r-cria',money(R.ingCria)); setT('r-cria-h',R.cria?nf(R.nTer,0)+' terneros':'');
-  setT('r-ing',money(R.ing)); setT('r-cpra',money(R.cpra)); setT('r-rec',money(R.rec)); setT('r-gven',money(R.gven)); setT('r-ct',money(R.ct));
+  setT('r-ing',money(R.ing)); setT('r-cpra',money(R.cpra)); setT('r-rec',money(R.campo)); setT('r-tie',money(R.tie)); setT('r-tie-h',R.ha>0?nf(R.ha,0)+' ha de campo + estructura':'Alquiler de la tierra y gastos fijos'); setT('r-gven',money(R.gven)); setT('r-ct',money(R.ct));
   setT('r-mb',money(R.mb),R.mb); setT('r-rent',pct(R.rent),R.rent); setT('r-cp',money(R.cp)); setT('r-gr',money(R.gr),R.gr); setT('r-rm',pct(R.rm,2),R.rm);
   setT('r-be',isNum(R.be)?money(R.be)+R.beU:'—');
   setT('r-pmax',isNum(R.pmaxCab)?money(R.pmaxCab)+'/cab'+(st.pc>0?' ('+money(R.pmaxKg)+'/kg)':''):'—');
@@ -1839,6 +1872,7 @@ function flujo(s,R){
     const gm=estOn(s)?gdpMes(s,t0):T.gC;
     let al=n*(gm*D*camp*Z('alKg')+Z('alMes')*camp)+n*(T.gF*D*feed*Z('conv')*Z('pRac')+Z('diaF')*D*feed);
     add(k,-al,null); add(k,-n*(Z('mob')+Z('otros'))*len/M,null);
+    add(k,-((R.ha||0)*Z('arrHa')/12*camp+n*Z('estMes')*len),k===1?'Tierra y estructura (todos los meses)':null);
   }
   if(R.sup>0){ // suplemento: en los meses de invierno (jun–ago) que caen en el campo; si no hay, repartido
     const m0=(isNum(s.mesCompra)?s.mesCompra:1)-1, inv=[]; for(let k=1;k<=Mc;k++){ const mm=(m0+k-1)%12; if(k-1<T.mC&&mm>=5&&mm<=7) inv.push(k); }
@@ -1918,6 +1952,8 @@ $('sanPlan').addEventListener('change',e=>{ const t=e.target; if(!t.dataset||t.d
 
 // ================= ⓘ explicaciones de términos =================
 const GLOS=[
+ ['Tierra y estructura','El alquiler de las hectáreas que ocupa la hacienda (aunque el campo sea propio, es lo que se deja de cobrar por no alquilarlo) más los gastos fijos del campo: asesor, camioneta, alambrados, aguadas e impuestos.'],
+ ['Cabezas por hectárea','Carga: cuántos animales entran en cada hectárea mientras están a campo. Con esto se calcula cuántas hectáreas ocupa el negocio y cuánto cuesta la tierra.'],
  ['Ganancia real','Lo que queda después de pagar todo y de descontar lo que esa misma plata habría rendido en otra inversión. Es la ganancia "de verdad".'],
  ['Margen bruto','Ingresos por ventas menos todos los costos (compra, campo y venta). Todavía no descuenta el costo de tener la plata inmovilizada.'],
  ['Rentabilidad por mes','Ganancia real dividida por la plata puesta y por los meses que dura. Sirve para comparar negocios de distinta duración.'],
@@ -2297,7 +2333,10 @@ $('verList').addEventListener('click',e=>{
     c.onSnapshot(snap=>{
       if(first&&snap.empty&&snap.metadata.fromCache) return;
       const remote=snap.docs.filter(d=>d.exists).map(d=>{const b=d.data(); lastW[d.id]=JSON.stringify({name:b.name,st:b.st,created:b.created}); return {id:d.id,name:b.name,st:b.st,created:b.created,synced:true};});
-      if(first){ first=false; primera(remote); return; }
+      const fixT=remote.filter(migTierra).map(r=>r.id);
+      const wrT=()=>{ if(!readOnly) fixT.forEach(id=>{ if(negs.find(n=>n.id===id)) writeNeg(id); }); };
+      if(first){ first=false; primera(remote).then(wrT); return; }
+      setTimeout(wrT,0);
       // cambios de otras personas o de otro dispositivo
       const local=new Map(negs.map(n=>[n.id,n]));
       const pendingLocal=negs.filter(n=>!n.synced&&!remote.find(r=>r.id===n.id));
