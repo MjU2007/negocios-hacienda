@@ -655,7 +655,7 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
     <div class="eyebrow">Evaluación de negocios ganaderos · Cría · Recría · Invernada</div>
   </div>
   <h1 id="negTitle">Mi negocio</h1>
-  <p class="lead">Simulá un negocio antes de hacerlo: hacienda, tiempo, precios y costos. Obtenés margen bruto, ganancia real, rentabilidad mensual, puntos de equilibrio y sensibilidad, con precios de referencia de mercado.</p>
+  <p class="lead">Simulá un negocio antes de hacerlo: hacienda, tiempo, precios y costos. Obtenés la ganancia, la rentabilidad mensual, puntos de equilibrio y sensibilidad, con precios de referencia de mercado.</p>
   <div class="legend">
     <span><i class="sw in"></i>Celda amarilla: la podés cambiar</span>
     <span><i class="sw in auto"></i>Borde punteado: valor sugerido, cambialo si querés</span>
@@ -744,12 +744,12 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
     <div class="eyebrow" id="v-cat">Resumen</div>
     <div class="headline" id="headline">…</div>
     <div class="kpis">
-      <div class="kpi main"><span class="k">Ganancia real</span><span class="big num" id="k-gr">—</span><span class="sub" id="k-gr-cab">—</span></div>
+      <div class="kpi main"><span class="k">Ganancia</span><span class="big num" id="k-gr">—</span><span class="sub" id="k-gr-cab">—</span></div>
       <div class="kpi"><span class="k">Rentabilidad por mes</span><span class="mid num" id="k-rm">—</span><span class="sub" id="k-mes">—</span></div>
-      <div class="kpi"><span class="k">Margen bruto</span><span class="mid num" id="k-mb">—</span><span class="sub" id="k-rent">—</span></div>
+      <div class="kpi"><span class="k" id="k-mb-l">Rentabilidad total</span><span class="mid num" id="k-mb">—</span><span class="sub" id="k-rent">—</span></div>
       <div class="kpi"><span class="k" id="k-inv-l">Plata a poner en la compra</span><span class="mid num" id="k-inv">—</span><span class="sub" id="k-cab">—</span></div>
     </div>
-    <p class="note">“Ganancia real” = lo que queda después de pagar todo y de descontar lo que esa misma plata habría rendido en otro lado. Está en pesos de hoy: la inflación sube igual la hacienda y los costos, así que no la cuenta como ganancia.</p>
+    <p class="note">“Ganancia” = lo que vendés menos todo lo que gastás: hacienda, campo, tierra, estructura y venta. Está en pesos de hoy: la inflación sube igual la hacienda y los costos, así que no la cuenta como ganancia.</p>
   </div>
 </section>
 
@@ -955,18 +955,14 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
       <tr><td><span class="lbl">Comisión y gastos de venta</span></td><td class="calc" id="r-gven">—</td></tr>
       <tr class="total"><td><span class="lbl">Costo total</span></td><td class="calc" id="r-ct">—</td></tr>
       <tr class="sub"><td colspan="2">Lo que ganás</td></tr>
-      <tr class="key"><td><span class="lbl">Margen bruto</span></td><td id="r-mb">—</td></tr>
+      <tr class="key"><td><span class="lbl">Ganancia</span></td><td id="r-mb">—</td></tr>
       <tr><td><span class="lbl">Rentabilidad sobre lo invertido</span></td><td class="calc" id="r-rent">—</td></tr>
-      <tr><td><span class="lbl">Costo de la plata inmovilizada</span>
-          <span class="hint">Lo que rendiría en otro lado a una tasa real de <span class="field"><input class="in s" id="tasa" inputmode="decimal"><span class="u">% anual</span></span></span></td>
-          <td class="calc" id="r-cp">—</td></tr>
-      <tr class="key"><td><span class="lbl">Ganancia real</span></td><td id="r-gr">—</td></tr>
       <tr><td><span class="lbl">Rentabilidad por mes</span></td><td class="calc" id="r-rm">—</td></tr>
       <tr class="sub"><td colspan="2">Límites del negocio (pesos de hoy)</td></tr>
       <tr><td><span class="lbl">Precio de venta mínimo para no perder</span></td><td class="calc" id="r-be">—</td></tr>
       <tr><td><span class="lbl">Precio de compra máximo que podés pagar</span></td><td class="calc" id="r-pmax">—</td></tr>
       <tr class="sub"><td colspan="2">En pesos del día de venta</td></tr>
-      <tr><td><span class="lbl">Margen bruto con inflación</span>
+      <tr><td><span class="lbl">Ganancia con inflación</span>
           <span class="hint">Con inflación de <span class="field"><input class="in s" id="inf" inputmode="decimal"><span class="u">% mensual</span></span> (REM-BCRA). Es lo que vas a ver en la cuenta, pero no es todo ganancia.</span></td>
           <td id="r-nom">—</td></tr>
     </tbody>
@@ -1044,12 +1040,10 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
     <tr><td><span class="lbl">Comisión y gastos de venta</span></td><td class="calc" id="rc-gven">—</td></tr>
     <tr class="total"><td><span class="lbl">Costo total</span></td><td class="calc" id="rc-ct">—</td></tr>
     <tr class="sub"><td colspan="2">Lo que ganás</td></tr>
-    <tr class="key"><td><span class="lbl">Margen bruto del año</span></td><td id="rc-mb">—</td></tr>
+    <tr class="key"><td><span class="lbl">Ganancia del año</span></td><td id="rc-mb">—</td></tr>
     <tr><td><span class="lbl">Por vaca</span></td><td class="calc" id="rc-mbv">—</td></tr>
     <tr><td><span class="lbl">Por hectárea</span></td><td class="calc" id="rc-mbha">—</td></tr>
     <tr><td><span class="lbl">Plata que tenés en el rodeo</span></td><td class="calc" id="rc-cap">—</td></tr>
-    <tr><td><span class="lbl">Costo de esa plata</span><span class="hint">Lo que rendiría en otro lado a una tasa real de <span class="field"><input class="in s" id="tasaC" inputmode="decimal"><span class="u">% anual</span></span></span></td><td class="calc" id="rc-cp">—</td></tr>
-    <tr class="key"><td><span class="lbl">Ganancia real del año</span></td><td id="rc-gr">—</td></tr>
     <tr><td><span class="lbl">Rentabilidad sobre la plata en el rodeo</span></td><td class="calc" id="rc-rent">—</td></tr>
     <tr class="sub"><td colspan="2">Límites del negocio (pesos de hoy)</td></tr>
     <tr><td><span class="lbl">Precio promedio del ternero para no perder</span></td><td class="calc" id="rc-be">—</td></tr>
@@ -1272,7 +1266,7 @@ function modelCria(s){
   r.dir=V*(Z('sanV')+Z('alV')+Z('mobV')+Z('otrosV'))+r.nToros*Z('ctoro')+(HA(s)||0)*Z('arrHa');
   r.cvp=Z('cv')/100; r.cv=r.ing*r.cvp; r.gv=(r.mach+r.hemV+r.vd)*Z('gv'); r.gven=r.cv+r.gv;
   r.ct=r.dir+r.gven; r.mb=r.ing-r.ct;
-  r.compraCab=N('valVaca'); r.cpra=V*r.compraCab; r.cp=r.cpra*Z('tasa')/100; r.gr=r.mb-r.cp;
+  r.compraCab=N('valVaca'); r.cpra=V*r.compraCab; r.cp=0; r.gr=r.mb; // sin comparar contra otra inversión
   r.rent=r.mb/r.cpra; r.rm=(r.gr/r.cpra)/12; r.mbVaca=r.mb/V; r.mbHa=r.mb/(HA(s)||NaN);
   const need=(r.dir+r.gv)/(1-r.cvp);
   r.be=((need/v)-r.ingVd/v)/((r.mach+r.hemV)*pdes);
@@ -1318,7 +1312,7 @@ function model(s){
   r.cvp=Z('cv')/100; r.cv=r.ing*r.cvp; r.gv=r.viv*Z('gv'); r.gven=r.cv+r.gv;
   r.ct=r.cpra+r.rec+r.gven; r.mb=r.ing-r.ct; r.rent=r.mb/r.ct;
   const tasa=Z('tasa')/100, inf=Z('inf')/100, m=r.meses;
-  r.cp=r.cpra*(Math.pow(1+tasa,m/12)-1)+r.rec*(Math.pow(1+tasa,m/24)-1);
+  r.cp=0; // sin comparar contra otra inversión: la ganancia es el margen
   r.gr=r.mb-r.cp; r.rm=(r.gr/r.ct)/m;
   r.nom=r.ing*Math.pow(1+inf,m)-r.cpra-r.rec*Math.pow(1+inf,m/2)-r.gven*Math.pow(1+inf,m);
   const need=(r.cpra+r.rec+r.gv)/(1-r.cvp), needMain=(need-r.ingCria)/v;
@@ -1605,7 +1599,7 @@ function calc(except){
   setT('r-main-l',R.vcc?'Venta de vacas con cría y vacías':R.pren?'Venta de preñadas y vacías':'Venta de la hacienda');
   setT('r-main',money(R.ingMain)); setT('r-cria',money(R.ingCria)); setT('r-cria-h',R.cria?nf(R.nTer,0)+' terneros':'');
   setT('r-ing',money(R.ing)); setT('r-cpra',money(R.cpra)); setT('r-rec',money(R.campo)); setT('r-tie',money(R.tie)); setT('r-tie-h',R.ha>0?nf(R.ha,0)+' ha de campo + estructura':'Alquiler de la tierra y gastos fijos'); setT('r-gven',money(R.gven)); setT('r-ct',money(R.ct));
-  setT('r-mb',money(R.mb),R.mb); setT('r-rent',pct(R.rent),R.rent); setT('r-cp',money(R.cp)); setT('r-gr',money(R.gr),R.gr); setT('r-rm',pct(R.rm,2),R.rm);
+  setT('r-mb',money(R.mb),R.mb); setT('r-rent',pct(R.rent),R.rent); setT('r-rm',pct(R.rm,2),R.rm);
   setT('r-be',isNum(R.be)?money(R.be)+R.beU:'—');
   setT('r-pmax',isNum(R.pmaxCab)?money(R.pmaxCab)+'/cab'+(st.pc>0?' ('+money(R.pmaxKg)+'/kg)':''):'—');
   setT('r-nom',money(R.nom),R.nom);
@@ -1613,13 +1607,12 @@ function calc(except){
   setT('v-cat',(TIPOS[st.tipo]||'Recría')+' '+(SISTEMAS[st.sistema||'campo'])+(st.cat?' · '+catName(st.cat):'')+(isNum(R.n)?' · '+nf(R.n)+' cabezas':''));
   setT('k-gr',ok?mill(R.gr):'—',ok?R.gr:0); setT('k-gr-cab',ok?money(R.gr/R.n)+' por cabeza':'por cabeza');
   setT('k-rm',ok?pct(R.rm,2):'—',ok?R.rm:0); setT('k-mes',isNum(R.meses)?'en '+nf(R.meses,1)+' meses':'—');
-  setT('k-mb',ok?mill(R.mb):'—',ok?R.mb:0); setT('k-rent',ok?pct(R.rent)+' sobre lo invertido':'—');
+  setT('k-mb-l','Rentabilidad total'); setT('k-mb',ok?pct(R.rent):'—',ok?R.rent:0); setT('k-rent',ok?'sobre lo invertido, en '+nf(R.meses,1)+' meses':'—');
   setT('k-inv-l','Plata a poner en la compra'); setT('k-inv',isNum(R.cpra)?mill(R.cpra):'—'); setT('k-cab',isNum(R.compraCab)?money(R.compraCab)+' por cabeza':'—');
   $('headline').innerHTML= !st.cat ? 'Elegí qué hacienda comprás y cargá tus números (o los de referencia) para ver cuánto deja.'
     : !ok ? 'Faltan datos: cargá cabezas, precio de compra, meses y precio de venta.'
-    : R.gr>0 ? 'Este negocio deja <b class="pos">'+mill(R.gr)+'</b> de ganancia real en '+nf(R.meses,1)+' meses.'
-    : R.mb>0 ? 'Da margen bruto, pero <b class="neg">no le gana a dejar la plata quieta</b>: la ganancia real es '+mill(R.gr)+'.'
-    : 'Con estos números <b class="neg">se pierde plata</b>: '+mill(R.mb)+' de margen bruto.';
+    : R.mb>0 ? 'Este negocio deja <b class="pos">'+mill(R.mb)+'</b> de ganancia en '+nf(R.meses,1)+' meses.'
+    : 'Con estos números <b class="neg">se pierde plata</b>: '+mill(R.mb)+'.';
   cal(R);
 }
 function paintCria(R){
@@ -1635,16 +1628,15 @@ function paintCria(R){
   setT('o-cvaca',isNum(R.n)&&R.n>0?money(R.dir/R.n):'—'); setT('o-crodeo',money(R.dir));
   setT('rc-ter',money(R.ingTer)); setT('rc-vd',money(R.ingVd)); setT('rc-ing',money(R.ing)); setT('rc-dir',money(R.dir)); setT('rc-gven',money(R.gven)); setT('rc-ct',money(R.ct));
   setT('rc-mb',money(R.mb),R.mb); setT('rc-mbv',money(R.mbVaca),R.mbVaca); setT('rc-mbha',money(R.mbHa),R.mbHa);
-  setT('rc-cap',money(R.cpra)); setT('rc-cp',money(R.cp)); setT('rc-gr',money(R.gr),R.gr); setT('rc-rent',pct(R.rent),R.rent);
+  setT('rc-cap',money(R.cpra)); setT('rc-rent',pct(R.rent),R.rent);
   setT('rc-be',isNum(R.be)?money(R.be)+'/kg':'—'); setT('rc-bed',isNum(R.beD)?(R.beD>100?'más de 100% (no alcanza)':nf(R.beD,0)+'%'):'—');
   setT('v-cat','Cría · rodeo propio'+(isNum(R.n)?' · '+nf(R.n)+' vacas':''));
   setT('k-gr',ok?mill(R.gr):'—',ok?R.gr:0); setT('k-gr-cab',ok?money(R.gr/R.n)+' por vaca':'por vaca');
   setT('k-rm',ok&&isNum(R.rm)?pct(R.rm,2):'—',ok?R.rm:0); setT('k-mes','sobre la plata en el rodeo');
-  setT('k-mb',ok?mill(R.mb):'—',ok?R.mb:0); setT('k-rent',ok&&isNum(R.mbHa)?money(R.mbHa)+' por hectárea':'por año');
+  setT('k-mb-l','Ganancia por hectárea'); setT('k-mb',ok&&isNum(R.mbHa)?money(R.mbHa):'—',ok?R.mbHa:0); setT('k-rent','por año');
   setT('k-inv-l','Plata en el rodeo'); setT('k-inv',isNum(R.cpra)?mill(R.cpra):'—'); setT('k-cab',isNum(R.compraCab)?money(R.compraCab)+' por vaca':'—');
   $('headline').innerHTML= !ok ? 'Faltan datos: cargá vacas, destete, peso y precio del ternero.'
-    : R.gr>0 ? 'Este rodeo deja <b class="pos">'+mill(R.gr)+'</b> de ganancia real por año.'
-    : R.mb>0 ? 'Da margen bruto, pero <b class="neg">no le gana a lo que rendiría la plata de las vacas</b>: la ganancia real es '+mill(R.gr)+' por año.'
+    : R.mb>0 ? 'Este rodeo deja <b class="pos">'+mill(R.mb)+'</b> de ganancia por año.'
     : 'Con estos números <b class="neg">el rodeo pierde plata</b>: '+mill(R.mb)+' por año.';
 }
 function cal(R){
@@ -1708,8 +1700,7 @@ function renderCmp(){
   row('Costo total',R=>R.ok?mill(R.ct):'—',{hint:'Compra, gastos y venta'});
   row('Ingreso por ventas',R=>R.ok?mill(R.ing):'—');
   grp('El resultado');
-  row('Margen bruto',R=>R.ok?sg(R.mb,mill(R.mb)):'—',{v:R=>R.mb,hint:'Ingresos menos costos'});
-  row('Ganancia real',R=>R.ok?sg(R.gr,mill(R.gr)):'—',{v:R=>R.gr,key:1,hint:'Margen menos el costo de la plata'});
+  row('Ganancia',R=>R.ok?sg(R.mb,mill(R.mb)):'—',{v:R=>R.mb,key:1,hint:'Ventas menos todos los costos'});
   row('Ganancia por cabeza',R=>R.ok&&R.n>0?money(R.gr/R.n):'—',{v:R=>R.n>0?R.gr/R.n:NaN});
   row('Rentabilidad sobre lo invertido',R=>R.ok?sg(R.rent,pct(R.rent)):'—',{v:R=>R.rent});
   row('Rentabilidad por mes',R=>R.ok?sg(R.rm,pct(R.rm,2)):'—',{v:R=>R.rm,key:1,hint:'La que sirve para comparar negocios de distinta duración'});
@@ -1725,7 +1716,7 @@ function paintCmpVisual(rows,best){
   const rankOf=x=>ranked.indexOf(x)+1;
   if(best&&ok.length>1){ const second=ranked[1];
     W.hidden=false;
-    W.innerHTML='<div class="medal">1º</div><div><div class="t">El que más rinde</div><div class="n">'+esc(best.n.name||'Sin nombre')+'</div><div class="d">'+pct(best.R.rm,2)+' por mes · ganancia real '+mill(best.R.gr)+(second?' · '+nf((best.R.rm-second.R.rm)*100,2)+' puntos por mes más que «'+esc(second.n.name||'Sin nombre')+'»':'')+'</div></div>';
+    W.innerHTML='<div class="medal">1º</div><div><div class="t">El que más rinde</div><div class="n">'+esc(best.n.name||'Sin nombre')+'</div><div class="d">'+pct(best.R.rm,2)+' por mes · ganancia '+mill(best.R.gr)+(second?' · '+nf((best.R.rm-second.R.rm)*100,2)+' puntos por mes más que «'+esc(second.n.name||'Sin nombre')+'»':'')+'</div></div>';
   } else { W.hidden=true; W.innerHTML=''; }
   const ordered=[...ranked,...rows.filter(x=>!ranked.includes(x))];
   C.innerHTML=ordered.map(x=>{ const R=x.R, s={...EMPTY,...x.n.st}; const r=R.ok?rankOf(x):0; const isB=best&&x===best&&ok.length>1;
@@ -1733,17 +1724,17 @@ function paintCmpVisual(rows,best){
     return '<article class="cmp-card '+tcls(s)+(isB?' best':'')+'">'+(r&&ok.length>1?'<span class="rank">'+r+'º</span>':'')
       +'<h4><button type="button" data-open="'+x.n.id+'">'+esc(x.n.name||'Sin nombre')+'</button></h4>'
       +'<span class="tag '+tcls(s)+'">'+esc(tipoTxt(s))+(s.tipo==='cria'?'':' · '+esc(catName(s.cat)))+'</span>'
-      +'<div class="big"><span>Ganancia real</span><b class="'+cls(R.gr)+'">'+(R.ok?mill(R.gr):'—')+'</b><small>'+(R.ok?pct(R.rm,2)+' por mes':'Faltan datos')+'</small></div>'
+      +'<div class="big"><span>Ganancia</span><b class="'+cls(R.gr)+'">'+(R.ok?mill(R.gr):'—')+'</b><small>'+(R.ok?pct(R.rm,2)+' por mes':'Faltan datos')+'</small></div>'
       +'<dl><dt>'+(s.tipo==='cria'?'Vacas':'Cabezas')+'</dt><dd>'+nf(R.n,0)+'</dd>'
       +'<dt>Duración</dt><dd>'+(isNum(R.meses)?nf(R.meses,1)+' meses':'—')+'</dd>'
       +'<dt>Plata invertida</dt><dd>'+mill(R.cpra)+'</dd>'
-      +'<dt>Margen bruto</dt><dd class="'+cls(R.mb)+'">'+(R.ok?mill(R.mb):'—')+'</dd>'
+      +'<dt>Rentabilidad total</dt><dd class="'+cls(R.rent)+'">'+(R.ok?pct(R.rent):'—')+'</dd>'
       +'<dt>Por cabeza</dt><dd class="'+cls(R.gr)+'">'+(R.ok&&R.n>0?money(R.gr/R.n):'—')+'</dd></dl></article>'; }).join('');
   C.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>{switchTo(b.dataset.open); setView('neg');}));
   const chart=(title,val,fmt)=>{ if(ok.length<2) return ''; const mx=Math.max(...ok.map(x=>Math.abs(val(x.R))))||1;
     return '<div class="cmp-chart"><h4>'+title+'</h4>'+[...ok].sort((a,b)=>val(b.R)-val(a.R)).map(x=>{ const v=val(x.R);
       return '<div class="row'+(best&&x===best?' best':'')+(v<0?' neg':'')+'"><span class="nm" title="'+esc(x.n.name||'')+'">'+esc(x.n.name||'Sin nombre')+'</span><span class="track"><i style="width:'+Math.max(1.5,Math.abs(v)/mx*100).toFixed(1)+'%"></i></span><em>'+fmt(v)+'</em></div>'; }).join('')+'</div>'; };
-  G.innerHTML=chart('Rentabilidad por mes',R=>R.rm,v=>pct(v,2))+chart('Ganancia real',R=>R.gr,v=>mill(v));
+  G.innerHTML=chart('Rentabilidad por mes',R=>R.rm,v=>pct(v,2))+chart('Ganancia',R=>R.gr,v=>mill(v));
 }
 $('cmpAll').addEventListener('click',()=>{cmpSel=negs.map(n=>n.id); saveSel(); renderCmp();});
 $('cmpNone').addEventListener('click',()=>{cmpSel=[]; saveSel(); renderCmp();});
@@ -1788,7 +1779,7 @@ function renderIni(){
     const c=v=>isNum(v)?(v>=0?'pos':'neg'):'';
     return '<button type="button" class="ini-neg '+tcls(s)+'" data-open="'+n.id+'"><h3>'+esc(n.name||'Sin nombre')+'</h3>'
       +'<span class="tag '+tcls(s)+'">'+esc(tipoTxt(s))+(s.tipo==='cria'?'':' · '+esc(catName(s.cat)))+'</span>'
-      +'<div class="nums"><div><span>Ganancia real</span><b class="'+c(R.gr)+'">'+(R.ok?mill(R.gr):'—')+'</b></div>'
+      +'<div class="nums"><div><span>Ganancia</span><b class="'+c(R.gr)+'">'+(R.ok?mill(R.gr):'—')+'</b></div>'
       +'<div><span>Por mes</span><b class="'+c(R.rm)+'">'+(R.ok?pct(R.rm,2):'—')+'</b></div></div>'
       +'<small class="upd">'+(R.ok?(s.tipo==='cria'?nf(R.n,0)+' vacas · por año':nf(R.n,0)+' cabezas · '+nf(R.meses,1)+' meses'):'Faltan datos')+'</small></button>'; }).join('');
   L.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>{ switchTo(b.dataset.open); setView('neg'); }));
@@ -1846,7 +1837,7 @@ function paintMini(R){
       ['Ingreso total',mill(R.ing)],
       vend>0?['Por cabeza vendida',money(R.ing/vend)]:null,
       vend>0&&R.pf>0?['Precio promedio logrado','$ '+nf(R.ing/(vend*R.pf),0)+'/kg']:null,
-      R.n>0?['Margen por cabeza',money(R.mb/R.n)]:null]));
+      R.n>0?['Ganancia por cabeza',money(R.mb/R.n)]:null]));
   }
 }
 
@@ -1902,7 +1893,7 @@ function renderFlujo(R){
     '<div class="flu-kpi"><span>Plata máxima puesta</span><b>'+mill(-peak)+'</b><small>El momento de mayor desembolso</small></div>'
    +'<div class="flu-kpi"><span>Se recupera en</span><b>'+(rec>0?F.labels[rec]:'—')+'</b><small>'+(rec>0?(F.cria?'Mes '+rec+' del año':'A los '+rec+' meses de la compra'):'No se recupera en el período')+'</small></div>'
    +'<div class="flu-kpi"><span>TIR anual</span><b class="'+c(tirA)+'">'+(isNum(tirA)?pct(tirA,1):'—')+'</b><small>Rendimiento real de la plata puesta, por año</small></div>'
-   +'<div class="flu-kpi"><span>Contra la alternativa</span><b class="'+c(tirA-alt)+'">'+(isNum(tirA)?(tirA>=alt?'+':'−')+nf(Math.abs(tirA-alt)*100,1)+' pts':'—')+'</b><small>Frente a una inversión al '+nf(alt*100,1)+' % anual real</small></div>';
+   +'<div class="flu-kpi"><span>Ganancia</span><b class="'+c(R.mb)+'">'+mill(R.mb)+'</b><small>'+(F.cria?'Del año, sin contar las vacas':'Al vender, sobre lo puesto')+'</small></div>';
   // gráfico: barras de neto por mes y línea del acumulado
   const W=860,H=250,pl=58,pr=14,pt=14,pb=30, n=net.length, iw=W-pl-pr, ih=H-pt-pb;
   const mx=Math.max(...net.map(Math.abs),...cum.map(Math.abs))||1, y=v=>pt+ih/2-(v/mx)*(ih/2), bw=Math.min(36,iw/n*0.6), x=i=>pl+iw*(i+0.5)/n;
@@ -1954,17 +1945,16 @@ $('sanPlan').addEventListener('change',e=>{ const t=e.target; if(!t.dataset||t.d
 const GLOS=[
  ['Tierra y estructura','El alquiler de las hectáreas que ocupa la hacienda (aunque el campo sea propio, es lo que se deja de cobrar por no alquilarlo) más los gastos fijos del campo: asesor, camioneta, alambrados, aguadas e impuestos.'],
  ['Cabezas por hectárea','Carga: cuántos animales entran en cada hectárea mientras están a campo. Con esto se calcula cuántas hectáreas ocupa el negocio y cuánto cuesta la tierra.'],
- ['Ganancia real','Lo que queda después de pagar todo y de descontar lo que esa misma plata habría rendido en otra inversión. Es la ganancia "de verdad".'],
- ['Margen bruto','Ingresos por ventas menos todos los costos (compra, campo y venta). Todavía no descuenta el costo de tener la plata inmovilizada.'],
- ['Rentabilidad por mes','Ganancia real dividida por la plata puesta y por los meses que dura. Sirve para comparar negocios de distinta duración.'],
- ['Rentabilidad sobre lo invertido','Margen bruto dividido por todo lo que se gastó, sin importar cuánto dura el negocio.'],
- ['Rentabilidad sobre la plata en el rodeo','Ganancia real del año dividida por lo que valen las vacas.'],
- ['Costo de la plata','Lo que esa plata rendiría en otro lado (a la tasa real que cargás) mientras está metida en hacienda.'],
- ['TIR anual','Tasa interna de retorno: el interés anual que rinde la plata puesta, teniendo en cuenta cuándo sale y cuándo vuelve cada peso.'],
+ ['Ganancia','Lo que vendés menos todo lo que gastás: compra, campo, tierra, estructura y venta.'],
+ ['Rentabilidad total','Ganancia dividida por todo lo que se puso en el negocio.'],
+ ['Ganancia por hectárea','Ganancia del año dividida por las hectáreas que ocupa el rodeo.'],
+ ['Rentabilidad por mes','Ganancia dividida por la plata puesta y por los meses que dura. Sirve para comparar negocios de distinta duración.'],
+ ['Rentabilidad sobre lo invertido','Ganancia dividida por todo lo que se gastó, sin importar cuánto dura el negocio.'],
+ ['Rentabilidad sobre la plata en el rodeo','Ganancia del año dividida por lo que valen las vacas.'],
+  ['TIR anual','Tasa interna de retorno: el interés anual que rinde la plata puesta, teniendo en cuenta cuándo sale y cuándo vuelve cada peso.'],
  ['Plata máxima puesta','Lo máximo que vas a tener invertido en algún momento del negocio, sumando compra y gastos hasta que entra la venta.'],
  ['Se recupera en','El mes en que lo que entró ya cubre todo lo que se puso.'],
- ['Contra la alternativa','Diferencia entre la TIR del negocio y lo que rendiría la misma plata en otra inversión a la tasa real que cargaste.'],
- ['Desbaste','Porcentaje que se descuenta del peso al pesar la hacienda, porque el animal tiene la panza llena (comida y agua). Se paga o se cobra el peso con ese descuento.'],
+  ['Desbaste','Porcentaje que se descuenta del peso al pesar la hacienda, porque el animal tiene la panza llena (comida y agua). Se paga o se cobra el peso con ese descuento.'],
  ['Vacas por hectárea','Carga del campo: cuántas vacas sostiene cada hectárea en el año. Depende del pasto: más pasto, más carga.'],
  ['Hectáreas que ocupa','Superficie que necesita el rodeo según la carga. Se calcula con las vacas y las vacas por hectárea.'],
  ['Aumento diario','Cuántos kilos gana cada animal por día. A campo depende mucho de la estación: poco en invierno, mucho en primavera.'],
@@ -1980,11 +1970,11 @@ const GLOS=[
  ['Guías, DTE','Documentos y tasas para mover la hacienda (DTE de SENASA, guías municipales) y otros gastos por cabeza al vender.'],
  ['Suplemento invernal','Comida extra (grano, silo, rollo) para cubrir el invierno, cuando el pasto casi no crece.'],
  ['Kilos producidos','Kilos que gana cada animal desde que se compra hasta que se vende.'],
- ['Precio de venta mínimo para no perder','Precio al que tendrías que vender para que el margen dé cero.'],
- ['Precio de compra máximo','Lo máximo que podrías pagar por cabeza para que el margen dé cero.'],
+ ['Precio de venta mínimo para no perder','Precio al que tendrías que vender para que la ganancia dé cero.'],
+ ['Precio de compra máximo','Lo máximo que podrías pagar por cabeza para que la ganancia dé cero.'],
  ['Precio promedio del ternero para no perder','Precio por kilo del ternero al que el resultado del año da cero.'],
  ['Destete mínimo para no perder','Porcentaje de destete por debajo del cual la cría pierde plata.'],
- ['Margen bruto con inflación','El margen expresado en pesos del día de la venta, con la inflación esperada. Infla los números pero no es ganancia real.'],
+ ['Ganancia con inflación','La ganancia expresada en pesos del día de la venta, con la inflación esperada. Los números se ven más grandes, pero esa diferencia es inflación, no ganancia.'],
  ['Cambio esperado del precio de venta','Cuánto creés que va a subir o bajar el precio de venta en términos reales (por encima o por debajo de la inflación).'],
  ['Plata a poner en la compra','Lo que hay que poner al comprar: hacienda, comisión y flete.'],
  ['Plata en el rodeo','Lo que valen las vacas: es la plata que tenés invertida en la cría.'],
@@ -2038,7 +2028,7 @@ function renderSens(){
   }
   const base=model(st);
   if(!base.ok){ T.innerHTML=''; $('sensNote').textContent='Completá los datos del negocio para ver la sensibilidad.'; return; }
-  $('sensNote').textContent='Ganancia real '+(cria?'del año':'del negocio')+' si cambian el precio de venta y '+sensVar+'. El recuadro marcado es el escenario cargado.';
+  $('sensNote').textContent='Ganancia '+(cria?'del año':'del negocio')+' si cambian el precio de venta y '+sensVar+'. El recuadro marcado es el escenario cargado.';
   let html='<thead><tr><th class="corner">'+corner+'</th>'+colV.map(c=>'<th>'+(c>0?'+':'')+c+' %</th>').join('')+'</tr></thead><tbody>';
   rows.forEach(r=>{ html+='<tr><th>'+rowLbl(r)+'</th>'+colV.map(c=>{ const R=model(apply(r,c)); const g=R.ok?R.gr:NaN;
     return '<td class="'+(isNum(g)?(g>=0?'pos':'neg'):'')+(r===0&&c===0?' base':'')+'">'+(isNum(g)?mill(g):'—')+'</td>'; }).join('')+'</tr>'; });
