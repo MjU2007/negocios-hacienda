@@ -761,6 +761,8 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
     <tbody>
       <tr><td><span class="lbl">Categoría</span><span class="hint">Qué hacienda comprás</span></td>
           <td><select id="cat" class="catsel"><option value="">Elegí una categoría…</option></select></td></tr>
+      <tr id="destRow" hidden><td><span class="lbl">Para qué son</span><span class="hint">Cambia los precios y valores sugeridos</span></td>
+          <td><div class="seg" role="group" aria-label="Destino"><button type="button" id="dt-rep" aria-pressed="true">Reproductor</button><button type="button" id="dt-fae" aria-pressed="false">Faena</button></div></td></tr>
       <tr><td><span class="lbl">Cabezas</span><span class="hint">Jaula doble: ~80 terneros de 175 kg o ~35 vacas</span></td>
           <td><span class="field"><input class="in s" id="cab" inputmode="numeric"><span class="u">cab</span></span></td></tr>
       <tr><td><span class="lbl">Peso de compra por cabeza</span></td>
@@ -1157,7 +1159,9 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
 const D=30.4;
 const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 const CATS=[['ternero','Terneros'],['ternera','Terneras'],['novillito','Novillitos'],['vaquillona','Vaquillonas'],['novillo','Novillos'],
-  ['vaca','Vacas'],['vacaPren','Vacas preñadas'],['vacaCria','Vacas con cría al pie'],['torito','Toritos para reproductores'],['toro','Toros de descarte'],['otro','Otra hacienda']];
+  ['vaca','Vacas'],['vacaPren','Vacas preñadas'],['vacaCria','Vacas con cría al pie'],['torito','Toritos'],['toro','Toros'],['otro','Otra hacienda']];
+const TOR=['torito','toro'];
+const refFor=s=>TOR.includes(s.cat)?REF[s.cat+'_'+(s.destTor||'rep')]:REF[s.cat];
 const catName=c=>(CATS.find(x=>x[0]===c)||[])[1]||'Sin categoría';
 // Estructura de un negocio. Los números arrancan vacíos (null).
 const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:null,fl:null,
@@ -1169,7 +1173,7 @@ const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:nu
   tipo:'recria',sistema:'campo',mesesF:null,gdpF:null,conv:null,pRac:null,diaF:null,
   vacas:null,toros:null,ha:null,carga:null,valVaca:null,mortV:null,destC:null,pdesC:null,machos:null,desc:null,pVd:null,
   pTro:null,pTra:null,pVdKg:null,sanV:null,alV:null,mobV:null,ctoro:null,otrosV:null,arrHa:null,
-  estac:false,gdpVer:null,gdpOto:null,gdpInv:null,gdpPri:null,supKg:null,supDias:null,supPrecio:null,dC:null,dV:null,sanDet:false,sanPlan:null};
+  estac:false,gdpVer:null,gdpOto:null,gdpInv:null,gdpPri:null,supKg:null,supDias:null,supPrecio:null,dC:null,dV:null,sanDet:false,sanPlan:null,destTor:'rep'};
 const TIPOS={cria:'Cría',recria:'Recría',invernada:'Invernada / engorde'};
 const SISTEMAS={campo:'a campo',feed:'a corral (feedlot)',mix:'mix campo + corral'};
 // Valores sugeridos para un rodeo de cría (precios De Campo a Campo, sep-2026; costos estimados)
@@ -1204,10 +1208,14 @@ const REF={
     v:{cab:35,precioPor:'cab',pCcab:2313938,pc:430,meses:10,gdp:0.03,mort:1,modoVenta:'prenada',ms:3,pr:85,pPren:1593487,pVac:3060,conCria:true,dest:90,pdes:170,pTer:6610,fl:34000,alKg:0,alMes:15000,san:35000,serv:30000,tacto:6000,mob:45000}},
   vacaCria:{txt:'Vaca nueva con cría al pie a $1.508.478/cab (sem. 37); ternero a $6.610/kg y vaca a faena a $3.060/kg (Mercado Agroganadero). Se desteta el ternero y se venden los dos: ~5 meses.',
     v:{cab:35,precioPor:'cab',pCcab:1508478,pc:430,meses:5,gdp:0.03,mort:1,modoVenta:'kilo',pVkg:3060,conCria:true,dest:95,pdes:170,pTer:6610,fl:34000,alKg:0,alMes:15000,san:30000,mob:25000}},
-  torito:{txt:'Toro PC Angus a $5.668.304 por cabeza en promedio (remates temporada 2025, Asociación Argentina de Angus). Recría de terneros enteros de buena genética hasta ~2 años para vender como reproductores; precio de compra estimado. Incluye revisación andrológica y registros en otros gastos. Ojo: no todos califican como reproductores (suele quedar ~70 %); si querés contemplarlo, bajá el precio promedio de venta.',
+  torito_rep:{txt:'Toritos para reproductores: toro PC Angus a $5.668.304 por cabeza en promedio (remates temporada 2025, Asociación Argentina de Angus). Recría de terneros enteros de buena genética hasta ~2 años; precio de compra estimado. Incluye revisación andrológica y registros en otros gastos. Ojo: no todos califican como reproductores (suele quedar ~70 %); si querés contemplarlo, bajá el precio promedio de venta.',
     v:{cab:30,pc:200,pCkg:7000,meses:18,gdp:0.6,mort:2,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,fl:15000,san:60000,mob:60000,otros:120000,alKg:1500}},
-  toro:{txt:'Toro a faena a $3.562/kg (Mercado Agroganadero, 16/10/2026). Toro de descarte comprado flaco y terminado a campo en ~3 meses; precio de compra estimado ~10 % por debajo del toro gordo.',
-    v:{cab:30,pc:600,pCkg:3200,meses:3,gdp:0.8,mort:1,modoVenta:'kilo',pVkg:3562,fl:40000,san:15000,mob:20000,otros:0,alKg:1500}},
+  torito_fae:{txt:'Toritos a faena: el torito entero se paga ~10 % menos que el novillito (novillito a $4.427/kg en el Mercado Agroganadero, 16/10/2026; precio de venta estimado). Ternero entero a $6.610/kg (De Campo a Campo, sem. 39). Recría a campo de ~12 meses. Si los castrás, evaluálo como recría de terneros.',
+    v:{cab:40,pc:200,pCkg:6610,meses:12,gdp:0.7,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:3985,fl:15000,san:30000,mob:40000,otros:0,alKg:1500}},
+  toro_rep:{txt:'Toros para reproductores: venta a $5.668.304 por cabeza (toro PC Angus, promedio de remates temporada 2025). Compra de toros jóvenes por cabeza, estimada. Incluye revisación andrológica en otros gastos.',
+    v:{cab:20,pc:600,precioPor:'cab',pCcab:4500000,meses:6,gdp:0.4,mort:1,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,fl:40000,san:40000,mob:30000,otros:80000,alKg:1500}},
+  toro_fae:{txt:'Toros a faena: toro a $3.562/kg (Mercado Agroganadero, 16/10/2026). Toro comprado flaco y terminado a campo en ~3 meses; precio de compra estimado ~10 % por debajo del toro gordo.',
+    v:{cab:30,pc:600,pCkg:3200,meses:3,gdp:0.8,mort:1,modoVenta:'kilo',ventaPor:'kg',pVkg:3562,fl:40000,san:15000,mob:20000,otros:0,alKg:1500}},
   otro:{txt:'Sin precios de referencia para esta categoría: cargá los tuyos. Los costos tienen valores sugeridos generales.',v:{}}
 };
 const KEYDEF={...EMPTY};
@@ -1448,7 +1456,7 @@ selM.addEventListener('change',()=>{st.mesCompra=+selM.value; calc(); save();});
 const selC=$('cat'); CATS.forEach(([k,l])=>{const o=document.createElement('option');o.value=k;o.textContent=l;selC.appendChild(o);});
 selC.addEventListener('change',()=>{
   st.cat=selC.value||null;
-  const r=REF[st.cat]; if(!r){ applyUI(); save(); return; }
+  const r=refFor(st); if(!r){ applyUI(); save(); return; }
   const a=autoSet(), v={...BASE,...r.v};
   // la forma de comprar y vender que corresponde a la categoría
   const mine=(k1,k2)=>(isNum(st[k1])&&!a.has(k1))||(isNum(st[k2])&&!a.has(k2));
@@ -1465,6 +1473,7 @@ selC.addEventListener('change',()=>{
   if(!myBuy){ if(st.precioPor==='kg'&&a.has('pCcab')) st.pCcab=null; if(st.precioPor==='cab'&&a.has('pCkg')) st.pCkg=null; }
   st.auto=[...a]; applyUI(); save();
 });
+['rep','fae'].forEach(d=>$('dt-'+d).addEventListener('click',()=>{ if((st.destTor||'rep')===d) return; st.destTor=d; selC.dispatchEvent(new Event('change')); }));
 $('conCria').addEventListener('change',e=>{st.conCria=e.target.checked; applyUI(); save();});
 const seg=(a,b,key,va,vb)=>{$(a).addEventListener('click',()=>{st[key]=va; applyUI(); save();}); $(b).addEventListener('click',()=>{st[key]=vb; applyUI(); save();});};
 seg('f-gdp','f-peso','fijo','gdp','peso'); seg('v-cab','v-jaula','vista','cab','jaula'); seg('mv-kilo','mv-prenada','modoVenta','kilo','prenada');
@@ -1479,7 +1488,7 @@ function setTipo(t){
 }
 function setSis(x){ st.sistema=x;
   if(x!=='campo') fillAuto((REF_SIS[x]||{})[st.tipo==='invernada'?'invernada':'recria']||{});
-  else { const r=REF[st.cat], a=autoSet(); if(r) ['meses','gdp'].forEach(k=>{ if(k in r.v&&(a.has(k)||!isNum(st[k]))){ st[k]=r.v[k]; a.add(k);} }); st.auto=[...a]; }
+  else { const r=refFor(st), a=autoSet(); if(r) ['meses','gdp'].forEach(k=>{ if(k in r.v&&(a.has(k)||!isNum(st[k]))){ st[k]=r.v[k]; a.add(k);} }); st.auto=[...a]; }
   applyUI(); save(); }
 $('tp-cria').addEventListener('click',()=>setTipo('cria')); $('tp-recria').addEventListener('click',()=>setTipo('recria')); $('tp-inv').addEventListener('click',()=>setTipo('invernada'));
 $('sy-campo').addEventListener('click',()=>setSis('campo')); $('sy-feed').addEventListener('click',()=>setSis('feed')); $('sy-mix').addEventListener('click',()=>setSis('mix'));
@@ -1487,7 +1496,7 @@ $('refCriaBtn').addEventListener('click',()=>{ const a=autoSet(); Object.entries
 // valores de referencia
 $('refBtn').addEventListener('click',()=>{ $('refConfirm').hidden=false; $('refYes').focus(); });
 $('refNo').addEventListener('click',()=>{ $('refConfirm').hidden=true; });
-$('refYes').addEventListener('click',()=>{ const r=REF[st.cat]; if(!r)return;
+$('refYes').addEventListener('click',()=>{ const r=refFor(st); if(!r)return;
   const v={...BASE,...r.v}; st={...EMPTY,cat:st.cat,mesCompra:st.mesCompra,vista:st.vista,fijo:st.fijo,...v,auto:Object.keys(v).filter(k=>!STRUCT.includes(k))}; $('refConfirm').hidden=true; applyUI(); save(); });
 
 function applyUI(){
@@ -1510,13 +1519,14 @@ function applyUI(){
     const hEst= el.dataset.est==='on'? !st.estac : false;
     el.hidden=hShow||hSis||hEst;});
   pr('es-par',!st.estac); pr('es-est',!!st.estac);
+  $('destRow').hidden=!TOR.includes(st.cat)||st.tipo==='cria'; pr('dt-rep',(st.destTor||'rep')==='rep'); pr('dt-fae',st.destTor==='fae');
   paintSanPlan();
   $('l-gdp').textContent= sis==='feed'?'Aumento diario en el corral': sis==='mix'?'Aumento diario a campo':'Aumento diario de peso';
   $('h-gdp').textContent= sis==='feed'?'Recría a corral: 0,8–1,0 · terminación: 1,2–1,4':'A campo: terneros 0,6–0,8 · terneras 0,4–0,55 · vacas casi nada';
   $('c-sub-campo').textContent= sis==='campo'?'En el campo': sis==='feed'?'En el corral':'A campo y en el corral';
   $('refCria').textContent='Sugeridos: '+REF_CRIA.txt;
   $('h-vac').textContent=st.modoVenta==='vcc'?'Las que no salen con cría':'Las que no preñan';
-  const r=REF[st.cat];
+  const r=refFor(st);
   $('refTxt').textContent= !st.cat?'Elegí una categoría: se completan solos el precio de mercado, los pesos, los meses y los costos típicos. Después cambiás lo que quieras.': r? (Object.keys(r.v).length?'Sugeridos para esta categoría: ':'')+r.txt : '';
   $('refBtn').disabled=!r||!Object.keys(r.v).length; $('refConfirm').hidden=true;
   calc();
@@ -2108,8 +2118,8 @@ $('whoIn').addEventListener('keydown',e=>{ if(e.key==='Enter') setWho(e.target.v
 showWho();
 
 // Nombres y unidades de cada dato, tomados de la página misma.
-const LBL_FIX={estac:'Aumento por estación',sanDet:'Plan sanitario detallado',sanPlan:'Plan sanitario',toros:'Toros cada 100 vacas',tipo:'Tipo de negocio',sistema:'Sistema',modoVenta:'Forma de venta',precioPor:'Compra por',ventaPor:'Venta por',conCria:'Con cría al pie',inf:'Inflación esperada',name:'Nombre'};
-const VAL_FIX={cria:'Cría',recria:'Recría',inv:'Invernada',campo:'A campo',feed:'Feedlot',mix:'Mix',kilo:'Por kilo',prenada:'Preñada',vcc:'Vaca con cría al pie',kg:'kilo',cab:'cabeza',jaula:'jaula'};
+const LBL_FIX={destTor:'Para qué son',estac:'Aumento por estación',sanDet:'Plan sanitario detallado',sanPlan:'Plan sanitario',toros:'Toros cada 100 vacas',tipo:'Tipo de negocio',sistema:'Sistema',modoVenta:'Forma de venta',precioPor:'Compra por',ventaPor:'Venta por',conCria:'Con cría al pie',inf:'Inflación esperada',name:'Nombre'};
+const VAL_FIX={rep:'Reproductor',fae:'Faena',cria:'Cría',recria:'Recría',inv:'Invernada',campo:'A campo',feed:'Feedlot',mix:'Mix',kilo:'Por kilo',prenada:'Preñada',vcc:'Vaca con cría al pie',kg:'kilo',cab:'cabeza',jaula:'jaula'};
 const SKIP=new Set(['auto','vista','fijo']);
 function lblOf(k){ if(LBL_FIX[k]) return LBL_FIX[k]; const e=document.getElementById(k); const t=e&&e.closest('tr')&&e.closest('tr').querySelector('.lbl'); return t?[...t.childNodes].filter(n=>!(n.classList&&n.classList.contains('info-b'))).map(n=>n.textContent).join('').trim():k; }
 function valOf(k,v){
