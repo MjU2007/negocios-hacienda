@@ -109,7 +109,11 @@ input.in:focus-visible{outline:3px solid var(--input-line);outline-offset:1px}
 /* Calendario */
 .cal{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;overflow-x:auto}
 .cal-grid{display:grid;grid-template-columns:86px repeat(12,minmax(34px,1fr));gap:4px 2px;align-items:center;min-width:520px}
-.cal-grid .mh{font-family:var(--display);font-weight:600;font-size:.85rem;color:var(--muted);text-align:center;text-transform:uppercase}
+.cal-grid .mh{font-family:var(--display);font-weight:600;font-size:.85rem;color:var(--muted);text-align:center;text-transform:uppercase;position:relative}
+.cal-grid .mh .yr{display:block;font-size:.66rem;font-weight:500;letter-spacing:.02em;color:var(--hembra);line-height:1}
+.mesanio{display:inline-flex;gap:6px;align-items:center}
+.mesanio select{width:auto}
+@media (min-width:1100px){ body.cuadros .board td .mesanio{display:flex;width:10.5rem;margin-left:auto} body.cuadros .board td .mesanio select{width:auto!important;flex:1 1 0;min-width:0;margin:0!important;display:block} }
 .cal-grid .rl{font-family:var(--display);font-weight:700;font-size:1rem}
 .bar{height:30px;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-size:.8rem;font-weight:700;color:var(--bg);white-space:nowrap;overflow:hidden}
 .bar.r.h{background:var(--hembra)} .bar.r.m{background:var(--macho)}
@@ -202,6 +206,7 @@ table.cmp .pill{display:block;margin:4px 0 0 auto;width:max-content}
 .viewtabs button{flex:1;font:inherit;font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.02em;padding:9px 12px;border:0;border-radius:9px;background:transparent;color:var(--muted);cursor:pointer}
 .viewtabs button[aria-selected="true"]{background:var(--hembra);color:var(--bg)}
 .viewtabs button:focus-visible{outline:3px solid var(--input-line);outline-offset:2px}
+@media (max-width:560px){.viewtabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.viewtabs button{font-size:1rem;padding:8px 6px}}
 section[hidden],.negbar[hidden],.secnav[hidden]{display:none}
 .pick{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
 .pick-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
@@ -822,7 +827,7 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
   <div class="tbl-wrap">
   <table class="one">
     <tbody>
-      <tr><td><span class="lbl">Mes de compra</span></td><td><select id="mesCompra"></select></td></tr>
+      <tr><td><span class="lbl">Mes y año de compra</span></td><td><div class="mesanio"><select id="mesCompra" aria-label="Mes de compra"></select><select id="anioCompra" aria-label="Año de compra"></select></div></td></tr>
       <tr><td><span class="lbl">Meses en total</span><span class="hint">De la compra a la venta</span></td>
           <td><span class="field"><input class="in s" id="meses" inputmode="decimal"><span class="u">meses</span></span></td></tr>
       <tr data-sis="mix"><td><span class="lbl">Meses a corral (al final)</span><span class="hint">El resto del tiempo está a campo</span></td>
@@ -1187,6 +1192,8 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
 // ================= datos fijos =================
 const D=30.4;
 const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const YEAR0=new Date().getFullYear();
+const anioDe=s=>isNum(s.anioCompra)?s.anioCompra:YEAR0;
 const CATS=[['ternero','Terneros'],['ternera','Terneras'],['novillito','Novillitos'],['vaquillona','Vaquillonas'],['novillo','Novillos'],
   ['vaca','Vacas'],['vacaPren','Vacas preñadas'],['vacaCria','Vacas con cría al pie'],['torito','Toritos'],['toro','Toros'],['otro','Otra hacienda']];
 const TOR=['torito','toro'];
@@ -1194,7 +1201,7 @@ const refFor=s=>TOR.includes(s.cat)?REF[s.cat+'_'+(s.destTor||'rep')]:REF[s.cat]
 const catName=c=>(CATS.find(x=>x[0]===c)||[])[1]||'Sin categoría';
 // Estructura de un negocio. Los números arrancan vacíos (null).
 const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:null,fl:null,
-  mesCompra:4,meses:null,gdp:null,mort:null,
+  mesCompra:4,anioCompra:null,meses:null,gdp:null,mort:null,
   modoVenta:'kilo',ventaPor:'kg',pVkg:null,pVcab:null,ms:null,entoreObj:null,pr:null,pPren:null,pVac:null,
   conCria:false,pcria:null,pVcc:null,dest:null,pdes:null,pTer:null,varVenta:null,
   alKg:null,alMes:null,cargaR:null,estMes:null,san:null,serv:null,tacto:null,mob:null,otros:null,cv:null,gv:null,
@@ -1269,7 +1276,7 @@ const EST_K=['gdpVer','gdpVer','gdpOto','gdpOto','gdpOto','gdpInv','gdpInv','gdp
 const estOn=s=>!!s.estac&&(s.sistema||'campo')!=='feed';
 function gdpMes(s,t){ // aumento del mes t (desde la compra) a campo
   if(!estOn(s)) return isNum(s.gdp)?s.gdp:0;
-  const m=((isNum(s.mesCompra)?s.mesCompra:1)-1+Math.floor(t))%12, v=s[EST_K[m]]; return isNum(v)?v:0; }
+  const m=((isNum(s.mesCompra)?s.mesCompra:0)+Math.floor(t))%12, v=s[EST_K[m]]; return isNum(v)?v:0; } // mesCompra: 0 = enero
 function gdpProm(s,mC){ if(!(mC>0)) return isNum(s.gdp)?s.gdp:0; let a=0; for(let t=0;t<mC;t++){ const len=Math.min(1,mC-t); a+=gdpMes(s,t)*len; } return a/mC; }
 function tramos(s){
   const Z=k=>isNum(s[k])?s[k]:0, sis=s.sistema||'campo', M=Z('meses');
@@ -1407,6 +1414,8 @@ function migTierra(n){
   }
   s.auto=[...a]; n.st=s; return true;
 }
+// Negocios guardados antes de poder elegir el año de compra: toman el año actual
+function migAnio(n){ const o=n&&n.st; if(!o||typeof o!=='object'||('anioCompra' in o)) return false; n.st={...o,anioCompra:YEAR0}; return true; }
 (function loadLocal(){
   let sv=null;
   try{const o=JSON.parse(localStorage.getItem(LKEY)||'null'); if(o&&Array.isArray(o.negs)&&o.negs.length){negs=o.negs; active=o.active; sv=o.seedV||null;}}catch(e){}
@@ -1415,7 +1424,7 @@ function migTierra(n){
   else if(sv!==SEED_V){ seedCopy().forEach(s=>{ const i=negs.findIndex(n=>n.id===s.id); if(i>=0){ if(!negs[i].synced) negs[i]=s; } else negs.push(s); }); }
   if(negs.some(n=>isOld(n.st))){ const out=[]; negs.forEach(n=>{ if(isOld(n.st)){ const mm=migrate(n); mm.forEach(x=>x.fromMig=true); if(n.id===active) active=mm[0].id; out.push(...mm);} else out.push(n); }); negs=out; }
   if(!negs.length) negs=[{id:newId(),name:'Negocio 1',st:{...EMPTY},created:Date.now()}];
-  negs.forEach(migTierra);
+  negs.forEach(n=>{ migTierra(n); migAnio(n); });
   if(!cur()) active=negs[0].id;
 })();
 let st={...EMPTY,...cur().st};
@@ -1455,7 +1464,11 @@ L.ha={g:()=>HA(st),s:v=>{ if(st.vacas>0&&v>0){ st.carga=st.vacas/v; } else st.ha
 L.nToros={g:()=>{ const t=isNum(st.toros)?st.toros:TOROS_REF; return st.vacas>0&&t>0?Math.max(1,Math.round(st.vacas*t/100)):0; },dep:['vacas'],s:v=>{ if(st.vacas>0) st.toros=Math.max(0,v)/st.vacas*100; },clear:()=>{st.toros=null},d:0};
 alias('arrR','arrHa',0); alias('cvC','cv',1); alias('gvC','gv',0); alias('varC','varVenta',1); alias('tasaC','tasa',1);
 const pfOf=()=>tramos(st).pf;
-function setGdpProm(v){ if(estOn(st)){ const T=tramos(st), a=T.gC; ['gdpVer','gdpOto','gdpInv','gdpPri'].forEach(k=>{ st[k]=a>0&&isNum(st[k])?st[k]*v/a:v; }); } st.gdp=v; }
+const EST_FORMA={gdpVer:1.1,gdpOto:0.85,gdpInv:0.5,gdpPri:1.5};
+const EST_KS=['gdpVer','gdpOto','gdpInv','gdpPri'];
+// si falta alguna estación o están todas iguales, se usa la forma típica (invierno bajo, primavera alta)
+function estForma(){ const v=EST_KS.map(k=>st[k]); if(v.some(x=>!isNum(x))||v.every(x=>x===v[0])) EST_KS.forEach(k=>{ st[k]=EST_FORMA[k]; }); }
+function setGdpProm(v){ if(estOn(st)){ estForma(); const a=tramos(st).gC; EST_KS.forEach(k=>{ st[k]=a>0?st[k]*v/a:v; }); } st.gdp=v; }
 L.gdp={g:()=>estOn(st)?tramos(st).gC:st.gdp,s:v=>setGdpProm(v),clear:()=>{st.gdp=null},d:2};
 const fac=()=>st.vista==='jaula'?(st.cab||0):1;
 // cabezas ↔ kilos
@@ -1464,8 +1477,13 @@ L.kgc={g:()=>st.cab*st.pc,dep:['cab','pc'],s:v=>{if(st.pc>0) st.cab=Math.max(1,M
 L.pCkg={g:()=>st.precioPor==='kg'?st.pCkg:(st.pc>0&&isNum(st.pCcab)?st.pCcab/(st.pc*(1-(st.dC||0)/100)):null),s:v=>{st.precioPor='kg';st.pCkg=v;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
 L.pCcab={g:()=>st.precioPor==='cab'?st.pCcab:(isNum(st.pCkg)&&isNum(st.pc)?st.pCkg*st.pc*(1-(st.dC||0)/100):null),s:v=>{st.precioPor='cab';st.pCcab=v;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
 // meses y peso de compra respetan "mantener fijo: peso final"
+// pfKeep: el peso final a mantener aunque el campo quede vacío un momento mientras se escribe
+let pfKeep=null;
+const pfVale=()=>st.meses>0&&isNum(st.pc)&&isNum(pfOf());
 for(const k of ['meses','pc']){ const d=k==='meses'?1:0;
-  L[k]={g:()=>st[k],d,clear:()=>{st[k]=null},s:v=>{const pf=pfOf(); st[k]=v; if(st.fijo==='peso'&&st.meses>0&&isNum(st.gdp)) L.pf.s(pf);}}; }
+  L[k]={g:()=>st[k],d,clear:()=>{ if(pfVale()) pfKeep=pfOf(); st[k]=null; },
+    s:v=>{ const pf=pfVale()?pfOf():pfKeep; st[k]=v; if(pfVale()) pfKeep=null;
+      if(st.fijo==='peso'&&st.meses>0&&isNum(pf)){ L.pf.s(pf); pfKeep=null; } }}; }
 // peso final ↔ aumento diario
 L.pf={g:pfOf,dep:['pc','meses'],s:v=>{ const T=tramos(st);
   if(T.sis==='mix'){ if(T.mC>0) setGdpProm(Math.max(0,(v-(st.pc||0)-T.kF)/(T.mC*D))); else if(T.mF>0) st.gdpF=Math.max(0,(v-(st.pc||0))/(T.mF*D)); }
@@ -1488,8 +1506,9 @@ function fmtIn(id){ if((L[id].dep||[]).some(k=>!isNum(st[k]))) return ''; const 
 function refresh(except){
   const a=autoSet();
   for(const id in L){const el=$(id); if(!el)continue; el.classList.toggle('auto',(KEYS[id]||[id]).some(k=>a.has(k))&&el.value!==''); if(el===except)continue; el.value=fmtIn(id); el.classList.toggle('auto',(KEYS[id]||[id]).some(k=>a.has(k))&&el.value!=='');}
-  $('mesCompra').value=st.mesCompra; $('cat').value=st.cat||''; $('conCria').checked=!!st.conCria;
+  $('mesCompra').value=st.mesCompra; fillAnios(); $('anioCompra').value=anioDe(st); $('cat').value=st.cat||''; $('conCria').checked=!!st.conCria;
 }
+function pintaFijo(){ $('f-gdp').setAttribute('aria-pressed',st.fijo==='gdp'); $('f-peso').setAttribute('aria-pressed',st.fijo==='peso'); }
 document.querySelectorAll('input.in').forEach(el=>{
   if(!L[el.id]) return;
   el.placeholder='—';
@@ -1497,6 +1516,8 @@ document.querySelectorAll('input.in').forEach(el=>{
     const before={...st};
     if(el.value.trim()===''){ if(L[el.id].clear){L[el.id].clear(); unAuto(Object.keys(st).filter(k=>st[k]!==before[k]).concat(KEYS[el.id]||[el.id])); calc(el); save();} return; }
     const v=parse(el.value); if(isNaN(v)||(v<0&&el.id!=='varVenta'))return;
+    if(el.id==='pf'&&st.fijo!=='peso'){ st.fijo='peso'; pintaFijo(); }
+    else if(['gdp','gdpVer','gdpOto','gdpInv','gdpPri','gdpF'].includes(el.id)&&st.fijo!=='gdp'){ st.fijo='gdp'; pintaFijo(); }
     L[el.id].s(v); unAuto(Object.keys(st).filter(k=>st[k]!==before[k]).concat(KEYS[el.id]||[el.id])); for(const k in st){ if(typeof st[k]==='number'&&!isFinite(st[k])) st[k]=null; } calc(el); save();});
   el.addEventListener('blur',()=>{el.value=fmtIn(el.id);});
   el.addEventListener('focus',()=>el.select());
@@ -1504,6 +1525,9 @@ document.querySelectorAll('input.in').forEach(el=>{
 });
 const selM=$('mesCompra'); MES.forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m[0].toUpperCase()+m.slice(1);selM.appendChild(o);});
 selM.addEventListener('change',()=>{st.mesCompra=+selM.value; calc(); save();});
+function fillAnios(){ const sel=$('anioCompra'), y=anioDe(st), lo=Math.min(YEAR0-1,y), hi=Math.max(YEAR0+4,y);
+  if(sel.dataset.r===lo+'-'+hi) return; sel.dataset.r=lo+'-'+hi; sel.innerHTML=''; for(let a=lo;a<=hi;a++){ const o=document.createElement('option'); o.value=a; o.textContent=a; sel.appendChild(o);} }
+$('anioCompra').addEventListener('change',()=>{ st.anioCompra=+$('anioCompra').value; calc(); save(); });
 const selC=$('cat'); CATS.forEach(([k,l])=>{const o=document.createElement('option');o.value=k;o.textContent=l;selC.appendChild(o);});
 selC.addEventListener('change',()=>{
   st.cat=selC.value||null;
@@ -1548,7 +1572,7 @@ $('refCriaBtn').addEventListener('click',()=>{ const a=autoSet(); Object.entries
 $('refBtn').addEventListener('click',()=>{ $('refConfirm').hidden=false; $('refYes').focus(); });
 $('refNo').addEventListener('click',()=>{ $('refConfirm').hidden=true; });
 $('refYes').addEventListener('click',()=>{ const r=refFor(st); if(!r)return;
-  const v={...BASE,...r.v}; st={...EMPTY,cat:st.cat,mesCompra:st.mesCompra,vista:st.vista,fijo:st.fijo,...v,auto:Object.keys(v).filter(k=>!STRUCT.includes(k))}; $('refConfirm').hidden=true; applyUI(); save(); });
+  const v={...BASE,...r.v}; st={...EMPTY,cat:st.cat,mesCompra:st.mesCompra,anioCompra:st.anioCompra,vista:st.vista,fijo:st.fijo,...v,auto:Object.keys(v).filter(k=>!STRUCT.includes(k))}; $('refConfirm').hidden=true; applyUI(); save(); });
 
 function applyUI(){
   const pr=(id,on)=>$(id).setAttribute('aria-pressed',on);
@@ -1669,7 +1693,9 @@ function paintCria(R){
 function cal(R){
   const g=$('calGrid'); g.innerHTML=''; const m0=st.mesCompra;
   g.appendChild(document.createElement('div'));
-  for(let i=0;i<12;i++){const d=document.createElement('div');d.className='mh';d.textContent=MES[(m0+i)%12];g.appendChild(d);}
+  const y0=anioDe(st);
+  for(let i=0;i<12;i++){const d=document.createElement('div'); const mm=(m0+i)%12; d.className='mh'; d.textContent=MES[mm];
+    if(i===0||mm===0){ const y=document.createElement('small'); y.className='yr'; y.textContent=y0+Math.floor((m0+i)/12); d.appendChild(y); } g.appendChild(d);}
   const l=document.createElement('div'); l.className='rl'; l.textContent=st.cat?catName(st.cat):'Negocio'; l.style.gridRow=2; g.appendChild(l);
   const M=isNum(st.meses)?st.meses:0;
   if(!(M>0)){ const e=document.createElement('div'); e.className='note'; e.style.gridColumn='2 / span 12'; e.style.gridRow=2; e.textContent='Cargá los meses en el campo para ver el calendario.'; g.appendChild(e); return; }
@@ -1893,12 +1919,12 @@ function flujo(s,R){
     add(k,-((R.ha||0)*Z('arrHa')/12*camp+n*Z('estMes')*len),k===1?'Tierra y estructura (todos los meses)':null);
   }
   if(R.sup>0){ // suplemento: en los meses de invierno (jun–ago) que caen en el campo; si no hay, repartido
-    const m0=(isNum(s.mesCompra)?s.mesCompra:1)-1, inv=[]; for(let k=1;k<=Mc;k++){ const mm=(m0+k-1)%12; if(k-1<T.mC&&mm>=5&&mm<=7) inv.push(k); }
+    const m0=isNum(s.mesCompra)?s.mesCompra:0, inv=[]; for(let k=1;k<=Mc;k++){ const mm=(m0+k-1)%12; if(k-1<T.mC&&mm>=5&&mm<=7) inv.push(k); }
     const ks=inv.length?inv:Array.from({length:Math.max(1,Math.ceil(T.mC))},(_,i)=>i+1); ks.forEach((k,i)=>add(k,-n*R.sup/ks.length,i===0?'Suplemento invernal':null)); }
   if(R.pren){ const ks=Math.max(1,Math.ceil(M-Z('ms'))); add(Math.min(ks,Mc),-n*Z('serv'),'Servicio'); add(Mc,-n*Z('tacto'),'Tacto'); }
   add(Mc,R.ing-R.gven,'Venta (neta de comisión y gastos)');
-  const m0=(isNum(s.mesCompra)?s.mesCompra:1)-1;
-  return {rows:out,labels:out.map((_,k)=>{ const mm=(m0+k)%12; return MES[mm].charAt(0).toUpperCase()+MES[mm].slice(1); })};
+  const m0=isNum(s.mesCompra)?s.mesCompra:0, y0=anioDe(s);
+  return {rows:out,labels:out.map((_,k)=>{ const mm=(m0+k)%12, yy=y0+Math.floor((m0+k)/12); return MES[mm].charAt(0).toUpperCase()+MES[mm].slice(1)+' '+String(yy).slice(2); })};
 }
 function tirMensual(cf){
   const npv=r=>cf.reduce((a,v,i)=>a+v/Math.pow(1+r,i),0);
@@ -1939,10 +1965,9 @@ function renderFlujo(R){
 
 
 // ================= aumento por estación y plan sanitario =================
-const EST_FORMA={gdpVer:1.1,gdpOto:0.85,gdpInv:0.5,gdpPri:1.5};
 $('es-par').addEventListener('click',()=>{ if(!st.estac) return; const T=tramos(st); st.gdp=T.gC; st.estac=false; unAuto(['estac']); applyUI(); save(); });
 $('es-est').addEventListener('click',()=>{ if(st.estac) return; const g=isNum(st.gdp)?st.gdp:0.6, T0=tramos(st);
-  st.estac=true; Object.entries(EST_FORMA).forEach(([k,f])=>{ if(!isNum(st[k])) st[k]=f; });
+  st.estac=true; estForma();
   // se ajusta la forma para que el promedio del período sea el aumento que ya tenías: no cambia el peso final
   const a=tramos(st).gC; if(a>0) ['gdpVer','gdpOto','gdpInv','gdpPri'].forEach(k=>{ st[k]=Math.round(st[k]*g/a*100)/100; });
   st.gdp=g; applyUI(); save(); });
@@ -2071,12 +2096,12 @@ function renderBar(){
   negs.forEach(n=>{const o=document.createElement('option'); o.value=n.id; o.textContent=n.name||'Sin nombre'; s.appendChild(o);});
   s.value=active; if(s.dataset.act!==active){ $('negConfirm').hidden=true; s.dataset.act=active; } syncShadow(); renderHist(); if(curView==='ini') renderIni();
 }
-function loadActive(){ st={...EMPTY,...cur().st}; if(!cur().st||!cur().st.tipo) st.tipo=inferTipo(st.cat); if(!isNum(st.carga)&&isNum(st.ha)&&st.ha>0&&st.vacas>0) st.carga=st.vacas/st.ha; renderBar(); $('negName').value=cur().name||''; setTitle(); applyUI(); renderCmp(); saveLocal(); }
+function loadActive(){ pfKeep=null; st={...EMPTY,...cur().st}; if(!cur().st||!cur().st.tipo) st.tipo=inferTipo(st.cat); if(!isNum(st.carga)&&isNum(st.ha)&&st.ha>0&&st.vacas>0) st.carga=st.vacas/st.ha; renderBar(); $('negName').value=cur().name||''; setTitle(); applyUI(); renderCmp(); saveLocal(); }
 function switchTo(id){ flush(); active=id; loadActive(); }
 $('negSel').addEventListener('change',e=>switchTo(e.target.value));
 $('negName').addEventListener('input',e=>{const n=cur(); if(!n)return; n.name=e.target.value.slice(0,60); const o=[...$('negSel').options].find(o=>o.value===n.id); if(o) o.textContent=n.name||'Sin nombre'; setTitle(); save();});
 $('negName').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.blur();});
-function addNeg(name,s,why){ flush(); const n={id:newId(),name,st:{...s},created:Date.now(),touched:true,mine:true}; negs.push(n); active=n.id; loadActive(); writeNeg(n.id); logOne({tipo:why?why.t:'nuevo',negId:n.id,negName:n.name,texto:why?why.x:''}); const ni=$('negName'); ni.focus(); ni.select(); }
+function addNeg(name,s,why){ flush(); const n={id:newId(),name,st:{...s},created:Date.now(),touched:true,mine:true}; if(!isNum(n.st.anioCompra)) n.st.anioCompra=YEAR0; negs.push(n); active=n.id; loadActive(); writeNeg(n.id); logOne({tipo:why?why.t:'nuevo',negId:n.id,negName:n.name,texto:why?why.x:''}); const ni=$('negName'); ni.focus(); ni.select(); }
 $('negNew').addEventListener('click',()=>addNeg('Negocio '+(negs.length+1),{...EMPTY,...BASE,auto:Object.keys(BASE)}));
 $('negDup').addEventListener('click',()=>{ const o=cur().name||'Negocio'; addNeg(o+' (copia)',st,{t:'duplico',x:o}); });
 $('negDel').addEventListener('click',()=>{ $('negDelName').textContent=cur().name||'Sin nombre'; $('negConfirm').hidden=false; $('negDelNo').focus(); });
@@ -2171,7 +2196,7 @@ $('whoIn').addEventListener('keydown',e=>{ if(e.key==='Enter') setWho(e.target.v
 showWho();
 
 // Nombres y unidades de cada dato, tomados de la página misma.
-const LBL_FIX={destTor:'Para qué son',estac:'Aumento por estación',sanDet:'Plan sanitario detallado',sanPlan:'Plan sanitario',toros:'Toros cada 100 vacas',tipo:'Tipo de negocio',sistema:'Sistema',modoVenta:'Forma de venta',precioPor:'Compra por',ventaPor:'Venta por',conCria:'Con cría al pie',inf:'Inflación esperada',name:'Nombre'};
+const LBL_FIX={anioCompra:'Año de compra',mesCompra:'Mes de compra',fijo:'Qué queda fijo',destTor:'Para qué son',estac:'Aumento por estación',sanDet:'Plan sanitario detallado',sanPlan:'Plan sanitario',toros:'Toros cada 100 vacas',tipo:'Tipo de negocio',sistema:'Sistema',modoVenta:'Forma de venta',precioPor:'Compra por',ventaPor:'Venta por',conCria:'Con cría al pie',inf:'Inflación esperada',name:'Nombre'};
 const VAL_FIX={rep:'Reproductor',fae:'Faena',cria:'Cría',recria:'Recría',inv:'Invernada',campo:'A campo',feed:'Feedlot',mix:'Mix',kilo:'Por kilo',prenada:'Preñada',vcc:'Vaca con cría al pie',kg:'kilo',cab:'cabeza',jaula:'jaula'};
 const SKIP=new Set(['auto','vista','fijo']);
 function lblOf(k){ if(LBL_FIX[k]) return LBL_FIX[k]; const e=document.getElementById(k); const t=e&&e.closest('tr')&&e.closest('tr').querySelector('.lbl'); return t?[...t.childNodes].filter(n=>!(n.classList&&n.classList.contains('info-b'))).map(n=>n.textContent).join('').trim():k; }
@@ -2350,7 +2375,7 @@ $('verList').addEventListener('click',e=>{
     c.onSnapshot(snap=>{
       if(first&&snap.empty&&snap.metadata.fromCache) return;
       const remote=snap.docs.filter(d=>d.exists).map(d=>{const b=d.data(); lastW[d.id]=JSON.stringify({name:b.name,st:b.st,created:b.created}); return {id:d.id,name:b.name,st:b.st,created:b.created,synced:true};});
-      const fixT=remote.filter(migTierra).map(r=>r.id);
+      const fixT=remote.filter(r=>migTierra(r)|migAnio(r)).map(r=>r.id);
       const wrT=()=>{ if(!readOnly) fixT.forEach(id=>{ if(negs.find(n=>n.id===id)) writeNeg(id); }); };
       if(first){ first=false; primera(remote).then(wrT); return; }
       setTimeout(wrT,0);
