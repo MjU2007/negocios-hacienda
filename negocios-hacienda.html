@@ -352,6 +352,33 @@ body.tipo-cria{--tc:var(--c-cria)} body.tipo-recria{--tc:var(--c-recria)} body.t
   body.cuadros .board .sec-head{border-bottom-color:color-mix(in srgb,var(--tc) 35%,var(--line))}
 }
 .board>section .sec-head{border-bottom-color:var(--tc)}
+/* Costos (largo) ancho y en dos columnas; Resultado (corto) angosto: quedan a la misma altura */
+@media (min-width:1100px){
+  body.cuadros .board{grid-template-columns:repeat(12,minmax(0,1fr))}
+  body.cuadros .board>section{grid-column:span 4}
+  body.cuadros #costos{grid-column:1/7}
+  body.cuadros #resultado{grid-column:7/13}
+  body.cuadros #c-costos{grid-column:1/5}
+  body.cuadros #c-res{grid-column:5/13}
+  body.cuadros .board #c-res .tbl-wrap,body.cuadros .board #resultado .tbl-wrap{display:flex;flex-direction:column}
+  body.cuadros .board #c-res .tbl-wrap>table,body.cuadros .board #resultado .tbl-wrap>table{flex:1}
+  body.cuadros .board #costos thead tr>th:last-child:not(:first-child){width:auto;flex:1 1 auto;text-align:right}
+  body.cuadros .board #costos table,body.cuadros .board #costos thead{display:block}
+  body.cuadros .board #costos tbody{display:block;columns:2;column-gap:36px;column-rule:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+  body.cuadros .board #costos tr{display:flex;align-items:center;gap:12px;break-inside:avoid;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
+  body.cuadros .board #costos tr[hidden]{display:none}
+  body.cuadros .board #costos tr.sub{break-after:avoid;border-bottom:0}
+  body.cuadros .board #costos tr>td,body.cuadros .board #costos tr>th{border:0}
+  body.cuadros .board #costos tr>td:first-child,body.cuadros .board #costos tr>th:first-child{flex:1 1 auto;min-width:0}
+  body.cuadros .board #costos tr>td:last-child:not(:first-child),body.cuadros .board #costos tr>th:last-child:not(:first-child){flex:none;width:9.4rem}
+  body.cuadros .board #costos td .field{width:9.4rem}
+  body.cuadros .board #costos td .field .u:last-child{width:2.9rem}
+  body.cuadros .board #costos tbody{column-gap:28px}
+  body.cuadros .board #costos td[colspan]{flex:1 1 100%}
+  body.cuadros .board #costos thead tr{border-bottom:1px solid var(--line)}
+  body.cuadros .board #costos tr.total{border-top:1.5px solid var(--ink);border-bottom:0}
+  body.cuadros .board #costos tr.total>td{border-top:0}
+}
 .negbar{border-left-color:var(--tc)!important}
 #tp-cria[aria-pressed="true"]{background:var(--c-cria)!important;border-color:var(--c-cria)!important;color:#fff!important}
 #tp-recria[aria-pressed="true"]{background:var(--c-recria)!important;border-color:var(--c-recria)!important;color:#fff!important}
