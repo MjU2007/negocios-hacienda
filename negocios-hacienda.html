@@ -870,15 +870,27 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
           <td><select id="cat" class="catsel"><option value="">Elegí una categoría…</option></select></td></tr>
       <tr id="destRow" hidden><td><span class="lbl">Para qué son</span><span class="hint">Cambia los precios y valores sugeridos</span></td>
           <td><div class="seg" role="group" aria-label="Destino"><button type="button" id="dt-rep" aria-pressed="true">Reproductor</button><button type="button" id="dt-fae" aria-pressed="false">Faena</button></div></td></tr>
-      <tr><td><span class="lbl">Cabezas</span><span class="hint">Jaula doble: ~80 terneros de 175 kg o ~35 vacas</span></td>
+      <tr data-mix="1"><td><span class="lbl">Terneros (machos)</span></td>
+          <td><span class="field"><input class="in s" id="cabM" inputmode="decimal"><span class="u">cab</span></span></td></tr>
+      <tr data-mix="1"><td><span class="lbl">Terneras (hembras)</span></td>
+          <td><span class="field"><input class="in s" id="cabH" inputmode="decimal"><span class="u">cab</span></span><span class="eq" id="e-cabMix"></span></td></tr>
+      <tr data-mix="1"><td><span class="lbl">Peso de compra de los terneros</span></td>
+          <td><span class="field"><input class="in s" id="pcM" inputmode="decimal"><span class="u">kg</span></span></td></tr>
+      <tr data-mix="1"><td><span class="lbl">Peso de compra de las terneras</span></td>
+          <td><span class="field"><input class="in s" id="pcH" inputmode="decimal"><span class="u">kg</span></span></td></tr>
+      <tr data-mix="1"><td><span class="lbl">Precio de compra de los terneros</span></td>
+          <td><span class="field"><span class="u">$</span><input class="in" id="pCkgM" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
+      <tr data-mix="1"><td><span class="lbl">Precio de compra de las terneras</span></td>
+          <td><span class="field"><span class="u">$</span><input class="in" id="pCkgH" inputmode="decimal"><span class="u">/kg</span></span><span class="eq" id="e-compraMix"></span></td></tr>
+      <tr data-nomix="1"><td><span class="lbl">Cabezas</span><span class="hint">Jaula doble: ~80 terneros de 175 kg o ~35 vacas</span></td>
           <td><span class="field"><input class="in s" id="cab" inputmode="numeric"><span class="u">cab</span></span></td></tr>
-      <tr><td><span class="lbl">Peso de compra por cabeza</span></td>
+      <tr data-nomix="1"><td><span class="lbl">Peso de compra por cabeza</span></td>
           <td><span class="field"><input class="in s" id="pc" inputmode="decimal"><span class="u">kg</span></span></td></tr>
-      <tr><td><span class="lbl">Kilos comprados (toda la jaula)</span><span class="hint">Si lo cambiás, se ajustan las cabezas</span></td>
+      <tr data-nomix="1"><td><span class="lbl">Kilos comprados (toda la jaula)</span><span class="hint">Si lo cambiás, se ajustan las cabezas</span></td>
           <td><span class="field"><input class="in" id="kgc" inputmode="decimal"><span class="u">kg</span></span></td></tr>
-      <tr><td><span class="lbl">Precio de compra por kilo</span></td>
+      <tr data-nomix="1"><td><span class="lbl">Precio de compra por kilo</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="pCkg" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
-      <tr><td><span class="lbl">Precio de compra por cabeza</span><span class="hint">Cargá el que uses; el otro se calcula con el peso</span></td>
+      <tr data-nomix="1"><td><span class="lbl">Precio de compra por cabeza</span><span class="hint">Cargá el que uses; el otro se calcula con el peso</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="pCcab" inputmode="decimal"><span class="u">/cab</span></span></td></tr>
       <tr><td><span class="lbl">Desbaste en la compra</span><span class="hint">Se descuenta del peso para pagar. Remate feria: 0–3 %; compra directa pesando en el campo: 3–8 %</span></td>
           <td><span class="field"><input class="in s" id="dC" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-dC"></span></td></tr>
@@ -904,8 +916,10 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
   <table class="one">
     <tbody>
       <tr><td><span class="lbl">Mes y año de compra</span><span class="hint">El año ordena el calendario y el flujo; los precios siempre son los de hoy</span></td><td><div class="mesanio"><select id="mesCompra" aria-label="Mes de compra"></select><select id="anioCompra" aria-label="Año de compra"></select></div></td></tr>
-      <tr><td><span class="lbl">Meses en total</span><span class="hint">De la compra a la venta</span></td>
+      <tr><td><span class="lbl" id="l-meses">Meses en total</span><span class="hint">De la compra a la venta</span></td>
           <td><span class="field"><input class="in s" id="meses" inputmode="decimal"><span class="u">meses</span></span></td></tr>
+      <tr data-mixpren="1"><td><span class="lbl">Meses de las terneras</span><span class="hint">Recría, entore y tacto, hasta venderlas preñadas</span></td>
+          <td><span class="field"><input class="in s" id="mesesH" inputmode="decimal"><span class="u">meses</span></span></td></tr>
       <tr data-sis="mix"><td><span class="lbl">Meses a corral (al final)</span><span class="hint">El resto del tiempo está a campo</span></td>
           <td><span class="field"><input class="in s" id="mesesF" inputmode="decimal"><span class="u">meses</span></span></td></tr>
       <tr><td><span class="lbl" id="l-gdp">Aumento diario de peso</span><span class="hint" id="h-gdp">A campo: terneros 0,6–0,8 · terneras 0,4–0,55 · vacas casi nada</span></td>
@@ -918,8 +932,11 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
       <tr data-sis="campo mix" data-est="on"><td><span class="lbl">Primavera (sep–nov)</span></td><td><span class="field"><input class="in s" id="gdpPri" inputmode="decimal"><span class="u">kg/día</span></span><span class="eq" id="e-est"></span></td></tr>
       <tr data-sis="mix"><td><span class="lbl">Aumento diario en el corral</span><span class="hint">Terminación a corral: 1,2–1,4 kg/día</span></td>
           <td><span class="field"><input class="in s" id="gdpF" inputmode="decimal"><span class="u">kg/día</span></span></td></tr>
-      <tr><td><span class="lbl">Peso final por cabeza</span></td>
+      <tr data-mix="1"><td><span class="lbl">Aumento diario de las terneras</span><span class="hint">Las hembras engordan menos: 0,4–0,55 kg/día a campo</span></td>
+          <td><span class="field"><input class="in s" id="gdpH" inputmode="decimal"><span class="u">kg/día</span></span></td></tr>
+      <tr><td><span class="lbl" id="l-pf">Peso final por cabeza</span></td>
           <td><span class="field"><input class="in s" id="pf" inputmode="decimal"><span class="u">kg</span></span></td></tr>
+      <tr data-mix="1"><td><span class="lbl">Peso final de las terneras</span></td><td class="calc" id="o-pfH">—</td></tr>
       <tr><td><span class="lbl">Mortandad</span></td>
           <td><span class="field"><input class="in s" id="mort" inputmode="decimal"><span class="u">%</span></span></td></tr>
       <tr><td><span class="lbl">Cabezas vendidas</span></td><td class="calc" id="o-viv">—</td></tr>
@@ -935,14 +952,18 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
   <div class="sec-head"><h2><svg class="sec-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8" r="1.4"/></svg>Venta</h2><button type="button" class="zoom-btn" data-zoom="venta" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
   <div class="tbar">
     <p class="note">¿Cómo vendés la hacienda?</p>
-    <div class="seg" role="group" aria-label="Cómo se vende"><button type="button" id="mv-kilo" aria-pressed="true">Por kilo o por cabeza</button><button type="button" id="mv-prenada" aria-pressed="false">Preñadas</button><button type="button" id="mv-vcc" aria-pressed="false">Con cría al pie</button></div>
+    <div class="seg" role="group" aria-label="Cómo se vende" id="mvSeg"><button type="button" id="mv-kilo" aria-pressed="true">Por kilo o por cabeza</button><button type="button" id="mv-prenada" aria-pressed="false">Preñadas</button><button type="button" id="mv-vcc" aria-pressed="false">Con cría al pie</button></div>
   </div>
   <div class="tbl-wrap">
   <table class="one">
     <tbody>
-      <tr data-show="kilo"><td><span class="lbl">Precio de venta por kilo</span></td>
+      <tr data-mix="1"><td><span class="lbl">Las terneras se venden</span><span class="hint">Por kilo junto con los machos, o entoradas y preñadas</span></td>
+          <td><div class="seg" role="group" aria-label="Cómo se venden las terneras"><button type="button" id="dh-kilo" aria-pressed="true">Por kilo</button><button type="button" id="dh-pren" aria-pressed="false">Preñadas</button></div></td></tr>
+      <tr data-show="kilo"><td><span class="lbl" id="l-pVkg">Precio de venta por kilo</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="pVkg" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
-      <tr data-show="kilo"><td><span class="lbl">Precio de venta por cabeza</span><span class="hint">Cargá el que uses; el otro se calcula con el peso final</span></td>
+      <tr data-mixkilo="1"><td><span class="lbl">Precio de la vaquillona por kilo</span><span class="hint">Las terneras recriadas</span></td>
+          <td><span class="field"><span class="u">$</span><input class="in" id="pVkgH" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
+      <tr data-show="kilo" data-nomix="1"><td><span class="lbl">Precio de venta por cabeza</span><span class="hint">Cargá el que uses; el otro se calcula con el peso final</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="pVcab" inputmode="decimal"><span class="u">/cab</span></span></td></tr>
       <tr id="califRow"><td><span class="lbl">Califican como reproductores</span><span class="hint">Los que pasan la revisación y se venden al precio de arriba; el resto va a faena</span></td>
           <td><span class="field"><input class="in s" id="calif" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-calif"></span></td></tr>
@@ -968,7 +989,7 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
           <td><span class="field"><span class="u">$</span><input class="in" id="pVcc" inputmode="decimal"><span class="u">/cab</span></span></td></tr>
       <tr data-show="prenada vcc"><td><span class="lbl">Precio de las vacías por kilo</span><span class="hint" id="h-vac">Las que no preñan</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="pVac" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
-      <tr class="sub" data-show="nocc"><td colspan="2"><label class="chk"><input type="checkbox" id="conCria"> Además vendo los terneros al destete (vacas con cría)</label></td></tr>
+      <tr class="sub" data-show="nocc" data-nomix="1"><td colspan="2"><label class="chk"><input type="checkbox" id="conCria"> Además vendo los terneros al destete (vacas con cría)</label></td></tr>
       <tr data-show="cria"><td><span class="lbl">Terneros destetados por vaca</span></td>
           <td><span class="field"><input class="in s" id="dest" inputmode="decimal"><span class="u">%</span></span></td></tr>
       <tr data-show="cria"><td><span class="lbl">Peso del ternero al destete</span></td>
@@ -995,7 +1016,8 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
     <thead><tr><th>Concepto</th><th id="c-head">Por cabeza comprada</th></tr></thead>
     <tbody>
       <tr class="sub"><td colspan="2">Compra</td></tr>
-      <tr><td><span class="lbl">Hacienda</span><span class="hint">Si lo cambiás, se ajusta el precio de compra</span></td>
+      <tr data-mix="1"><td><span class="lbl">Hacienda</span><span class="hint">Terneros y terneras, a sus precios</span></td><td class="calc" id="o-compraMix">—</td></tr>
+      <tr data-nomix="1"><td><span class="lbl">Hacienda</span><span class="hint">Si lo cambiás, se ajusta el precio de compra</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="compraT" inputmode="decimal"></span></td></tr>
       <tr><td><span class="lbl">Comisión de compra</span></td><td class="calc" id="o-cc">—</td></tr>
       <tr><td><span class="lbl">Flete de entrada</span><span class="hint">Sugerido: ~$1,2 M por jaula a ~300 km, repartido entre las cabezas</span></td>
@@ -1252,11 +1274,11 @@ const D=30.4;
 const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 const YEAR0=new Date().getFullYear();
 const anioDe=s=>isNum(s.anioCompra)?s.anioCompra:YEAR0;
-const CATS=[['ternero','Terneros'],['ternera','Terneras'],['novillito','Novillitos'],['vaquillona','Vaquillonas'],['novillo','Novillos'],
+const CATS=[['ternero','Terneros'],['ternera','Terneras'],['mixto','Terneros y terneras (jaula mixta)'],['novillito','Novillitos'],['vaquillona','Vaquillonas'],['novillo','Novillos'],
   ['vaca','Vacas'],['vacaPren','Vacas preñadas'],['vacaCria','Vacas con cría al pie'],['torito','Toritos'],['toro','Toros'],['otro','Otra hacienda']];
 const TOR=['torito','toro'];
 // Feedlot y Mix no sirven para vender preñadas, vacas con cría o reproductores (necesitan campo)
-const sisBloq=s=>s.tipo==='cria'?'':s.modoVenta==='prenada'?'vender preñadas':s.modoVenta==='vcc'?'vender vacas con cría':s.conCria?'vender terneros al pie':(TOR.includes(s.cat)&&(s.destTor||'rep')==='rep')?'vender reproductores':'';
+const sisBloq=s=>s.tipo==='cria'?'':(s.cat==='mixto'&&s.destH==='pren')?'vender preñadas':s.modoVenta==='prenada'?'vender preñadas':s.modoVenta==='vcc'?'vender vacas con cría':s.conCria?'vender terneros al pie':(TOR.includes(s.cat)&&(s.destTor||'rep')==='rep')?'vender reproductores':'';
 const refFor=s=>TOR.includes(s.cat)?REF[s.cat+'_'+(s.destTor||'rep')]:REF[s.cat];
 const catName=c=>(CATS.find(x=>x[0]===c)||[])[1]||'Sin categoría';
 // Estructura de un negocio. Los números arrancan vacíos (null).
@@ -1264,7 +1286,7 @@ const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:nu
   mesCompra:4,anioCompra:null,meses:null,gdp:null,mort:null,
   modoVenta:'kilo',ventaPor:'kg',pVkg:null,pVcab:null,ms:null,entoreObj:null,pr:null,pPren:null,pVac:null,
   conCria:false,pcria:null,pVcc:null,dest:null,pdes:null,pTer:null,varVenta:null,
-  alKg:null,alMes:null,cargaR:null,estMes:null,calif:null,pDesc:null,san:null,serv:null,tacto:null,mob:null,otros:null,cv:null,gv:null,
+  alKg:null,alMes:null,cargaR:null,estMes:null,calif:null,pDesc:null,cabM:null,cabH:null,pcM:null,pcH:null,pCkgM:null,pCkgH:null,gdpH:null,pVkgH:null,mesesH:null,destH:null,san:null,serv:null,tacto:null,mob:null,otros:null,cv:null,gv:null,
   tasa:null,inf:null,vista:'cab',fijo:'gdp',
   tipo:'recria',sistema:'campo',mesesF:null,gdpF:null,conv:null,pRac:null,diaF:null,
   vacas:null,toros:null,ha:null,carga:null,valVaca:null,mortV:null,destC:null,pdesC:null,machos:null,desc:null,pVd:null,
@@ -1314,6 +1336,8 @@ const REF={
     v:{cargaR:0.8,cab:20,pc:600,precioPor:'cab',pCcab:4500000,meses:6,gdp:0.4,mort:1,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,calif:95,pDesc:3562,fl:40000,san:40000,mob:30000,otros:80000,alKg:2000}},
   toro_fae:{txt:'Toros a faena: toro a $3.562/kg (Mercado Agroganadero, 16/10/2026). Toro comprado flaco y terminado a campo en ~3 meses; precio de compra estimado ~10 % por debajo del toro gordo.',
     v:{cargaR:0.8,cab:30,pc:600,pCkg:3200,meses:3,gdp:0.8,mort:1,modoVenta:'kilo',ventaPor:'kg',pVkg:3562,fl:40000,san:15000,mob:20000,otros:0,alKg:2000}},
+  mixto:{txt:'Jaula mixta: terneros (~215 kg) a $5.890/kg y terneras (~215 kg) a $5.505/kg; los machos se venden como novillitos a $5.216/kg y las terneras como vaquillonas a $4.700/kg, o entoradas y preñadas a $2.262.712 (Rosgan, remate del 13/10/2026). Recría a campo de ~5 meses; si las terneras se venden preñadas, ~8 meses.',
+    v:{cargaR:1.5,cab:48,cabM:25,cabH:23,pcM:215,pcH:215,pc:215,pCkgM:5890,pCkgH:5505,pCkg:5890,precioPor:'kg',meses:5,gdp:0.68,gdpH:0.5,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:5216,pVkgH:4700,destH:'kilo',mesesH:8,ms:3,entoreObj:280,pr:80,pPren:2262712,pVac:4194,fl:15000,san:30000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
   otro:{txt:'Sin precios de referencia para esta categoría: cargá los tuyos. Los costos tienen valores sugeridos generales.',v:{}}
 };
 const KEYDEF={...EMPTY};
@@ -1370,8 +1394,39 @@ function modelCria(s){
   return r;
 }
 // N = dato imprescindible (si falta, el resultado queda en "—"); Z = si falta cuenta como 0.
+// Jaula mixta: se calcula como dos negocios (terneros y terneras) que comparten costos por cabeza, y se suman
+function modelMixto(s,simple){
+  const N=k=>isNum(s[k])?s[k]:NaN, Z=k=>isNum(s[k])?s[k]:0, pren=s.destH==='pren';
+  const gM=s.gdp, gH=N('gdpH'), fH=isNum(gM)&&gM>0&&isNum(gH)?gH/gM:1;
+  const base={...s,conCria:false,destTor:null,calif:null,precioPor:'kg',ventaPor:'kg'};
+  const sM={...base,cat:'ternero',cab:Z('cabM'),pc:N('pcM'),pCkg:N('pCkgM'),modoVenta:'kilo'};
+  const sH={...base,cat:'ternera',cab:Z('cabH'),pc:N('pcH'),pCkg:N('pCkgH'),gdp:gH,modoVenta:pren?'prenada':'kilo',pVkg:N('pVkgH')};
+  ['gdpVer','gdpOto','gdpInv','gdpPri'].forEach(k=>{ if(isNum(s[k])) sH[k]=s[k]*fH; });
+  if(pren) sH.meses=N('mesesH');
+  const RM=sM.cab>0?model(sM):null, RH=sH.cab>0?model(sH):null, parts=[RM,RH].filter(Boolean);
+  const r={mixto:true,sM,sH,M:RM,H:RH}, sum=k=>parts.reduce((a,x)=>a+(isNum(x[k])?x[k]:0),0);
+  r.ok=parts.length>0&&parts.every(x=>x.ok);
+  r.n=Z('cabM')+Z('cabH');
+  ['viv','ing','ingMain','compra','cc','fl','cpra','alim','campo','tierra','estr','tie','rec','cv','gv','gven','ct','mb','cp','gr','nom','ha','nPren','nVac'].forEach(k=>{ r[k]=sum(k); });
+  r.ingCria=0; r.cria=false; r.meses=parts.length?Math.max(...parts.map(x=>isNum(x.meses)?x.meses:0)):NaN;
+  r.pc=r.n>0?(Z('cabM')*Z('pcM')+Z('cabH')*Z('pcH'))/r.n:NaN;
+  r.pf=r.viv>0?parts.reduce((a,x)=>a+x.viv*(isNum(x.pf)?x.pf:0),0)/r.viv:NaN;
+  r.kp=r.viv>0?parts.reduce((a,x)=>a+x.viv*(isNum(x.kp)?x.kp:0),0)/r.viv:0;
+  r.compraCab=r.n>0?r.compra/r.n:NaN; r.T=(RM||RH||{}).T; r.gdp=(RM||RH||{}).gdp;
+  r.pren=pren&&!!RH; r.pe=RH?RH.pe:NaN; r.pr=RH?RH.pr:NaN; r.cvp=Z('cv')/100;
+  r.rent=r.mb/r.ct; r.rm=(r.gr/r.ct)/r.meses;
+  if(simple||!r.ok) return r;
+  // precio de venta mínimo: de los terneros (o de las terneras si no hay machos), con lo demás a su precio
+  const kv=RM?'pVkg':(pren?'pPren':'pVkgH'), p0=N(kv);
+  if(isNum(p0)){ const m1=modelMixto({...s,[kv]:p0+1000},true).mb, sl=(m1-r.mb)/1000; r.be=sl>0?p0-r.mb/sl:NaN; r.beU=RM?'/kg los terneros':pren?'/cab preñada':'/kg las terneras'; }
+  // precio de compra máximo: los dos precios suben en la misma proporción
+  const m2=modelMixto({...s,pCkgM:Z('pCkgM')*2,pCkgH:Z('pCkgH')*2},true).mb, k=m2-r.mb;
+  if(k<0){ const f=1-r.mb/k; r.pmaxCab=r.compraCab*f; r.pmaxKg=NaN; r.pmaxTxt=(RM?'Terneros '+money(Z('pCkgM')*f)+'/kg':'')+(RM&&RH?' y ':'')+(RH?'terneras '+money(Z('pCkgH')*f)+'/kg':''); }
+  return r;
+}
 function model(s){
   if(s.tipo==='cria') return modelCria(s);
+  if(s.cat==='mixto') return modelMixto(s);
   const N=k=>isNum(s[k])?s[k]:NaN, Z=k=>isNum(s[k])?s[k]:0;
   const r={}, T=tramos(s); r.T=T;
   r.n=N('cab'); r.pc=Z('pc'); r.meses=N('meses'); r.gdp=estOn(s)?T.gC:Z('gdp');
@@ -1580,6 +1635,10 @@ prim('gdp',2); ['gdpVer','gdpOto','gdpInv','gdpPri','supKg'].forEach(k=>prim(k,2
 ['vacas','toros','valVaca','pdesC','pVd','pTro','pTra','pVdKg','sanV','alV','mobV','ctoro','otrosV','arrHa','pRac','diaF'].forEach(k=>prim(k,0));
 ['mortV','destC','machos','desc','mesesF','conv'].forEach(k=>prim(k,1));
 prim('gdpF',2); prim('cargaR',1); prim('estMes',0); prim('calif',0); prim('pDesc',0);
+prim('gdpH',2); prim('pVkgH',0); prim('mesesH',1); prim('pcH',0); prim('pCkgH',0);
+// jaula mixta: las cabezas suman; el peso y el precio de los terneros son los del negocio base
+['cabM','cabH'].forEach(k=>{ L[k]={g:()=>st[k],d:0,s:v=>{ st[k]=v; st.cab=(st.cabM||0)+(st.cabH||0); },clear:()=>{ st[k]=null; st.cab=(st.cabM||0)+(st.cabH||0); }}; });
+L.pCkgM={g:()=>st.pCkgM,d:0,s:v=>{ st.pCkgM=v; st.pCkg=v; st.precioPor='kg'; },clear:()=>{ st.pCkgM=null; st.pCkg=null; }};
 // en cría, comisión, gastos de venta, cambio de precio y tasa usan los mismos datos que el resto
 const alias=(id,k,d)=>{L[id]={g:()=>st[k],s:v=>{st[k]=v},clear:()=>{st[k]=null},d};};
 L.carga={g:()=>CARGA(st),s:v=>{st.carga=v;},clear:()=>{st.carga=null;st.ha=null;},d:2};
@@ -1607,6 +1666,7 @@ for(const k of ['meses','pc']){ const d=k==='meses'?1:0;
   L[k]={g:()=>st[k],d,clear:()=>{ if(pfVale()) pfKeep=pfOf(); st[k]=null; },
     s:v=>{ const pf=pfVale()?pfOf():pfKeep; st[k]=v; if(pfVale()) pfKeep=null;
       if(st.fijo==='peso'&&st.meses>0&&isNum(pf)){ L.pf.s(pf); pfKeep=null; } }}; }
+L.pcM={g:()=>st.pcM,d:0,s:v=>{ L.pc.s(v); st.pcM=v; },clear:()=>{ L.pc.clear(); st.pcM=null; }};
 // peso final ↔ aumento diario
 L.pf={g:pfOf,dep:['pc','meses'],s:v=>{ const T=tramos(st);
   if(T.sis==='mix'){ if(T.mC>0) setGdpProm(Math.max(0,(v-(st.pc||0)-T.kF)/(T.mC*D))); else if(T.mF>0) st.gdpF=Math.max(0,(v-(st.pc||0))/(T.mF*D)); }
@@ -1614,7 +1674,9 @@ L.pf={g:pfOf,dep:['pc','meses'],s:v=>{ const T=tramos(st);
 // precio de venta por kilo ↔ por cabeza
 L.pVkg={g:()=>st.ventaPor==='kg'?st.pVkg:(isNum(st.pVcab)&&pfOf()>0?st.pVcab/(pfOf()*(1-(st.dV||0)/100)):null),s:v=>{st.ventaPor='kg';st.pVkg=v;},clear:()=>{st.pVkg=null;st.pVcab=null;},d:0};
 L.pVcab={g:()=>st.ventaPor==='cab'?st.pVcab:(isNum(st.pVkg)&&pfOf()>0?st.pVkg*pfOf()*(1-(st.dV||0)/100):null),s:v=>{st.ventaPor='cab';st.pVcab=v;},clear:()=>{st.pVkg=null;st.pVcab=null;},d:0};
-L.pPrenKg={g:()=>isNum(st.pPren)&&pfOf()>0?st.pPren/pfOf():null,s:v=>{if(pfOf()>0) st.pPren=v*pfOf();},clear:()=>{st.pPren=null},d:0};
+// en la jaula mixta, la preñada es la ternera: se usa su peso final
+const pfPren=()=>{ if(st.cat==='mixto'){ const H=model(st).H; return H&&isNum(H.pf)?H.pf:NaN; } return pfOf(); };
+L.pPrenKg={g:()=>isNum(st.pPren)&&pfPren()>0?st.pPren/pfPren():null,s:v=>{if(pfPren()>0) st.pPren=v*pfPren();},clear:()=>{st.pPren=null},d:0};
 // costos: por cabeza o por jaula
 ['fl','san','serv','tacto','mob','otros'].forEach(k=>{L[k]={g:()=>isNum(st[k])?st[k]*fac():null,s:v=>{const f=fac(); if(f>0) st[k]=v/f;},clear:()=>{st[k]=null},d:0};});
 L.gv={g:()=>isNum(st.gv)?st.gv*(st.vista==='jaula'?(st.cab||0)*(1-(st.mort||0)/100):1):null,
@@ -1622,7 +1684,7 @@ L.gv={g:()=>isNum(st.gv)?st.gv*(st.vista==='jaula'?(st.cab||0)*(1-(st.mort||0)/1
 L.compraT={g:()=>{const c=st.precioPor==='cab'?st.pCcab:(isNum(st.pCkg)&&isNum(st.pc)?st.pCkg*st.pc*(1-(st.dC||0)/100):null); return isNum(c)?c*fac():null;},
   s:v=>{const f=fac(); if(!(f>0))return; const c=v/f; if(st.precioPor==='cab'||!(st.pc>0)){st.precioPor='cab';st.pCcab=c;} else st.pCkg=c/st.pc;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
 
-const KEYS={arrR:['arrHa'],gdp:['gdp','gdpVer','gdpOto','gdpInv','gdpPri'],cvC:['cv'],gvC:['gv'],varC:['varVenta'],tasaC:['tasa'],pCkg:['pCkg','pCcab'],pCcab:['pCkg','pCcab'],compraT:['pCkg','pCcab'],pVkg:['pVkg','pVcab'],pVcab:['pVkg','pVcab'],pf:['gdp'],kgc:['cab'],nToros:['toros'],ha:['carga'],pPrenKg:['pPren']};
+const KEYS={pcM:['pcM','pc'],pCkgM:['pCkgM','pCkg'],arrR:['arrHa'],gdp:['gdp','gdpVer','gdpOto','gdpInv','gdpPri'],cvC:['cv'],gvC:['gv'],varC:['varVenta'],tasaC:['tasa'],pCkg:['pCkg','pCcab'],pCcab:['pCkg','pCcab'],compraT:['pCkg','pCcab'],pVkg:['pVkg','pVcab'],pVcab:['pVkg','pVcab'],pf:['gdp'],kgc:['cab'],nToros:['toros'],ha:['carga'],pPrenKg:['pPren']};
 const autoSet=()=>new Set(st.auto||[]);
 function unAuto(keys){ if(!st.auto) return; const a=autoSet(); keys.forEach(k=>a.delete(k)); st.auto=[...a]; }
 function fmtIn(id){ if((L[id].dep||[]).some(k=>!isNum(st[k]))) return ''; const v=L[id].g(); return isNum(v)?nf(v,L[id].d):''; }
@@ -1634,7 +1696,7 @@ function refresh(except){
 // rangos posibles: [mínimo, máximo, unidad]
 const LIMS={mort:[0,50,'%'],mortV:[0,50,'%'],pr:[0,100,'%'],pcria:[0,100,'%'],dest:[0,100,'%'],destC:[0,100,'%'],machos:[0,100,'%'],desc:[0,60,'%'],calif:[0,100,'%'],
   cc:[0,20,'%'],cv:[0,20,'%'],dC:[0,15,'%'],dV:[0,15,'%'],varVenta:[-90,300,'%'],inf:[0,30,'% por mes'],meses:[0,60,'meses'],mesesF:[0,60,'meses'],ms:[0,12,'meses'],
-  gdp:[0,3,'kg/día'],gdpVer:[0,3,'kg/día'],gdpOto:[0,3,'kg/día'],gdpInv:[0,3,'kg/día'],gdpPri:[0,3,'kg/día'],gdpF:[0,3,'kg/día'],cargaR:[0,20,'cab/ha'],carga:[0,10,'vacas/ha']};
+  gdp:[0,3,'kg/día'],gdpH:[0,3,'kg/día'],mesesH:[0,60,'meses'],gdpVer:[0,3,'kg/día'],gdpOto:[0,3,'kg/día'],gdpInv:[0,3,'kg/día'],gdpPri:[0,3,'kg/día'],gdpF:[0,3,'kg/día'],cargaR:[0,20,'cab/ha'],carga:[0,10,'vacas/ha']};
 function pintaFijo(){ $('f-gdp').setAttribute('aria-pressed',st.fijo==='gdp'); $('f-peso').setAttribute('aria-pressed',st.fijo==='peso'); }
 document.querySelectorAll('input.in').forEach(el=>{
   if(!L[el.id]) return;
@@ -1677,6 +1739,7 @@ selC.addEventListener('change',()=>{
   if(!myBuy){ if(st.precioPor==='kg'&&a.has('pCcab')) st.pCcab=null; if(st.precioPor==='cab'&&a.has('pCkg')) st.pCkg=null; }
   st.auto=[...a]; applyUI(); save();
 });
+['kilo','pren'].forEach(d=>$('dh-'+d).addEventListener('click',()=>{ if((st.destH||'kilo')===d) return; st.destH=d; applyUI(); save(); }));
 ['rep','fae'].forEach(d=>$('dt-'+d).addEventListener('click',()=>{ if((st.destTor||'rep')===d) return; st.destTor=d; selC.dispatchEvent(new Event('change')); }));
 $('conCria').addEventListener('change',e=>{st.conCria=e.target.checked; applyUI(); save();});
 const seg=(a,b,key,va,vb)=>{$(a).addEventListener('click',()=>{st[key]=va; applyUI(); save();}); $(b).addEventListener('click',()=>{st[key]=vb; applyUI(); save();});};
@@ -1717,12 +1780,19 @@ function applyUI(){
   $('tipoNote').textContent= esCria ? 'Cría: tenés un rodeo de vacas propio y vendés los terneros al destete y las vacas de descarte. El resultado es por año.'
     : st.tipo==='invernada' ? 'Invernada / engorde: comprás hacienda recriada o flaca y la terminás para faena, '+SISTEMAS[sis]+'.'
     : 'Recría: comprás terneros destetados y los hacés crecer hasta novillito o vaquillona, '+SISTEMAS[sis]+'.';
-  document.querySelectorAll('[data-show],[data-sis],[data-est]').forEach(el=>{
-    const w=el.dataset.show, m=st.modoVenta||'kilo';
-    const hShow= !w?false: w==='cria'?(!st.conCria||m==='vcc'): w==='nocc'?m==='vcc': !w.split(' ').includes(m);
+  const mixto=st.cat==='mixto'&&!esCria, mPren=mixto&&st.destH==='pren';
+  if(mixto&&(st.modoVenta!=='kilo'||st.conCria)){ st.modoVenta='kilo'; st.conCria=false; }
+  document.querySelectorAll('[data-show],[data-sis],[data-est],[data-mix],[data-nomix],[data-mixpren],[data-mixkilo]').forEach(el=>{
+    const w=el.dataset.show, m=st.modoVenta||'kilo', modes=mixto?(mPren?['kilo','prenada']:['kilo']):[m];
+    const hShow= !w?false: w==='cria'?(!st.conCria||m==='vcc'||mixto): w==='nocc'?m==='vcc': !w.split(' ').some(x=>modes.includes(x));
     const hSis= el.dataset.sis? !el.dataset.sis.split(' ').includes(sis) : false;
     const hEst= el.dataset.est==='on'? !st.estac : false;
-    el.hidden=hShow||hSis||hEst;});
+    const hMix=(el.dataset.mix&&!mixto)||(el.dataset.nomix&&mixto)||(el.dataset.mixpren&&!mPren)||(el.dataset.mixkilo&&!(mixto&&!mPren));
+    el.hidden=hShow||hSis||hEst||hMix;});
+  { const tb=$('mvSeg').closest('.tbar'); if(tb) tb.style.display=mixto?'none':''; } pr('dh-kilo',!mPren); pr('dh-pren',mPren);
+  $('l-pf').textContent=mixto?'Peso final de los terneros':'Peso final por cabeza';
+  $('l-pVkg').textContent=mixto?'Precio del novillito por kilo':'Precio de venta por kilo';
+  $('l-meses').textContent=mPren?'Meses de los terneros':'Meses en total';
   pr('es-par',!st.estac); pr('es-est',!!st.estac);
   $('destRow').hidden=!TOR.includes(st.cat)||st.tipo==='cria'; pr('dt-rep',(st.destTor||'rep')==='rep'); pr('dt-fae',st.destTor==='fae');
   { const rep=TOR.includes(st.cat)&&(st.destTor||'rep')==='rep'&&!esCria&&(st.modoVenta||'kilo')==='kilo'; $('califRow').hidden=!rep; $('pDescRow').hidden=!rep; }
@@ -1730,7 +1800,7 @@ function applyUI(){
     if(bq&&sis!=='campo'&&editing){ setSis('campo'); toast('Feedlot y Mix no aplican para '+bq+': el negocio pasó a campo'); return; }
     if(bq) $('tipoNote').textContent+= sis==='campo' ? ' Feedlot y Mix no aplican para '+bq+'.' : ' ⚠ Este negocio está en '+SISTEMAS[sis]+', que no aplica para '+bq+': tocá EDITAR y pasalo a campo.'; }
   paintSanPlan();
-  $('l-gdp').textContent= sis==='feed'?'Aumento diario en el corral': sis==='mix'?'Aumento diario a campo':'Aumento diario de peso';
+  $('l-gdp').textContent= (sis==='feed'?'Aumento diario en el corral': sis==='mix'?'Aumento diario a campo':'Aumento diario de peso')+(mixto?' (terneros)':'');
   $('h-gdp').textContent= sis==='feed'?'Recría a corral: 0,8–1,0 · terminación: 1,2–1,4':'A campo: terneros 0,6–0,8 · terneras 0,4–0,55 · vacas casi nada';
   $('c-sub-campo').textContent= sis==='campo'?'En el campo': sis==='feed'?'En el corral':'A campo y en el corral';
   $('refCria').textContent='Sugeridos: '+REF_CRIA.txt;
@@ -1772,22 +1842,27 @@ function calc(except){
   const g=st.gdp, sisG=st.sistema||'campo'; $('e-gdp').innerHTML= isNum(g)&&st.meses>0&&(sisG==='feed'?g>1.6:g>1.0)?'<span class="pill bad">'+(sisG==='feed'?'muy alto para corral':'difícil a campo')+'</span>':'';
   setT('e-pRac',isNum(st.conv)&&isNum(st.pRac)?'= '+money(st.conv*st.pRac)+' por kilo ganado':'');
   if(R.tipoCria){ paintCria(R); return; }
-  $('e-entore').innerHTML= isNum(R.pe)&&isNum(st.entoreObj)&&st.pc>0 ? '<span class="pill '+(R.pe>=st.entoreObj?'ok':'bad')+'">'+(R.pe>=st.entoreObj?'llega al entore con '+nf(R.pe)+' kg':'llega con '+nf(R.pe)+' kg: liviana')+'</span>' : '';
+  $('e-entore').innerHTML= isNum(R.pe)&&isNum(st.entoreObj)&&R.pc>0 ? '<span class="pill '+(R.pe>=st.entoreObj?'ok':'bad')+'">'+(R.pe>=st.entoreObj?'llega al entore con '+nf(R.pe)+' kg':'llega con '+nf(R.pe)+' kg: liviana')+'</span>' : '';
   // kilos
   setT('o-viv',isNum(R.viv)?nf(R.viv,0)+' cab':'—');
-  setT('o-kp',st.pc>0&&st.meses>0?nf(R.kp)+' kg/cab':'—'); setT('o-kpt',isNum(R.n)&&st.pc>0&&st.meses>0?nf(R.kp*R.viv)+' kg en la jaula':'');
-  setT('o-kgv',isNum(R.viv)&&st.pc>0?nf(R.viv*R.pf)+' kg':'—');
+  setT('o-kp',R.pc>0&&R.meses>0?nf(R.kp)+' kg/cab':'—'); setT('o-kpt',isNum(R.n)&&R.pc>0&&R.meses>0?nf(R.kp*R.viv)+' kg en la jaula'+(R.mixto?' (promedio de machos y hembras)':''):'');
+  setT('o-kgv',isNum(R.viv)&&R.pc>0?nf(R.viv*R.pf)+' kg':'—');
+  if(R.mixto){ const H=R.H, M=R.M;
+    setT('o-pfH',H&&isNum(H.pf)?nf(H.pf)+' kg'+(isNum(st.gdpH)?' ('+nf(st.gdpH,2)+' kg/día)':''):'—');
+    setT('e-cabMix',isNum(R.n)&&R.n>0?'= '+nf(R.n,0)+' cabezas en la jaula':'');
+    setT('e-compraMix',R.n>0&&isNum(R.compra)?'Promedio de la jaula: '+money(R.compra/R.n)+' por cabeza':'');
+    setT('o-compraMix',isNum(R.compra)&&R.n>0?money(R.compra/(st.vista==='jaula'?1:R.n)):'—'); }
   // costos
   const pc=x=>isNum(R.n)&&R.n>0?money(x/R.n*f):'—';
   setT('o-cc',pc(R.cc)); setT('o-alim',pc(R.alim)); setT('o-ct',pc(R.ct));
   // resultado
   setT('r-pren',R.pren||R.vcc?nf(R.nPren,0)+' cab':'—'); setT('r-vac',R.pren||R.vcc?nf(R.nVac,0)+' cab':'—'); setT('r-pren-l',R.vcc?'Vacas con cría al pie':'Preñadas');
-  setT('r-main-l',R.vcc?'Venta de vacas con cría y vacías':R.pren?'Venta de preñadas y vacías':'Venta de la hacienda');
+  setT('r-main-l',R.mixto?(R.pren?'Venta de terneros, preñadas y vacías':'Venta de terneros y terneras'):R.vcc?'Venta de vacas con cría y vacías':R.pren?'Venta de preñadas y vacías':'Venta de la hacienda');
   setT('r-main',money(R.ingMain)); setT('r-cria',money(R.ingCria)); setT('r-cria-h',R.cria?nf(R.nTer,0)+' terneros':'');
   setT('r-ing',money(R.ing)); setT('r-cpra',money(R.cpra)); setT('r-rec',money(R.campo)); setT('r-tie',money(R.tie)); setT('r-tie-h',R.ha>0?nf(R.ha,0)+' ha de campo + estructura':'Alquiler de la tierra y gastos fijos'); setT('r-gven',money(R.gven)); setT('r-ct',money(R.ct));
   setT('r-mb',money(R.mb),R.mb); setT('r-rent',pct(R.rent),R.rent); setT('r-rm',pct(R.rm,2),R.rm);
   setT('r-be',isNum(R.be)?money(R.be)+R.beU:'—');
-  setT('r-pmax',isNum(R.pmaxCab)?money(R.pmaxCab)+'/cab'+(st.pc>0?' ('+money(R.pmaxKg)+'/kg)':''):'—');
+  setT('r-pmax',R.pmaxTxt?R.pmaxTxt:isNum(R.pmaxCab)?money(R.pmaxCab)+'/cab'+(st.pc>0?' ('+money(R.pmaxKg)+'/kg)':''):'—');
   setT('r-nom',money(R.nom),R.nom);
   // resumen
   setT('v-cat',(TIPOS[st.tipo]||'Recría')+' '+(SISTEMAS[st.sistema||'campo'])+(st.cat?' · '+catName(st.cat):'')+(isNum(R.n)?' · '+nf(R.n)+' cabezas':''));
@@ -1828,22 +1903,24 @@ function paintCria(R){
 function cal(R){
   const g=$('calGrid'); g.innerHTML=''; const m0=st.mesCompra;
   g.appendChild(document.createElement('div'));
-  const y0=anioDe(st), M0=isNum(st.meses)?st.meses:0, NC=Math.min(36,Math.max(12,Math.ceil(M0-1e-9)+1));
+  const y0=anioDe(st), M0=R.mixto?(isNum(R.meses)?R.meses:0):(isNum(st.meses)?st.meses:0), NC=Math.min(36,Math.max(12,Math.ceil(M0-1e-9)+1));
   g.style.setProperty('--n',NC); g.classList.toggle('dense',NC>12);
   for(let i=0;i<NC;i++){const d=document.createElement('div'); const mm=(m0+i)%12; d.className='mh'; d.textContent=MES[mm];
     if(i===0||mm===0){ const y=document.createElement('small'); y.className='yr'; y.textContent=y0+Math.floor((m0+i)/12); d.appendChild(y); } g.appendChild(d);}
-  const l=document.createElement('div'); l.className='rl'; l.textContent=st.cat?catName(st.cat):'Negocio'; l.style.gridRow=2; g.appendChild(l);
-  const M=isNum(st.meses)?st.meses:0;
-  if(!(M>0)){ const e=document.createElement('div'); e.className='note'; e.style.gridColumn='2 / span '+NC; e.style.gridRow=2; e.textContent='Cargá los meses en el campo para ver el calendario.'; g.appendChild(e); return; }
-  const T=R.T, ms=R.pren&&isNum(st.ms)&&T.sis==='campo'?Math.min(st.ms,M):0;
-  const segs=[];
-  if(T.sis==='feed') segs.push({k:'f',t:'Corral → '+nf(R.pf)+' kg',m:M});
-  else if(T.sis==='mix'){ segs.push({k:'r',t:'A campo → '+nf(R.pc+T.kC)+' kg',m:T.mC}); segs.push({k:'f',t:'Corral → '+nf(R.pf)+' kg',m:T.mF}); }
-  else { segs.push({k:'r',t:(R.pren&&ms?'Recría → '+nf(R.pe)+' kg':'En el campo → '+nf(R.pf)+' kg'),m:M-ms}); if(ms) segs.push({k:'s',t:'Servicio y tacto',m:ms}); }
-  segs.push({k:'v',t:'Venta',m:1});
-  let c=0; segs.filter(s=>s.m>0).forEach(s=>{ if(c>=NC)return; const span=Math.min(Math.max(1,Math.round(s.m)),NC-c);
-    const b=document.createElement('div'); b.className='bar '+s.k; b.textContent=s.t; b.title=s.t;
-    b.style.gridColumn=(2+c)+' / span '+span; b.style.gridRow=2; g.appendChild(b); c+=span; });
+  const filas=R.mixto?[['Terneros',R.M,R.sM],['Terneras',R.H,R.sH]].filter(x=>x[1]):[[st.cat?catName(st.cat):'Negocio',R,st]];
+  filas.forEach(([lbl,RR,ss],i)=>{ const row=2+i;
+    const l=document.createElement('div'); l.className='rl'; l.textContent=lbl; l.style.gridRow=row; g.appendChild(l);
+    const M=isNum(ss.meses)?ss.meses:0;
+    if(!(M>0)||!RR.T){ const e=document.createElement('div'); e.className='note'; e.style.gridColumn='2 / span '+NC; e.style.gridRow=row; e.textContent='Cargá los meses en el campo para ver el calendario.'; g.appendChild(e); return; }
+    const T=RR.T, ms=RR.pren&&isNum(ss.ms)&&T.sis==='campo'?Math.min(ss.ms,M):0;
+    const segs=[];
+    if(T.sis==='feed') segs.push({k:'f',t:'Corral → '+nf(RR.pf)+' kg',m:M});
+    else if(T.sis==='mix'){ segs.push({k:'r',t:'A campo → '+nf(RR.pc+T.kC)+' kg',m:T.mC}); segs.push({k:'f',t:'Corral → '+nf(RR.pf)+' kg',m:T.mF}); }
+    else { segs.push({k:'r',t:(RR.pren&&ms?'Recría → '+nf(RR.pe)+' kg':'En el campo → '+nf(RR.pf)+' kg'),m:M-ms}); if(ms) segs.push({k:'s',t:'Servicio y tacto',m:ms}); }
+    segs.push({k:'v',t:'Venta',m:1});
+    let c=0; segs.filter(x=>x.m>0).forEach(x=>{ if(c>=NC)return; const span=Math.min(Math.max(1,Math.round(x.m)),NC-c);
+      const b=document.createElement('div'); b.className='bar '+x.k; b.textContent=x.t; b.title=lbl+': '+x.t;
+      b.style.gridColumn=(2+c)+' / span '+span; b.style.gridRow=row; g.appendChild(b); c+=span; }); });
   // si el texto no entra en la barra, se acorta (el nombre completo queda al pasar el mouse)
   requestAnimationFrame(()=>g.querySelectorAll('.bar').forEach(b=>{ if(b.scrollWidth>b.clientWidth+1) b.textContent=b.classList.contains('v')?'$':b.textContent.split(' → ')[0]; }));
 }
@@ -2038,6 +2115,14 @@ function paintMini(R){
 // Arma los movimientos de plata mes a mes con los mismos datos del modelo (pesos de hoy).
 function flujo(s,R){
   if(!R||!R.ok) return null;
+  if(R.mixto){ // suma mes a mes el flujo de los terneros y el de las terneras
+    const fs=[[R.M,R.sM,'Terneros'],[R.H,R.sH,'Terneras']].filter(x=>x[0]).map(x=>({f:flujo(x[1],x[0]),n:x[2]})).filter(x=>x.f);
+    if(!fs.length) return null; const lg=fs.reduce((a,x)=>x.f.rows.length>a.f.rows.length?x:a);
+    const rows=lg.f.rows.map(()=>({e:0,s:0,det:[]}));
+    const who=rows.map(()=>new Map()); // mismo concepto en los dos: se nombra una sola vez
+    fs.forEach(x=>x.f.rows.forEach((r,k)=>{ rows[k].e+=r.e; rows[k].s+=r.s; r.det.forEach(d=>{ const m=who[k]; m.set(d,(m.get(d)||[]).concat(x.n)); }); }));
+    who.forEach((m,k)=>m.forEach((ns,d)=>rows[k].det.push(ns.length===fs.length?d:ns[0]+': '+d.charAt(0).toLowerCase()+d.slice(1))));
+    return {rows,labels:lg.f.labels}; }
   const Z=k=>isNum(s[k])?s[k]:0, out=[];
   const add=(k,v,txt)=>{ while(out.length<=k) out.push({e:0,s:0,det:[]}); if(v>0) out[k].e+=v; else out[k].s+=-v; if(txt) out[k].det.push(txt); };
   if(R.cria){
@@ -2216,7 +2301,7 @@ function renderSens(){
     const g0=st.gdp, gp=estOn(st)?tramos(st).gC:g0;
     rows=[-20,-10,0,10,20]; rowLbl=x=>(x>0?'+':'')+x+' %<span class="lvl">'+(isNum(gp)?nf(gp*(1+x/100),2)+' kg/día':'')+'</span>';
     corner='Aumento diario ↓ · Precio de venta →'; sensVar='el aumento diario de peso';
-    apply=(r,c)=>{ const f=1+r/100, o={...st,gdp:isNum(g0)?g0*f:g0,varVenta:(st.varVenta||0)+c}; ['gdpVer','gdpOto','gdpInv','gdpPri'].forEach(k=>{ if(isNum(o[k])) o[k]*=f; }); return o; };
+    apply=(r,c)=>{ const f=1+r/100, o={...st,gdp:isNum(g0)?g0*f:g0,varVenta:(st.varVenta||0)+c}; ['gdpVer','gdpOto','gdpInv','gdpPri','gdpH'].forEach(k=>{ if(isNum(o[k])) o[k]*=f; }); return o; };
   }
   const base=model(st);
   if(!base.ok){ T.innerHTML=''; $('sensNote').textContent='Completá los datos del negocio para ver la sensibilidad.'; return; }
