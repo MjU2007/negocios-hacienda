@@ -108,14 +108,17 @@ input.in:focus-visible{outline:3px solid var(--input-line);outline-offset:1px}
 
 /* Calendario */
 .cal{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;overflow-x:auto}
-.cal-grid{display:grid;grid-template-columns:86px repeat(12,minmax(34px,1fr));gap:4px 2px;align-items:center;min-width:520px}
+.cal-grid{display:grid;grid-template-columns:86px repeat(var(--n,12),minmax(34px,1fr));gap:4px 2px;align-items:center;min-width:520px}
 .cal-grid .mh{font-family:var(--display);font-weight:600;font-size:.85rem;color:var(--muted);text-align:center;text-transform:uppercase;position:relative}
+.cal-grid .mh{align-self:start}
+.cal-grid.dense .mh{font-size:.6rem;letter-spacing:0}
+.cal-grid.dense .bar{font-size:.66rem}
 .cal-grid .mh .yr{display:block;font-size:.66rem;font-weight:500;letter-spacing:.02em;color:var(--hembra);line-height:1}
 .mesanio{display:inline-flex;gap:6px;align-items:center}
 .mesanio select{width:auto}
 @media (min-width:1100px){ body.cuadros .board td .mesanio{display:flex;width:10.5rem;margin-left:auto} body.cuadros .board td .mesanio select{width:auto!important;flex:1 1 0;min-width:0;margin:0!important;display:block} }
 .cal-grid .rl{font-family:var(--display);font-weight:700;font-size:1rem}
-.bar{height:30px;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-size:.8rem;font-weight:700;color:var(--bg);white-space:nowrap;overflow:hidden}
+.bar{height:30px;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-size:.8rem;font-weight:700;color:var(--bg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .bar.r.h{background:var(--hembra)} .bar.r.m{background:var(--macho)}
 .bar.s{background:repeating-linear-gradient(135deg,var(--hembra) 0 6px,color-mix(in srgb,var(--hembra) 70%,var(--bg)) 6px 12px)}
 .bar.f{background:var(--macho)}
@@ -235,7 +238,7 @@ section[hidden],.negbar[hidden],.secnav[hidden]{display:none}
   body.cuadros .board td .eq{white-space:normal}
   body.cuadros .board .tbar{flex-direction:column;align-items:flex-start;gap:8px}
   body.cuadros .board th,body.cuadros .board td{padding:7px 6px}
-  body.cuadros .cal-grid{grid-template-columns:62px repeat(12,minmax(0,1fr));min-width:0;gap:4px 1px}
+  body.cuadros .cal-grid{grid-template-columns:62px repeat(var(--n,12),minmax(0,1fr));min-width:0;gap:4px 1px}
   body.cuadros .cal-grid .mh{font-size:.72rem}
   body.cuadros .bar{font-size:.7rem;padding:0 4px}
   body.cuadros input.in,body.cuadros input.in.s{width:6.6em}
@@ -491,7 +494,7 @@ table.flu-tbl td small{display:block;color:var(--muted);font-size:.74rem;white-s
 .ini-sec{display:flex;flex-direction:column;gap:12px}
 .ini-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:8px}
 .ini-head h2{margin:0;font-size:1.3rem}
-.ini-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.ini-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
 .ini-neg{font:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;color:var(--ink);transition:border-color .15s,transform .15s}
 .ini-neg:hover{border-color:var(--hembra);transform:translateY(-2px)}
 .ini-neg h3{margin:0;font-family:var(--display);font-size:1.15rem;line-height:1.2}
@@ -664,6 +667,75 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
 .ini-ico{background:linear-gradient(135deg,color-mix(in srgb,var(--c-recria) 22%,transparent),color-mix(in srgb,var(--c-inv) 22%,transparent))!important}
 table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mix(in srgb,var(--c-inv) 18%,var(--surface)),var(--surface))!important}
 @media print{ .wrap,body{background:#fff!important} .board>section .sec-head{background:none!important;margin:0!important;padding:0 0 6px!important} }
+/* ===== EDITAR / GUARDAR ===== */
+.editbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;margin:-2px 0 6px;border-radius:10px;background:color-mix(in srgb,var(--tc,#2F7A3B) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--tc,#2F7A3B) 30%,var(--line))}
+.editbar .em{flex:1 1 220px;font-size:.95rem;color:var(--muted)}
+.editbar .em b{color:var(--ink)}
+.editando .editbar{background:color-mix(in srgb,#C08A1E 14%,var(--surface));border-color:color-mix(in srgb,#C08A1E 55%,var(--line))}
+.btn.edit,.btn.save{font-family:var(--display);letter-spacing:.06em;font-weight:700;min-width:118px;padding:8px 18px;border:0;color:#fff}
+.btn.edit{background:var(--tc,#2F7A3B)}
+.btn.save{background:#B5651D}
+.btn.edit:hover{background:color-mix(in srgb,var(--tc,#2F7A3B) 82%,#000)}
+.btn.save:hover{background:#9A5418}
+.btn.save:disabled{background:color-mix(in srgb,#B5651D 45%,var(--surface));opacity:1}
+.dirty{color:#B5651D;font-weight:700}
+.editfloat{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:40;display:flex;align-items:center;gap:10px;padding:8px 10px 8px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:0 14px 40px -12px rgba(0,0,0,.35);max-width:calc(100vw - 24px)}
+.editfloat .em{font-size:.92rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
+.editando .editfloat{border-color:color-mix(in srgb,#C08A1E 60%,var(--line))}
+.editfloat[hidden]{display:none}
+body:has(#editFloat:not([hidden])) .wrap{padding-bottom:84px}
+.pulse{animation:pulse .9s ease-out 2}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--tc,#2F7A3B) 60%,transparent)}100%{box-shadow:0 0 0 14px transparent}}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);z-index:45;background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:10px;font-size:.92rem;box-shadow:0 10px 30px -10px rgba(0,0,0,.4)}
+.toast[hidden]{display:none}
+.salir{position:fixed;inset:0;z-index:70;background:rgba(12,16,10,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.salir[hidden]{display:none}
+.salir-box{background:var(--bg);border-radius:14px;padding:20px 22px;max-width:460px;width:100%;box-shadow:0 30px 80px -20px rgba(0,0,0,.5)}
+.salir-box h3{margin:0 0 6px;font-size:1.2rem}
+.salir-box p{margin:0 0 16px;color:var(--muted)}
+.salir-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+/* modo lectura: los datos se ven como texto, sin casillas */
+body.lectura .board .field,body.lectura .board td select,body.lectura #negName{background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline:0!important}
+body.lectura .board td select{-webkit-appearance:none;appearance:none}
+body.lectura .board input:disabled,body.lectura .board select:disabled,body.lectura #negName:disabled{color:var(--ink);-webkit-text-fill-color:var(--ink);opacity:1;cursor:default}
+body.lectura [data-ro]{pointer-events:none}
+body.lectura button[data-ro]{opacity:1;cursor:default}
+body.lectura .seg button[data-ro][aria-pressed="false"]{opacity:.5}
+body.lectura .btn[data-ro]{opacity:.45}
+input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outline-offset:1px}
+@media print{.editbar,.editfloat,.toast,.salir{display:none!important}}
+/* celular: las tablas entran enteras, sin cortar números */
+@media (max-width:560px){
+  .tbl-wrap:has(> table.one){overflow-x:visible}
+  table.one label.chk{white-space:normal;display:flex;align-items:flex-start;gap:6px}
+  table.one td .seg{display:flex;flex-wrap:wrap;justify-content:flex-end}
+  table.sens th,table.sens td{padding:6px 3px!important;font-size:.74rem}
+  table.sens,table.flu-tbl{width:100%}
+  table.sens td,table.flu-tbl td:not(:first-child),table.flu-tbl th:not(:first-child){white-space:nowrap!important}
+  table.sens th:first-child,table.flu-tbl td:first-child{white-space:normal!important}
+  table.sens td{font-size:.7rem;padding:6px 2px!important}
+  table.flu-tbl td,table.flu-tbl th{font-size:.74rem}
+  table.flu-tbl th,table.flu-tbl td{padding:6px 5px!important;font-size:.8rem}
+  table.one td .seg button{padding:5px 8px;font-size:.85rem}
+  table.one{width:100%;table-layout:fixed}
+  table.one td,table.one th{padding:7px 6px}
+  table.one td:first-child{min-width:0;width:auto;overflow-wrap:anywhere}
+  table.one td:last-child{width:48%}
+  table.one td .field{display:flex;width:100%;max-width:11rem;margin-left:auto;gap:3px}
+  table.one td .field input.in,table.one td .field input.in.s{width:auto;flex:1 1 0;min-width:0}
+  table.one td .field .u{font-size:.74rem}
+  table.one td select{max-width:100%}
+  table.one .hint{font-size:.78rem}
+  table.one td .eq{white-space:normal;font-size:.74rem}
+  table.one td,table.one th{white-space:normal!important}
+  table.one td.calc,table.one td[id]{overflow-wrap:anywhere}
+  .kpi.main{grid-column:auto!important}
+  .kpis .big{font-size:1.75rem}
+  .mesanio{display:flex;flex-wrap:wrap;justify-content:flex-end;width:100%;max-width:11rem;margin-left:auto}
+  .mesanio select{flex:1 1 4.6rem;min-width:0}
+}
+@media (max-width:760px){.kpi.main{grid-column:auto}}
+@media (max-width:560px){.editfloat{left:12px;right:12px;transform:none;bottom:10px}.editfloat .em{max-width:none;flex:1}.btn.edit,.btn.save{min-width:0;padding:8px 14px}}
 </style>
 
 <div class="wrap">
@@ -689,7 +761,7 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
   <h1 id="negTitle">Mi negocio</h1>
   <p class="lead">Simulá un negocio antes de hacerlo: hacienda, tiempo, precios y costos. Obtenés la ganancia, la rentabilidad mensual, puntos de equilibrio y sensibilidad, con precios de referencia de mercado.</p>
   <div class="legend">
-    <span><i class="sw in"></i>Celda amarilla: la podés cambiar</span>
+    <span><i class="sw in"></i>Celda amarilla: la podés cambiar después de tocar EDITAR</span>
     <span><i class="sw in auto"></i>Borde punteado: valor sugerido, cambialo si querés</span>
   </div>
     </div>
@@ -699,9 +771,9 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
     <button type="button" role="tab" id="tab-ini" aria-selected="false">Inicio</button>
     <button type="button" role="tab" id="tab-neg" aria-selected="true">Mis negocios</button>
     <button type="button" role="tab" id="tab-cmp" aria-selected="false">Comparar negocios</button>
-    <button type="button" role="tab" id="tab-his" aria-selected="false">Historial</button>
   </div>
   <div class="negbar vneg" role="region" aria-label="Mis negocios">
+    <div class="editbar" id="editTop"></div>
     <div class="negrow">
       <label for="negSel" class="eyebrow">Negocio</label>
       <select id="negSel"></select>
@@ -720,14 +792,9 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
       <button class="btn sm" type="button" id="negDup">Duplicar este</button>
       <button class="btn sm ghost" type="button" id="negDel">Borrar</button>
       <button class="btn sm" type="button" id="printRep">Imprimir informe / PDF</button>
-      <button class="btn sm" type="button" id="verQuick">Guardar versión</button>
       <button class="btn sm" type="button" id="shSend">Pasar negocio</button>
       <button class="btn sm" type="button" id="shRecv">Recibir negocio</button>
       <span class="note" id="negStatus" aria-live="polite"></span>
-    </div>
-    <div class="negrow whorow">
-      <span id="whoShow">Editás como <b id="whoName">—</b> · <button class="linkbtn" type="button" id="whoEdit">cambiar</button></span>
-      <span id="whoForm" hidden><span id="whoAsk">¿Quién está editando?</span> <label class="sr" for="whoIn">Tu nombre</label><input id="whoIn" maxlength="30" placeholder="Tu nombre" autocomplete="name"> <button class="btn sm" type="button" id="whoOk">Listo</button></span>
     </div>
     <div class="negconfirm" id="negConfirm" hidden>
       <span>¿Borrar “<b id="negDelName"></b>”? No se puede deshacer.</span>
@@ -753,6 +820,15 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
 </header>
 
 
+<div class="editfloat vneg" id="editFloat" role="region" aria-label="Editar o guardar"></div>
+<div class="salir" id="salirModal" hidden role="dialog" aria-modal="true" aria-labelledby="salirT">
+  <div class="salir-box">
+    <h3 id="salirT">Tenés cambios sin guardar</h3>
+    <p id="salirTxt"></p>
+    <div class="salir-btns"><button class="btn ghost" type="button" id="salirNo">Seguir editando</button><button class="btn danger" type="button" id="salirDesc">Descartar cambios</button><button class="btn save" type="button" id="salirGuardar">Guardar</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <nav class="secnav vneg" aria-label="Secciones">
   <div class="seg lay" role="group" aria-label="Forma de ver"><button type="button" id="lay-lista" aria-pressed="false">Lista</button><button type="button" id="lay-cuadros" aria-pressed="true">Cuadros</button></div>
   <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a><a href="#flujo">Flujo de fondos</a><a href="#sens">Sensibilidad</a>
@@ -779,7 +855,7 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
       <div class="kpi main"><span class="k">Ganancia</span><span class="big num" id="k-gr">—</span><span class="sub" id="k-gr-cab">—</span></div>
       <div class="kpi"><span class="k">Rentabilidad por mes</span><span class="mid num" id="k-rm">—</span><span class="sub" id="k-mes">—</span></div>
       <div class="kpi"><span class="k" id="k-mb-l">Rentabilidad total</span><span class="mid num" id="k-mb">—</span><span class="sub" id="k-rent">—</span></div>
-      <div class="kpi"><span class="k" id="k-inv-l">Plata a poner en la compra</span><span class="mid num" id="k-inv">—</span><span class="sub" id="k-cab">—</span></div>
+      <div class="kpi"><span class="k" id="k-inv-l">Plata para comprar</span><span class="mid num" id="k-inv">—</span><span class="sub" id="k-cab">—</span></div>
     </div>
     <p class="note">“Ganancia” = lo que vendés menos todo lo que gastás: hacienda, campo, tierra, estructura y venta. Está en pesos de hoy: la inflación sube igual la hacienda y los costos, así que no la cuenta como ganancia.</p>
   </div>
@@ -827,7 +903,7 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
   <div class="tbl-wrap">
   <table class="one">
     <tbody>
-      <tr><td><span class="lbl">Mes y año de compra</span></td><td><div class="mesanio"><select id="mesCompra" aria-label="Mes de compra"></select><select id="anioCompra" aria-label="Año de compra"></select></div></td></tr>
+      <tr><td><span class="lbl">Mes y año de compra</span><span class="hint">El año ordena el calendario y el flujo; los precios siempre son los de hoy</span></td><td><div class="mesanio"><select id="mesCompra" aria-label="Mes de compra"></select><select id="anioCompra" aria-label="Año de compra"></select></div></td></tr>
       <tr><td><span class="lbl">Meses en total</span><span class="hint">De la compra a la venta</span></td>
           <td><span class="field"><input class="in s" id="meses" inputmode="decimal"><span class="u">meses</span></span></td></tr>
       <tr data-sis="mix"><td><span class="lbl">Meses a corral (al final)</span><span class="hint">El resto del tiempo está a campo</span></td>
@@ -868,6 +944,10 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
           <td><span class="field"><span class="u">$</span><input class="in" id="pVkg" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
       <tr data-show="kilo"><td><span class="lbl">Precio de venta por cabeza</span><span class="hint">Cargá el que uses; el otro se calcula con el peso final</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="pVcab" inputmode="decimal"><span class="u">/cab</span></span></td></tr>
+      <tr id="califRow"><td><span class="lbl">Califican como reproductores</span><span class="hint">Los que pasan la revisación y se venden al precio de arriba; el resto va a faena</span></td>
+          <td><span class="field"><input class="in s" id="calif" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-calif"></span></td></tr>
+      <tr id="pDescRow"><td><span class="lbl">Precio de los que no califican</span><span class="hint">Van a faena, por kilo</span></td>
+          <td><span class="field"><span class="u">$</span><input class="in" id="pDesc" inputmode="decimal"><span class="u">/kg</span></span></td></tr>
       <tr><td><span class="lbl">Desbaste en la venta</span><span class="hint">Se descuenta del peso al vender por kilo. Remate feria: 0–3 %; a frigorífico pesando en el campo: 5–8 %</span></td>
           <td><span class="field"><input class="in s" id="dV" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-dV"></span></td></tr>
       <tr class="sub" data-show="prenada"><td colspan="2">Servicio y preñez</td></tr>
@@ -1009,7 +1089,7 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
     <tr><td><span class="lbl">Toros</span><span class="hint">Referencia a campo: 1 toro cada 28 vacas</span></td><td><span class="field"><input class="in s" id="nToros" inputmode="numeric"><span class="u">toros</span></span><span class="eq" id="e-toros"></span></td></tr>
     <tr><td><span class="lbl">Vacas por hectárea</span><span class="hint">Carga del campo</span></td><td><span class="field"><input class="in " id="carga" inputmode="decimal"><span class="u">vacas/ha</span></span><span class="eq" id="e-carga"></span></td></tr>
     <tr><td><span class="lbl">Hectáreas que ocupa el rodeo</span><span class="hint">Se calcula con las vacas y la carga</span></td><td><span class="field"><input class="in " id="ha" inputmode="decimal"><span class="u">ha</span></span><span class="eq" id="e-ha"></span></td></tr>
-    <tr><td><span class="lbl">Valor de cada vaca</span><span class="hint">Es la plata que tenés en el rodeo. Vaca usada preñada: $1.593.487 (sem. 39)</span></td><td><span class="field"><span class="u">$</span><input class="in " id="valVaca" inputmode="decimal"><span class="u">/vaca</span></span></td></tr>
+    <tr><td><span class="lbl">Valor de cada vaca</span><span class="hint">Es la plata que tenés en el rodeo. Vaca con garantía de preñez: $1.726.132 (Rosgan, 13/10/2026)</span></td><td><span class="field"><span class="u">$</span><input class="in " id="valVaca" inputmode="decimal"><span class="u">/vaca</span></span></td></tr>
     <tr><td><span class="lbl">Mortandad de vacas por año</span></td><td><span class="field"><input class="in s" id="mortV" inputmode="decimal"><span class="u">%</span></span></td></tr>
   </tbody></table></div>
   <div class="mini" id="mini-c-rodeo"></div>
@@ -1076,7 +1156,7 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
     <tr><td><span class="lbl">Por vaca</span></td><td class="calc" id="rc-mbv">—</td></tr>
     <tr><td><span class="lbl">Por hectárea</span></td><td class="calc" id="rc-mbha">—</td></tr>
     <tr><td><span class="lbl">Plata que tenés en el rodeo</span></td><td class="calc" id="rc-cap">—</td></tr>
-    <tr><td><span class="lbl">Rentabilidad sobre la plata en el rodeo</span></td><td class="calc" id="rc-rent">—</td></tr>
+    <tr><td><span class="lbl">Rentabilidad sobre lo invertido</span><span class="hint">Vacas + costos del año</span></td><td class="calc" id="rc-rent">—</td></tr>
     <tr class="sub"><td colspan="2">Límites del negocio (pesos de hoy)</td></tr>
     <tr><td><span class="lbl">Precio promedio del ternero para no perder</span></td><td class="calc" id="rc-be">—</td></tr>
     <tr><td><span class="lbl">Destete mínimo para no perder</span></td><td class="calc" id="rc-bed">—</td></tr>
@@ -1143,41 +1223,19 @@ table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mi
   <div class="tbl-wrap" id="cmpWrap"><table class="cmp" id="cmpTbl"></table></div>
 </section>
 
-<section id="historial" class="vhis" hidden>
-  <div class="sec-head"><h2>Historial de cambios</h2></div>
-  <div class="his-wrap">
-    <div class="his-top">
-      <label>Negocio <select id="hisFil"><option value="">Todos los negocios</option></select></label>
-      <span class="note" id="hisWho"></span>
-    </div>
-    <ol class="his-list" id="hisList"></ol>
-    <div class="negrow"><button class="btn sm ghost" type="button" id="hisMore" hidden>Ver más cambios</button></div>
-    <p class="note">Se ven los últimos 15 cambios, con día, hora y quién los hizo. Los cambios seguidos de una misma persona en un mismo negocio se juntan en uno solo. Cada cambio guarda cómo estaba el negocio antes, así que se puede volver atrás.</p>
-  </div>
-  <div class="sec-head"><h2>Versiones guardadas</h2></div>
-  <div class="his-wrap">
-    <p class="note">Una versión es una foto del negocio tal como está ahora. Guardala antes de probar cambios grandes: después la podés restaurar o abrir como un negocio aparte.</p>
-    <div class="negrow"><label class="sr" for="verName">Nombre de la versión</label><input id="verName" maxlength="50" placeholder="Nombre (ej.: antes de subir precios)" style="flex:1 1 240px"><button class="btn sm" type="button" id="verSave">Guardar versión</button></div>
-    <ol class="his-list" id="verList"></ol>
-  </div>
-</section>
 
 <section id="fuentes">
   <div class="sec-head"><h2>Fuentes de los valores de referencia</h2></div>
   <div class="src">
     <ol>
-      <li>Ternero 160–180 kg, novillito 300–330 kg y vaquillona 250–290 kg: <a href="https://www.decamponoticias.com/mercado-de-invernada-ternero-y-feedlot/" target="_blank" rel="noopener">De Campo a Campo, invernada semana 39 (29/09/2026)</a>.</li>
-      <li>Ternera 170–190 kg: <a href="https://www.decamponoticias.com/mercado-de-invernada-baja-de-precios-2/" target="_blank" rel="noopener">De Campo a Campo, invernada semana 36 (06/09/2026)</a>.</li>
-      <li>Vaquillona con garantía de preñez, vaca nueva y usada preñada: <a href="https://www.decamponoticias.com/mercado-de-cria-vaquillona-prenada/" target="_blank" rel="noopener">De Campo a Campo, cría semana 39 (29/09/2026)</a>.</li>
-      <li>Vaca nueva con cría al pie y vaca sin servicio: <a href="https://www.decamponoticias.com/mercado-de-cria-baja-vaquillona-prenada/" target="_blank" rel="noopener">De Campo a Campo, cría semana 37 (13/09/2026)</a>.</li>
-      <li>Novillos, novillitos, vaquillonas y vacas en el Mercado Agroganadero: <a href="https://www.decamponoticias.com/mercado-de-invernada-bajas-de-precios/" target="_blank" rel="noopener">De Campo a Campo, semana 37 (12/09/2026)</a>.</li>
+      <li>Hacienda de invernada y vientres (terneros, terneras, novillitos, novillos, vaquillonas, vacas a levantar, vaquillonas y vacas con garantía de preñez, vacas con cría al pie): <a href="https://www.lanacion.com.ar/economia/campo/pagaron-hasta-6900-por-terneros-en-un-importante-remate-ganadero-nid14102026/" target="_blank" rel="noopener">Rosgan, remate del 13/10/2026 (La Nación)</a>.</li>
+      <li>Hacienda gorda (novillitos, novillos, vaquillonas, vacas, toros y MEJ): <a href="https://ruralnet.com.ar/mag-precios-16-octubre-2026/" target="_blank" rel="noopener">Mercado Agroganadero, 16/10/2026 (Ruralnet)</a>. Todos los precios de compra y venta son de la misma semana.</li>
+      <li>Toros PC en remates: <a href="https://www.defrentealcampo.com.ar/wp-content/uploads/2026/03/Informe-Mensual-Angus-Enero-2026.pdf" target="_blank" rel="noopener">Informe Mensual Angus, enero 2026</a>.</li>
       <li>Recría pastoril (180 → 300 kg, 650–700 g/día, ~$1.400/kg producido): <a href="https://www.engormix.com/ganaderia/ganancia-peso-terneros/estudio-productivo-economico-diferentes_a56320/" target="_blank" rel="noopener">Engormix, junio 2026</a>. Costo del kilo a pasto (~$2.000/kg): <a href="https://bichosdecampo.com/el-analista-ganadero-fernando-gil-explica-cuanto-cuesta-hacer-pasturas-y-verdeos-y-que-retorno-tienen-se-repaga-la-inversion-y-generan-una-ganancia-interesante/" target="_blank" rel="noopener">Bichos de Campo</a>.</li>
       <li>Recría de hembras hasta el primer entore: <a href="https://www.produccion-animal.com.ar/informacion_tecnica/cria/05-manejo_de_la_hembra_hasta_el_primer_entore.pdf" target="_blank" rel="noopener">Sitio Argentino de Producción Animal</a>. Inflación esperada: <a href="https://www.canal26.com/economia/2026/09/05/las-proyecciones-de-los-analistas-del-banco-central-para-lo-que-resta-del-2026-que-espera-el-mercado-para-la-inflacion-y-el-dolar/" target="_blank" rel="noopener">REM del BCRA</a>.</li>
-          <li>Novillo de invernada (+300 kg): <a href="https://www.grupoguarino.com.ar/invernada/" target="_blank" rel="noopener">Grupo Guarino, invernada semana del 12 al 18/10/2026</a>. Novillo gordo en el Mercado Agroganadero: <a href="https://www.decamponoticias.com/mercado-de-invernada-terneros-pesados/" target="_blank" rel="noopener">De Campo a Campo, semana del 5 al 9/10/2026</a>.</li>
-          <li>Toros a faena: <a href="https://ruralnet.com.ar/mag-precios-16-octubre-2026/" target="_blank" rel="noopener">Mercado Agroganadero, 16/10/2026 (Ruralnet)</a>. Toros PC en remates: <a href="https://www.defrentealcampo.com.ar/wp-content/uploads/2026/03/Informe-Mensual-Angus-Enero-2026.pdf" target="_blank" rel="noopener">Informe Mensual Angus, enero 2026</a>.</li>
           <li>Alquiler de la tierra: índice novillo arrendamiento $4.241/kg y rango de 3 a 6 kg de novillo/ha/mes para campos ganaderos: <a href="https://www.consignatarias.com.ar/como-se-calcula-el-canon-de-arrendamiento" target="_blank" rel="noopener">Consignatarias.com.ar (16/10/2026)</a>. Se toman 3,5 kg/ha/mes para la Cuenca del Salado.</li>
     </ol>
-    <p>Los resultados son antes de impuestos (Ganancias e Ingresos Brutos). Estructura y administración, carga por hectárea, sanidad, servicio, tacto, mano de obra, fletes, comisiones, mortandad y aumentos diarios son estimaciones de un sistema pastoril típico: reemplazalos por los de tu campo. El flete sugerido supone ~$1,2 M por jaula a ~300 km. En feedlot, la ración se toma a precio de maíz (~$296.000/t, De Campo a Campo sem. 39) con conversiones de ~8 kg (recría) y ~6,5 kg (terminación) por kilo ganado, en línea con los costos de Engormix ($2.500 y $1.900 por kilo producido); los gastos de corral por día son estimados. En cría, los costos por vaca, el costo de los toros y el destete sugerido (80%) son estimaciones de un rodeo bien manejado; el resultado no incluye la tierra salvo que cargues un alquiler. No hay precio publicado del novillo de invernada ni de “otra hacienda”. No es asesoramiento financiero.</p>
+    <p>Los resultados son antes de impuestos (Ganancias e Ingresos Brutos). Estructura y administración, carga por hectárea, sanidad, servicio, tacto, mano de obra, fletes, comisiones, mortandad y aumentos diarios son estimaciones de un sistema pastoril típico: reemplazalos por los de tu campo. El flete sugerido supone ~$1,2 M por jaula a ~300 km. En feedlot, la ración se toma a precio de maíz (~$296.000/t, De Campo a Campo sem. 39) con conversiones de ~8 kg (recría) y ~6,5 kg (terminación) por kilo ganado, en línea con los costos de Engormix ($2.500 y $1.900 por kilo producido); los gastos de corral por día son estimados. En cría, los costos por vaca, el costo de los toros y el destete sugerido (80%) son estimaciones de un rodeo bien manejado. El precio de compra de toritos y toros reproductores y del toro flaco son estimados. No hay precio publicado de “otra hacienda”. No es asesoramiento financiero.</p>
   </div>
 </section>
 
@@ -1197,6 +1255,8 @@ const anioDe=s=>isNum(s.anioCompra)?s.anioCompra:YEAR0;
 const CATS=[['ternero','Terneros'],['ternera','Terneras'],['novillito','Novillitos'],['vaquillona','Vaquillonas'],['novillo','Novillos'],
   ['vaca','Vacas'],['vacaPren','Vacas preñadas'],['vacaCria','Vacas con cría al pie'],['torito','Toritos'],['toro','Toros'],['otro','Otra hacienda']];
 const TOR=['torito','toro'];
+// Feedlot y Mix no sirven para vender preñadas, vacas con cría o reproductores (necesitan campo)
+const sisBloq=s=>s.tipo==='cria'?'':s.modoVenta==='prenada'?'vender preñadas':s.modoVenta==='vcc'?'vender vacas con cría':s.conCria?'vender terneros al pie':(TOR.includes(s.cat)&&(s.destTor||'rep')==='rep')?'vender reproductores':'';
 const refFor=s=>TOR.includes(s.cat)?REF[s.cat+'_'+(s.destTor||'rep')]:REF[s.cat];
 const catName=c=>(CATS.find(x=>x[0]===c)||[])[1]||'Sin categoría';
 // Estructura de un negocio. Los números arrancan vacíos (null).
@@ -1204,7 +1264,7 @@ const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:nu
   mesCompra:4,anioCompra:null,meses:null,gdp:null,mort:null,
   modoVenta:'kilo',ventaPor:'kg',pVkg:null,pVcab:null,ms:null,entoreObj:null,pr:null,pPren:null,pVac:null,
   conCria:false,pcria:null,pVcc:null,dest:null,pdes:null,pTer:null,varVenta:null,
-  alKg:null,alMes:null,cargaR:null,estMes:null,san:null,serv:null,tacto:null,mob:null,otros:null,cv:null,gv:null,
+  alKg:null,alMes:null,cargaR:null,estMes:null,calif:null,pDesc:null,san:null,serv:null,tacto:null,mob:null,otros:null,cv:null,gv:null,
   tasa:null,inf:null,vista:'cab',fijo:'gdp',
   tipo:'recria',sistema:'campo',mesesF:null,gdpF:null,conv:null,pRac:null,diaF:null,
   vacas:null,toros:null,ha:null,carga:null,valVaca:null,mortV:null,destC:null,pdesC:null,machos:null,desc:null,pVd:null,
@@ -1215,8 +1275,8 @@ const SISTEMAS={campo:'a campo',feed:'a corral (feedlot)',mix:'mix campo + corra
 // Valores sugeridos para un rodeo de cría (precios De Campo a Campo, sep-2026; costos estimados)
 // Tierra: ~3,5 kg de novillo por ha y por mes (campo ganadero de la Cuenca del Salado) × índice novillo arrendamiento $4.241/kg (16/10/2026)
 const ARR_REF=178000, EST_REF=6000;
-const REF_CRIA={txt:'Ternero 160–180 kg a $6.610/kg y ternera 170–190 kg a $5.902/kg; vaca a faena a $3.060/kg; vaca usada preñada a $1.593.487 (De Campo a Campo). Costos por vaca estimados para un sistema pastoril.',
-  v:{vacas:100,toros:100/28,carga:0.7,valVaca:1593487,mortV:2,destC:80,pdesC:170,machos:50,desc:18,pVd:420,pTro:6610,pTra:5902,pVdKg:3060,cv:4,gv:12000,varVenta:0,
+const REF_CRIA={txt:'Ternero a $5.890/kg, ternera a $5.505/kg y vaca con garantía de preñez a $1.726.132 (Rosgan, remate del 13/10/2026); vaca a faena a $3.169/kg (Mercado Agroganadero, 16/10/2026). Costos por vaca estimados para un sistema pastoril.',
+  v:{vacas:100,toros:100/28,carga:0.7,valVaca:1726132,mortV:2,destC:80,pdesC:170,machos:50,desc:18,pVd:420,pTro:5890,pTra:5505,pVdKg:3169,cv:4,gv:12000,varVenta:0,
      sanV:35000,alV:150000,mobV:60000,ctoro:1500000,otrosV:20000,arrHa:ARR_REF,tasa:6}};
 // Valores sugeridos por sistema (recría / invernada)
 const REF_SIS={
@@ -1230,28 +1290,28 @@ const STRUCT=['precioPor','ventaPor','modoVenta','conCria'];
 // Valores sugeridos por categoría. Precios: De Campo a Campo (informes semanales AZ Group, sep-2026).
 // Flete estimado ~$1,2 M por jaula a ~300 km, repartido entre las cabezas que entran.
 const REF={
-  ternero:{txt:'Ternero 160–180 kg a $6.610/kg y novillito 300–330 kg a $5.424/kg (De Campo a Campo, sem. 39). Recría a campo de ~6 meses a 0,68 kg/día y venta del recriado.',
-    v:{cargaR:1.5,cab:80,pc:175,pCkg:6610,meses:6,gdp:0.68,mort:1.5,modoVenta:'kilo',pVkg:5424,fl:15000,san:30000,mob:30000,alKg:2000}},
-  ternera:{txt:'Ternera 170–190 kg a $5.902/kg (sem. 36) y vaquillona con garantía de preñez a $2.558.533 (sem. 39). Recría hasta el entore de diciembre, servicio, tacto y venta preñada: ~10 meses.',
-    v:{cargaR:1.5,cab:80,pc:175,pCkg:5902,meses:10,gdp:0.5,mort:1.5,modoVenta:'prenada',ms:3,entoreObj:280,pr:80,pPren:2558533,pVac:4333,fl:15000,san:45000,serv:60000,tacto:6000,mob:50000,alKg:2000}},
-  novillito:{txt:'Novillito 300–330 kg a $5.424/kg (sem. 39) y novillito gordo a $4.572/kg (Mercado Agroganadero, sem. 37). Terminación a campo hasta ~410 kg.',
-    v:{cargaR:1.2,cab:45,pc:300,pCkg:5424,meses:6,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:4572,fl:27000,san:25000,mob:30000,alKg:2000}},
-  vaquillona:{txt:'Vaquillona 250–290 kg a $5.389/kg y vaquillona con garantía de preñez a $2.558.533 (sem. 39). Entore, tacto y venta preñada: ~6 meses.',
-    v:{cargaR:1.2,cab:50,pc:270,pCkg:5389,meses:6,gdp:0.35,mort:1,modoVenta:'prenada',ms:3,entoreObj:280,pr:82,pPren:2558533,pVac:4333,fl:24000,san:40000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
-  novillo:{txt:'Novillo de invernada (+300 kg) a $5.000/kg (Grupo Guarino, 12–18/10) y novillo gordo a $4.157/kg (Mercado Agroganadero, 5–9/10). Terminación a campo de ~5 meses.',
-    v:{cargaR:1,cab:35,pc:380,pCkg:5000,meses:5,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:4157,fl:34000,san:20000,mob:25000,alKg:2000}},
-  vaca:{txt:'Vaca sin servicio a $1.170.068/cab (sem. 37) y vaca a faena a $3.060/kg (Mercado Agroganadero, sem. 37). Engorde a campo de ~4 meses.',
-    v:{cargaR:0.9,cab:35,precioPor:'cab',pCcab:1170068,pc:400,meses:4,gdp:0.7,mort:1,modoVenta:'kilo',pVkg:3060,fl:34000,san:15000,mob:20000,alKg:1300,alMes:0}},
-  vacaPren:{txt:'Vaca nueva preñada a $2.313.938/cab y vaca usada preñada a $1.593.487/cab (sem. 39); ternero a $6.610/kg; vaca nueva con cría a $1.508.478/cab (sem. 37). Pare, cría, destete, se vuelve a preñar y se vende con el ternero: ~10 meses.',
-    v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:2313938,pc:430,meses:10,gdp:0.03,mort:1,modoVenta:'prenada',ms:3,pr:85,pPren:1593487,pVac:3060,conCria:true,dest:90,pdes:170,pTer:6610,fl:34000,alKg:0,alMes:15000,san:35000,serv:30000,tacto:6000,mob:45000}},
-  vacaCria:{txt:'Vaca nueva con cría al pie a $1.508.478/cab (sem. 37); ternero a $6.610/kg y vaca a faena a $3.060/kg (Mercado Agroganadero). Se desteta el ternero y se venden los dos: ~5 meses.',
-    v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:1508478,pc:430,meses:5,gdp:0.03,mort:1,modoVenta:'kilo',pVkg:3060,conCria:true,dest:95,pdes:170,pTer:6610,fl:34000,alKg:0,alMes:15000,san:30000,mob:25000}},
-  torito_rep:{txt:'Toritos para reproductores: toro PC Angus a $5.668.304 por cabeza en promedio (remates temporada 2025, Asociación Argentina de Angus). Recría de terneros enteros de buena genética hasta ~2 años; precio de compra estimado. Incluye revisación andrológica y registros en otros gastos. Ojo: no todos califican como reproductores (suele quedar ~70 %); si querés contemplarlo, bajá el precio promedio de venta.',
-    v:{cargaR:1.3,cab:30,pc:200,pCkg:7000,meses:18,gdp:0.6,mort:2,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,fl:15000,san:60000,mob:60000,otros:120000,alKg:2000}},
-  torito_fae:{txt:'Toritos a faena: el torito entero se paga ~10 % menos que el novillito (novillito a $4.427/kg en el Mercado Agroganadero, 16/10/2026; precio de venta estimado). Ternero entero a $6.610/kg (De Campo a Campo, sem. 39). Recría a campo de ~12 meses. Si los castrás, evaluálo como recría de terneros.',
-    v:{cargaR:1.3,cab:40,pc:200,pCkg:6610,meses:12,gdp:0.7,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:3985,fl:15000,san:30000,mob:40000,otros:0,alKg:2000}},
-  toro_rep:{txt:'Toros para reproductores: venta a $5.668.304 por cabeza (toro PC Angus, promedio de remates temporada 2025). Compra de toros jóvenes por cabeza, estimada. Incluye revisación andrológica en otros gastos.',
-    v:{cargaR:0.8,cab:20,pc:600,precioPor:'cab',pCcab:4500000,meses:6,gdp:0.4,mort:1,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,fl:40000,san:40000,mob:30000,otros:80000,alKg:2000}},
+  ternero:{txt:'Ternero (~215 kg) a $5.890/kg y novillito (~310 kg) a $5.216/kg (Rosgan, remate del 13/10/2026). Recría a campo de ~5 meses a 0,68 kg/día y venta del recriado.',
+    v:{cargaR:1.5,cab:80,pc:215,pCkg:5890,meses:5,gdp:0.68,mort:1.5,modoVenta:'kilo',pVkg:5216,fl:15000,san:30000,mob:30000,alKg:2000}},
+  ternera:{txt:'Ternera (~215 kg) a $5.505/kg y vaquillona con garantía de preñez a $2.262.712 (Rosgan, remate del 13/10/2026); las vacías, a faena como vaquillonas a $4.194/kg (Mercado Agroganadero, 16/10/2026). Recría hasta el entore, servicio, tacto y venta preñada: ~8 meses.',
+    v:{cargaR:1.5,cab:80,pc:215,pCkg:5505,meses:8,gdp:0.5,mort:1.5,modoVenta:'prenada',ms:3,entoreObj:280,pr:80,pPren:2262712,pVac:4194,fl:15000,san:45000,serv:60000,tacto:6000,mob:50000,alKg:2000}},
+  novillito:{txt:'Novillito (~310 kg) a $5.216/kg (Rosgan, remate del 13/10/2026) y novillito gordo a $4.427/kg (Mercado Agroganadero, 16/10/2026). Terminación a campo hasta ~420 kg.',
+    v:{cargaR:1.2,cab:45,pc:310,pCkg:5216,meses:6,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:4427,fl:27000,san:25000,mob:30000,alKg:2000}},
+  vaquillona:{txt:'Vaquillona a $4.700/kg y vaquillona con garantía de preñez a $2.262.712 (Rosgan, remate del 13/10/2026); las vacías, a faena a $4.194/kg (Mercado Agroganadero, 16/10/2026). Entore, tacto y venta preñada: ~6 meses.',
+    v:{cargaR:1.2,cab:50,pc:270,pCkg:4700,meses:6,gdp:0.35,mort:1,modoVenta:'prenada',ms:3,entoreObj:280,pr:82,pPren:2262712,pVac:4194,fl:24000,san:40000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
+  novillo:{txt:'Novillo de invernada (~410 kg) a $4.795/kg (Rosgan, remate del 13/10/2026) y novillo gordo a $4.214/kg (Mercado Agroganadero, 16/10/2026). Terminación a campo de ~5 meses.',
+    v:{cargaR:1,cab:35,pc:408,pCkg:4795,meses:5,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:4214,fl:34000,san:20000,mob:25000,alKg:2000}},
+  vaca:{txt:'Vaca regular a levantar a $2.880/kg (Rosgan, remate del 13/10/2026) y vaca a faena a $3.169/kg (Mercado Agroganadero, 16/10/2026; las buenas, $3.394). Engorde a campo de ~4 meses.',
+    v:{cargaR:0.9,cab:35,precioPor:'kg',pCkg:2880,pc:400,meses:4,gdp:0.7,mort:1,modoVenta:'kilo',pVkg:3169,fl:34000,san:15000,mob:20000,alKg:1300,alMes:0}},
+  vacaPren:{txt:'Vaca con garantía de preñez a $1.726.132/cab y ternero a $5.890/kg (Rosgan, remate del 13/10/2026); vacías a faena a $3.169/kg (Mercado Agroganadero, 16/10/2026). Pare, cría, destete, se vuelve a preñar y se vende preñada con el ternero aparte: ~10 meses.',
+    v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:1726132,pc:430,meses:10,gdp:0.03,mort:1,modoVenta:'prenada',ms:3,pr:85,pPren:1726132,pVac:3169,conCria:true,dest:90,pdes:170,pTer:5890,fl:34000,alKg:0,alMes:15000,san:35000,serv:30000,tacto:6000,mob:45000}},
+  vacaCria:{txt:'Vaca con cría al pie a $1.522.559/cab y ternero a $5.890/kg (Rosgan, remate del 13/10/2026); vaca a faena a $3.169/kg (Mercado Agroganadero, 16/10/2026). Se desteta el ternero y se venden los dos: ~5 meses.',
+    v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:1522559,pc:430,meses:5,gdp:0.03,mort:1,modoVenta:'kilo',pVkg:3169,conCria:true,dest:95,pdes:170,pTer:5890,fl:34000,alKg:0,alMes:15000,san:30000,mob:25000}},
+  torito_rep:{txt:'Toritos para reproductores: se venden a $5.668.304 por cabeza los que califican (toro PC Angus, promedio de remates 2025, Asociación Argentina de Angus); se toma que califica el 70 % y el resto va a faena como MEJ a $3.901/kg (Mercado Agroganadero, 16/10/2026). Compra al precio del ternero, $5.890/kg (Rosgan, remate del 13/10/2026); si son de cabaña, cuestan más. Incluye revisación y registros en otros gastos.',
+    v:{cargaR:1.3,cab:30,pc:215,pCkg:5890,meses:18,gdp:0.6,mort:2,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,calif:70,pDesc:3901,fl:15000,san:60000,mob:60000,otros:120000,alKg:2000}},
+  torito_fae:{txt:'Toritos a faena: ternero entero a $5.890/kg (Rosgan, remate del 13/10/2026) y venta como MEJ (machos enteros jóvenes) a $3.901/kg (Mercado Agroganadero, 16/10/2026). Recría a campo de ~12 meses. Si los castrás, evaluálo como recría de terneros.',
+    v:{cargaR:1.3,cab:40,pc:215,pCkg:5890,meses:12,gdp:0.7,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:3901,fl:15000,san:30000,mob:40000,otros:0,alKg:2000}},
+  toro_rep:{txt:'Toros para reproductores: venta a $5.668.304 por cabeza (toro PC Angus, promedio de remates 2025); se toma que califica el 95 % y el resto va a faena a $3.562/kg (Mercado Agroganadero, 16/10/2026). Compra de toros jóvenes por cabeza: estimada. Incluye revisación en otros gastos.',
+    v:{cargaR:0.8,cab:20,pc:600,precioPor:'cab',pCcab:4500000,meses:6,gdp:0.4,mort:1,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,calif:95,pDesc:3562,fl:40000,san:40000,mob:30000,otros:80000,alKg:2000}},
   toro_fae:{txt:'Toros a faena: toro a $3.562/kg (Mercado Agroganadero, 16/10/2026). Toro comprado flaco y terminado a campo en ~3 meses; precio de compra estimado ~10 % por debajo del toro gordo.',
     v:{cargaR:0.8,cab:30,pc:600,pCkg:3200,meses:3,gdp:0.8,mort:1,modoVenta:'kilo',ventaPor:'kg',pVkg:3562,fl:40000,san:15000,mob:20000,otros:0,alKg:2000}},
   otro:{txt:'Sin precios de referencia para esta categoría: cargá los tuyos. Los costos tienen valores sugeridos generales.',v:{}}
@@ -1301,7 +1361,7 @@ function modelCria(s){
   r.cvp=Z('cv')/100; r.cv=r.ing*r.cvp; r.gv=(r.mach+r.hemV+r.vd)*Z('gv'); r.gven=r.cv+r.gv;
   r.ct=r.dir+r.gven; r.mb=r.ing-r.ct;
   r.compraCab=N('valVaca'); r.cpra=V*r.compraCab; r.cp=0; r.gr=r.mb; // sin comparar contra otra inversión
-  r.rent=r.mb/r.cpra; r.rm=(r.gr/r.cpra)/12; r.mbVaca=r.mb/V; r.mbHa=r.mb/(HA(s)||NaN);
+  r.inv=r.cpra+r.dir; r.rent=r.mb/r.inv; r.rm=r.rent/12; // sobre lo invertido: vacas + costos del año r.mbVaca=r.mb/V; r.mbHa=r.mb/(HA(s)||NaN);
   const need=(r.dir+r.gv)/(1-r.cvp);
   r.be=((need/v)-r.ingVd/v)/((r.mach+r.hemV)*pdes);
   const precioT=(r.mach*Z('pTro')+r.hemV*Z('pTra'))/Math.max(1e-9,r.mach+r.hemV);
@@ -1329,7 +1389,10 @@ function model(s){
     r.ingPren=r.nPren*N('pPren')*v; r.ingVac=r.nVac*r.pf*(1-dV)*Z('pVac')*v; r.ingMain=r.ingPren+r.ingVac;
   } else {
     r.ventaCab=s.ventaPor==='cab'?N('pVcab'):r.pf*(1-dV)*N('pVkg');
-    r.ingMain=r.viv*r.ventaCab*v;
+    // reproductores: no todos califican; los que no, van a faena
+    r.rep=TOR.includes(s.cat)&&(s.destTor||'rep')==='rep'&&isNum(s.calif)&&s.calif<100;
+    r.q=r.rep?Math.max(0,s.calif)/100:1; r.ventaNoCal=r.rep?r.pf*(1-dV)*Z('pDesc'):0;
+    r.ingMain=r.viv*(r.q*r.ventaCab+(1-r.q)*r.ventaNoCal)*v;
   }
   r.cria=!!s.conCria&&!r.vcc;
   r.nTer=r.cria?r.viv*Z('dest')/100:0;
@@ -1351,8 +1414,9 @@ function model(s){
   r.nom=r.ing*Math.pow(1+inf,m)-r.cpra-r.rec*Math.pow(1+inf,m/2)-r.gven*Math.pow(1+inf,m);
   const need=(r.cpra+r.rec+r.gv)/(1-r.cvp), needMain=(need-r.ingCria)/v;
   if(r.pren||r.vcc){ r.be=(needMain-r.nVac*r.pf*(1-dV)*Z('pVac'))/r.nPren; r.beU=r.vcc?'/cab con cría':'/cab preñada'; }
-  else if(s.ventaPor==='cab'){ r.be=needMain/r.viv; r.beU='/cab'; }
-  else { r.be=needMain/(r.viv*r.pf*(1-dV)); r.beU='/kg'; }
+  else { const fuera=r.viv*(1-r.q)*r.ventaNoCal;
+    if(s.ventaPor==='cab'){ r.be=(needMain-fuera)/(r.viv*r.q); r.beU='/cab'; }
+    else { r.be=(needMain-fuera)/(r.viv*r.q*r.pf*(1-dV)); r.beU='/kg'; } }
   r.pmaxCab=(r.ing*(1-r.cvp)-r.gv-r.fl-r.rec)/(r.n*(1+Z('cc')/100));
   r.pmaxKg=r.pmaxCab/(r.pc*(1-dC));
   r.pe=r.pren&&isNum(s.ms)?r.pc+r.gdp*Math.max(0,(isNum(r.meses)?r.meses:0)-s.ms)*D:NaN;
@@ -1428,7 +1492,9 @@ function migAnio(n){ const o=n&&n.st; if(!o||typeof o!=='object'||('anioCompra' 
   if(!cur()) active=negs[0].id;
 })();
 let st={...EMPTY,...cur().st};
-function saveLocal(){try{localStorage.setItem(LKEY,JSON.stringify({negs,active,seedV:SEED_V}));}catch(e){}}
+// en el navegador se guarda solo lo GUARDADO: ni los negocios nuevos sin guardar ni los cambios a medio hacer
+function saveLocal(){try{ const list=negs.filter(n=>!n.nuevo).map(n=>n.id===active&&editing&&editSnap?{...n,name:editSnap.name,st:editSnap.st}:n);
+  localStorage.setItem(LKEY,JSON.stringify({negs:list,active:list.some(n=>n.id===active)?active:(list[0]&&list[0].id),seedV:SEED_V}));}catch(e){}}
 const body=n=>({name:n.name,st:n.st,created:n.created});
 function writeNeg(id){
   const n=negs.find(x=>x.id===id); if(!n) return;
@@ -1439,13 +1505,70 @@ function writeNeg(id){
   chains[id]=(chains[id]||Promise.resolve()).then(()=>col.doc(id).set(b)).then(()=>{lastW[id]=j; n.synced=true; status('Guardado');})
     .catch(e=>{ if(e&&e.code==='invalid_argument'){ readOnly=true; status('Solo lectura: tus cambios quedan en este navegador'); return; } status(e&&e.code==='quota_exceeded'?'No se pudo guardar: no hay más lugar. Borrá algún negocio.':'No se pudo guardar. Los cambios quedan en este navegador.'); });
 }
+// Los cambios quedan en borrador hasta tocar GUARDAR. Sin EDITAR no se puede cambiar nada.
+let editing=false, dirty=false, editSnap=null, editBase=null, listo=false, salirFn=null;
 function save(){
-  const n=cur(); if(!n) return; n.st={...st}; n.touched=true; logEdit(n); saveLocal();
-  clearTimeout(timer); status(col?'Guardando…':'Guardado en este navegador');
-  timer=setTimeout(()=>{timer=null; writeNeg(n.id);},700);
-  renderCmp();
+  const n=cur(); if(!n||!editing) return; n.st={...st}; n.touched=true; dirty=true; paintBars(); renderCmp();
 }
-function flush(){ if(timer){clearTimeout(timer); timer=null; writeNeg(active);} }
+function flush(){}
+function editar(){ const n=cur(); if(!n||!listo) return;
+  editSnap={name:n.name,st:JSON.parse(JSON.stringify(n.st||{}))}; editBase=null; editing=true; dirty=false;
+  document.querySelectorAll('[data-ro]').forEach(el=>{ el.disabled=false; delete el.dataset.ro; });
+  applyUI(); paintBars(); toast('Ya podés cambiar los datos. Al terminar, tocá GUARDAR.'); }
+function guardar(){ const n=cur(); if(!n) return;
+  n.st={...st}; n.touched=true; n.mine=true; delete n.nuevo; editing=false; dirty=false; editSnap=null;
+  editBase=null; saveLocal(); writeNeg(n.id); applyUI(); paintBars(); renderBar(); renderCmp(); toast('Cambios guardados'); }
+function descartar(){ const n=cur(); if(!n) return;
+  if(n.nuevo){ negs=negs.filter(x=>x!==n); editing=false; dirty=false; editSnap=null;
+    if(!negs.length){ addNeg('Negocio 1',nuevoSt()); return; } active=negs[0].id; loadActive(); toast('Negocio descartado'); return; }
+  const base=editBase||editSnap; // si otro guardó mientras editabas, se vuelve a lo último guardado
+  if(base){ n.name=base.name; n.st=JSON.parse(JSON.stringify(base.st)); }
+  editing=false; dirty=false; editSnap=null; editBase=null; loadActive(); toast('Cambios descartados'); }
+// antes de cambiar de negocio, crear otro, etc.: si hay cambios sin guardar, se pregunta
+function pedirSalir(fn){
+  if(!editing){ fn(); return; }
+  if(!dirty){ editing=false; editSnap=null; fn(); return; }
+  salirFn=fn; $('salirTxt').textContent='«'+((cur()&&cur().name)||'Este negocio')+'» tiene cambios que todavía no guardaste. ¿Qué querés hacer?';
+  $('salirModal').hidden=false; $('salirGuardar').focus(); }
+const nuevoSt=()=>({...EMPTY,...BASE,mesCompra:new Date().getMonth(),anioCompra:YEAR0,auto:Object.keys(BASE)});
+// en modo lectura se bloquea todo lo que cambia datos (no lo que solo cambia cómo se ve)
+const LOCK='#negName,#tp-cria,#tp-recria,#tp-inv,#sy-campo,#sy-feed,#sy-mix,.refbar button,.board input,.board select,.board textarea,.board button:not(.zoom-btn):not(.info-b):not(#v-cab):not(#v-jaula)';
+function paintEdit(){
+  document.body.classList.toggle('lectura',!editing); document.body.classList.toggle('editando',editing);
+  if(!editing) document.querySelectorAll(LOCK).forEach(el=>{ if(!el.disabled){ el.disabled=true; el.dataset.ro='1'; } });
+}
+function paintBars(){
+  const n=cur(), nm=esc((n&&n.name)||'este negocio'), top=$('editTop'), fl=$('editFloat'); if(!top||!fl) return;
+  const eb='<button class="btn edit" type="button" data-act="edit"'+(listo?'':' disabled')+'>'+(listo?'EDITAR':'Conectando…')+'</button>';
+  if(!editing){
+    top.innerHTML='<span class="em">Estás viendo «<b>'+nm+'</b>». Para cambiar algo, tocá <b>EDITAR</b>.</span>'+eb;
+    fl.innerHTML='<span class="em">Modo lectura</span>'+eb;
+  } else {
+    const d=dirty?'<span class="dirty">cambios sin guardar</span>':'sin cambios todavía', nuevo=n&&n.nuevo;
+    const sv='<button class="btn save" type="button" data-act="save"'+(dirty?'':' disabled')+'>GUARDAR</button>';
+    const otro=editBase&&editSnap&&JSON.stringify(editBase)!==JSON.stringify(editSnap)?' <span class="dirty">⚠ Otra persona guardó cambios en este negocio mientras editabas: si guardás, quedan los tuyos.</span>':'';
+    top.innerHTML='<span class="em">Editando «<b>'+nm+'</b>» · '+d+'. Si cerrás la página sin tocar <b>GUARDAR</b>, '+(nuevo?'el negocio no se crea.':'los cambios se pierden.')+otro+'</span>'
+      +'<button class="btn ghost" type="button" data-act="disc">'+(nuevo?'Descartar negocio':'Descartar cambios')+'</button>'+sv;
+    fl.innerHTML='<span class="em">Editando · '+d+'</span><button class="btn ghost" type="button" data-act="disc">Descartar</button>'+sv;
+  }
+  fl.hidden=curView!=='neg';
+}
+function toast(t){ const el=$('toast'); if(!el) return; el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>{ el.hidden=true; },2600); }
+['editTop','editFloat'].forEach(id=>$(id).addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(!b||b.disabled) return;
+  const a=b.dataset.act;
+  if(a==='edit') editar();
+  else if(a==='save') guardar();
+  else if(a==='disc'){ if(b.dataset.sure){ descartar(); return; } b.dataset.sure='1'; const t0=b.textContent; b.textContent='¿Seguro? Tocá de nuevo'; setTimeout(()=>{ if(b.isConnected){ delete b.dataset.sure; b.textContent=t0; } },3500); } }));
+$('salirNo').addEventListener('click',()=>{ $('salirModal').hidden=true; salirFn=null; renderBar(); });
+$('salirDesc').addEventListener('click',()=>{ $('salirModal').hidden=true; const f=salirFn; salirFn=null; descartar(); if(f) f(); });
+$('salirGuardar').addEventListener('click',()=>{ $('salirModal').hidden=true; const f=salirFn; salirFn=null; guardar(); if(f) f(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!$('salirModal').hidden) $('salirNo').click(); });
+window.addEventListener('beforeunload',e=>{ if(editing&&dirty){ e.preventDefault(); e.returnValue=''; } });
+// si alguien intenta cambiar un dato sin tocar EDITAR, se le avisa
+document.addEventListener('pointerdown',e=>{ if(editing||curView!=='neg') return;
+  const t=e.target.closest('.board .field,.board td select,.board .seg,.board .linkbtn,.board .sp-r,#negName,.negbar .seg,.refbar .btn'); if(!t||t.closest('#v-cab,#v-jaula')||t.querySelector('#v-cab')) return;
+  toast(listo?'Para cambiar datos, primero tocá EDITAR':'Esperá un momento: se está conectando');
+  document.querySelectorAll('[data-act="edit"]').forEach(b=>{ b.classList.remove('pulse'); void b.offsetWidth; b.classList.add('pulse'); }); },true);
 
 // ================= campos enlazados =================
 // g = qué mostrar, s = qué cambiar al editarlo, dep = datos sin los cuales queda vacío
@@ -1456,7 +1579,7 @@ const prim=(id,d=0)=>{L[id]={g:()=>st[id],s:v=>{st[id]=v},d,clear:()=>{st[id]=nu
 prim('gdp',2); ['gdpVer','gdpOto','gdpInv','gdpPri','supKg'].forEach(k=>prim(k,2)); ['supDias','supPrecio'].forEach(k=>prim(k,0)); ['dC','dV'].forEach(k=>prim(k,1));
 ['vacas','toros','valVaca','pdesC','pVd','pTro','pTra','pVdKg','sanV','alV','mobV','ctoro','otrosV','arrHa','pRac','diaF'].forEach(k=>prim(k,0));
 ['mortV','destC','machos','desc','mesesF','conv'].forEach(k=>prim(k,1));
-prim('gdpF',2); prim('cargaR',1); prim('estMes',0);
+prim('gdpF',2); prim('cargaR',1); prim('estMes',0); prim('calif',0); prim('pDesc',0);
 // en cría, comisión, gastos de venta, cambio de precio y tasa usan los mismos datos que el resto
 const alias=(id,k,d)=>{L[id]={g:()=>st[k],s:v=>{st[k]=v},clear:()=>{st[k]=null},d};};
 L.carga={g:()=>CARGA(st),s:v=>{st.carga=v;},clear:()=>{st.carga=null;st.ha=null;},d:2};
@@ -1508,6 +1631,10 @@ function refresh(except){
   for(const id in L){const el=$(id); if(!el)continue; el.classList.toggle('auto',(KEYS[id]||[id]).some(k=>a.has(k))&&el.value!==''); if(el===except)continue; el.value=fmtIn(id); el.classList.toggle('auto',(KEYS[id]||[id]).some(k=>a.has(k))&&el.value!=='');}
   $('mesCompra').value=st.mesCompra; fillAnios(); $('anioCompra').value=anioDe(st); $('cat').value=st.cat||''; $('conCria').checked=!!st.conCria;
 }
+// rangos posibles: [mínimo, máximo, unidad]
+const LIMS={mort:[0,50,'%'],mortV:[0,50,'%'],pr:[0,100,'%'],pcria:[0,100,'%'],dest:[0,100,'%'],destC:[0,100,'%'],machos:[0,100,'%'],desc:[0,60,'%'],calif:[0,100,'%'],
+  cc:[0,20,'%'],cv:[0,20,'%'],dC:[0,15,'%'],dV:[0,15,'%'],varVenta:[-90,300,'%'],inf:[0,30,'% por mes'],meses:[0,60,'meses'],mesesF:[0,60,'meses'],ms:[0,12,'meses'],
+  gdp:[0,3,'kg/día'],gdpVer:[0,3,'kg/día'],gdpOto:[0,3,'kg/día'],gdpInv:[0,3,'kg/día'],gdpPri:[0,3,'kg/día'],gdpF:[0,3,'kg/día'],cargaR:[0,20,'cab/ha'],carga:[0,10,'vacas/ha']};
 function pintaFijo(){ $('f-gdp').setAttribute('aria-pressed',st.fijo==='gdp'); $('f-peso').setAttribute('aria-pressed',st.fijo==='peso'); }
 document.querySelectorAll('input.in').forEach(el=>{
   if(!L[el.id]) return;
@@ -1515,11 +1642,13 @@ document.querySelectorAll('input.in').forEach(el=>{
   el.addEventListener('input',()=>{
     const before={...st};
     if(el.value.trim()===''){ if(L[el.id].clear){L[el.id].clear(); unAuto(Object.keys(st).filter(k=>st[k]!==before[k]).concat(KEYS[el.id]||[el.id])); calc(el); save();} return; }
-    const v=parse(el.value); if(isNaN(v)||(v<0&&el.id!=='varVenta'))return;
+    const v=parse(el.value); if(isNaN(v)) return;
+    const lim=LIMS[el.id]; if((v<0&&el.id!=='varVenta')||(lim&&(v>lim[1]||v<lim[0]))){ el.classList.add('bad'); toast(lim?'Tiene que estar entre '+nf(lim[0],0)+' y '+nf(lim[1],0)+(lim[2]?' '+lim[2]:''):'No puede ser negativo'); return; }
+    el.classList.remove('bad');
     if(el.id==='pf'&&st.fijo!=='peso'){ st.fijo='peso'; pintaFijo(); }
     else if(['gdp','gdpVer','gdpOto','gdpInv','gdpPri','gdpF'].includes(el.id)&&st.fijo!=='gdp'){ st.fijo='gdp'; pintaFijo(); }
     L[el.id].s(v); unAuto(Object.keys(st).filter(k=>st[k]!==before[k]).concat(KEYS[el.id]||[el.id])); for(const k in st){ if(typeof st[k]==='number'&&!isFinite(st[k])) st[k]=null; } calc(el); save();});
-  el.addEventListener('blur',()=>{el.value=fmtIn(el.id);});
+  el.addEventListener('blur',()=>{ el.classList.remove('bad'); el.value=fmtIn(el.id); });
   el.addEventListener('focus',()=>el.select());
   el.addEventListener('keydown',e=>{if(e.key==='Enter')el.blur();});
 });
@@ -1552,7 +1681,7 @@ selC.addEventListener('change',()=>{
 $('conCria').addEventListener('change',e=>{st.conCria=e.target.checked; applyUI(); save();});
 const seg=(a,b,key,va,vb)=>{$(a).addEventListener('click',()=>{st[key]=va; applyUI(); save();}); $(b).addEventListener('click',()=>{st[key]=vb; applyUI(); save();});};
 seg('f-gdp','f-peso','fijo','gdp','peso'); seg('v-cab','v-jaula','vista','cab','jaula'); seg('mv-kilo','mv-prenada','modoVenta','kilo','prenada');
-$('mv-vcc').addEventListener('click',()=>{ st.modoVenta='vcc'; const a=new Set(st.auto||[]); if(!isNum(st.pVcc)){st.pVcc=1508478;a.add('pVcc');} if(!isNum(st.pcria)){st.pcria=90;a.add('pcria');} if(!isNum(st.pVac)){st.pVac=3060;a.add('pVac');} st.auto=[...a]; applyUI(); save(); });
+$('mv-vcc').addEventListener('click',()=>{ st.modoVenta='vcc'; const a=new Set(st.auto||[]); if(!isNum(st.pVcc)){st.pVcc=1522559;a.add('pVcc');} if(!isNum(st.pcria)){st.pcria=90;a.add('pcria');} if(!isNum(st.pVac)){st.pVac=3169;a.add('pVac');} st.auto=[...a]; applyUI(); save(); });
 // completa datos vacíos o sugeridos; no toca lo que cargaste vos
 function fillAuto(v){ const a=autoSet(); for(const [k,val] of Object.entries(v)){ if(!isNum(st[k])||a.has(k)){ st[k]=val; a.add(k);} } st.auto=[...a]; }
 function setTipo(t){
@@ -1575,6 +1704,7 @@ $('refYes').addEventListener('click',()=>{ const r=refFor(st); if(!r)return;
   const v={...BASE,...r.v}; st={...EMPTY,cat:st.cat,mesCompra:st.mesCompra,anioCompra:st.anioCompra,vista:st.vista,fijo:st.fijo,...v,auto:Object.keys(v).filter(k=>!STRUCT.includes(k))}; $('refConfirm').hidden=true; applyUI(); save(); });
 
 function applyUI(){
+  if(editing) document.querySelectorAll('[data-ro]').forEach(el=>{ el.disabled=false; delete el.dataset.ro; });
   const pr=(id,on)=>$(id).setAttribute('aria-pressed',on);
   pr('f-gdp',st.fijo==='gdp'); pr('f-peso',st.fijo==='peso'); pr('v-cab',st.vista==='cab'); pr('v-jaula',st.vista==='jaula');
   pr('mv-kilo',st.modoVenta==='kilo'||!st.modoVenta); pr('mv-prenada',st.modoVenta==='prenada'); pr('mv-vcc',st.modoVenta==='vcc');
@@ -1595,6 +1725,10 @@ function applyUI(){
     el.hidden=hShow||hSis||hEst;});
   pr('es-par',!st.estac); pr('es-est',!!st.estac);
   $('destRow').hidden=!TOR.includes(st.cat)||st.tipo==='cria'; pr('dt-rep',(st.destTor||'rep')==='rep'); pr('dt-fae',st.destTor==='fae');
+  { const rep=TOR.includes(st.cat)&&(st.destTor||'rep')==='rep'&&!esCria&&(st.modoVenta||'kilo')==='kilo'; $('califRow').hidden=!rep; $('pDescRow').hidden=!rep; }
+  { const bq=sisBloq(st); ['sy-feed','sy-mix'].forEach(id=>{ $(id).disabled=!!bq; $(id).title=bq?'No aplica para '+bq:''; });
+    if(bq&&sis!=='campo'&&editing){ setSis('campo'); toast('Feedlot y Mix no aplican para '+bq+': el negocio pasó a campo'); return; }
+    if(bq) $('tipoNote').textContent+= sis==='campo' ? ' Feedlot y Mix no aplican para '+bq+'.' : ' ⚠ Este negocio está en '+SISTEMAS[sis]+', que no aplica para '+bq+': tocá EDITAR y pasalo a campo.'; }
   paintSanPlan();
   $('l-gdp').textContent= sis==='feed'?'Aumento diario en el corral': sis==='mix'?'Aumento diario a campo':'Aumento diario de peso';
   $('h-gdp').textContent= sis==='feed'?'Recría a corral: 0,8–1,0 · terminación: 1,2–1,4':'A campo: terneros 0,6–0,8 · terneras 0,4–0,55 · vacas casi nada';
@@ -1604,7 +1738,7 @@ function applyUI(){
   const r=refFor(st);
   $('refTxt').textContent= !st.cat?'Elegí una categoría: se completan solos el precio de mercado, los pesos, los meses y los costos típicos. Después cambiás lo que quieras.': r? (Object.keys(r.v).length?'Sugeridos para esta categoría: ':'')+r.txt : '';
   $('refBtn').disabled=!r||!Object.keys(r.v).length; $('refConfirm').hidden=true;
-  calc();
+  calc(); paintEdit();
 }
 
 // ================= pintar =================
@@ -1617,6 +1751,7 @@ function calc(except){
     const n=isNum(st.cab)?st.cab:0, sup=(st.supKg||0)*(st.supDias||0)*(st.supPrecio||0);
     setT('e-sup',sup>0?'= '+money(sup)+' por cabeza · '+mill(sup*n)+' en total':'');
     setT('e-dC',st.dC>0&&isNum(st.pc)?'Se pagan '+nf(st.pc*(1-st.dC/100),0)+' kg por cabeza':'');
+    setT('e-calif',R.rep&&isNum(R.viv)?nf(R.viv*R.q,0)+' como reproductores y '+nf(R.viv*(1-R.q),0)+' a faena':'');
     setT('e-dV',st.dV>0&&R.pf>0?'Se cobran '+nf(R.pf*(1-st.dV/100),0)+' kg por cabeza':'');
     setT('e-est',estOn(st)&&R.meses>0?'Promedio del período: '+nf(R.T.gC,2)+' kg/día':'');
   }
@@ -1659,7 +1794,7 @@ function calc(except){
   setT('k-gr',ok?mill(R.gr):'—',ok?R.gr:0); setT('k-gr-cab',ok?money(R.gr/R.n)+' por cabeza':'por cabeza');
   setT('k-rm',ok?pct(R.rm,2):'—',ok?R.rm:0); setT('k-mes',isNum(R.meses)?'en '+nf(R.meses,1)+' meses':'—');
   setT('k-mb-l','Rentabilidad total'); setT('k-mb',ok?pct(R.rent):'—',ok?R.rent:0); setT('k-rent',ok?'sobre lo invertido, en '+nf(R.meses,1)+' meses':'—');
-  setT('k-inv-l','Plata a poner en la compra'); setT('k-inv',isNum(R.cpra)?mill(R.cpra):'—'); setT('k-cab',isNum(R.compraCab)?money(R.compraCab)+' por cabeza':'—');
+  setT('k-inv-l','Plata para comprar'); setT('k-inv',isNum(R.cpra)?mill(R.cpra):'—'); setT('k-cab',isNum(R.compraCab)?money(R.compraCab)+' por cabeza':'—');
   $('headline').innerHTML= !st.cat ? 'Elegí qué hacienda comprás y cargá tus números (o los de referencia) para ver cuánto deja.'
     : !ok ? 'Faltan datos: cargá cabezas, precio de compra, meses y precio de venta.'
     : R.mb>0 ? 'Este negocio deja <b class="pos">'+mill(R.mb)+'</b> de ganancia en '+nf(R.meses,1)+' meses.'
@@ -1693,21 +1828,24 @@ function paintCria(R){
 function cal(R){
   const g=$('calGrid'); g.innerHTML=''; const m0=st.mesCompra;
   g.appendChild(document.createElement('div'));
-  const y0=anioDe(st);
-  for(let i=0;i<12;i++){const d=document.createElement('div'); const mm=(m0+i)%12; d.className='mh'; d.textContent=MES[mm];
+  const y0=anioDe(st), M0=isNum(st.meses)?st.meses:0, NC=Math.min(36,Math.max(12,Math.ceil(M0-1e-9)+1));
+  g.style.setProperty('--n',NC); g.classList.toggle('dense',NC>12);
+  for(let i=0;i<NC;i++){const d=document.createElement('div'); const mm=(m0+i)%12; d.className='mh'; d.textContent=MES[mm];
     if(i===0||mm===0){ const y=document.createElement('small'); y.className='yr'; y.textContent=y0+Math.floor((m0+i)/12); d.appendChild(y); } g.appendChild(d);}
   const l=document.createElement('div'); l.className='rl'; l.textContent=st.cat?catName(st.cat):'Negocio'; l.style.gridRow=2; g.appendChild(l);
   const M=isNum(st.meses)?st.meses:0;
-  if(!(M>0)){ const e=document.createElement('div'); e.className='note'; e.style.gridColumn='2 / span 12'; e.style.gridRow=2; e.textContent='Cargá los meses en el campo para ver el calendario.'; g.appendChild(e); return; }
+  if(!(M>0)){ const e=document.createElement('div'); e.className='note'; e.style.gridColumn='2 / span '+NC; e.style.gridRow=2; e.textContent='Cargá los meses en el campo para ver el calendario.'; g.appendChild(e); return; }
   const T=R.T, ms=R.pren&&isNum(st.ms)&&T.sis==='campo'?Math.min(st.ms,M):0;
   const segs=[];
   if(T.sis==='feed') segs.push({k:'f',t:'Corral → '+nf(R.pf)+' kg',m:M});
   else if(T.sis==='mix'){ segs.push({k:'r',t:'A campo → '+nf(R.pc+T.kC)+' kg',m:T.mC}); segs.push({k:'f',t:'Corral → '+nf(R.pf)+' kg',m:T.mF}); }
   else { segs.push({k:'r',t:(R.pren&&ms?'Recría → '+nf(R.pe)+' kg':'En el campo → '+nf(R.pf)+' kg'),m:M-ms}); if(ms) segs.push({k:'s',t:'Servicio y tacto',m:ms}); }
   segs.push({k:'v',t:'Venta',m:1});
-  let c=0; segs.filter(s=>s.m>0).forEach(s=>{ if(c>=12)return; const span=Math.min(Math.max(1,Math.round(s.m)),12-c);
+  let c=0; segs.filter(s=>s.m>0).forEach(s=>{ if(c>=NC)return; const span=Math.min(Math.max(1,Math.round(s.m)),NC-c);
     const b=document.createElement('div'); b.className='bar '+s.k; b.textContent=s.t; b.title=s.t;
     b.style.gridColumn=(2+c)+' / span '+span; b.style.gridRow=2; g.appendChild(b); c+=span; });
+  // si el texto no entra en la barra, se acorta (el nombre completo queda al pasar el mouse)
+  requestAnimationFrame(()=>g.querySelectorAll('.bar').forEach(b=>{ if(b.scrollWidth>b.clientWidth+1) b.textContent=b.classList.contains('v')?'$':b.textContent.split(' → ')[0]; }));
 }
 const CKEY='recria-comparar-v1';
 let cmpSel=null; try{cmpSel=JSON.parse(localStorage.getItem(CKEY)||'null');}catch(e){}
@@ -1753,7 +1891,7 @@ function renderCmp(){
   row('Costo total',R=>R.ok?mill(R.ct):'—',{hint:'Compra, gastos y venta'});
   row('Ingreso por ventas',R=>R.ok?mill(R.ing):'—');
   grp('El resultado');
-  row('Ganancia',R=>R.ok?sg(R.mb,mill(R.mb)):'—',{v:R=>R.mb,key:1,hint:'Ventas menos todos los costos'});
+  row('Ganancia',R=>R.ok?sg(R.mb,mill(R.mb)):'—',{v:R=>R.mb,key:1,hint:'De lo que dura cada negocio (cría: un año)'});
   row('Ganancia por cabeza',R=>R.ok&&R.n>0?money(R.gr/R.n):'—',{v:R=>R.n>0?R.gr/R.n:NaN});
   row('Rentabilidad sobre lo invertido',R=>R.ok?sg(R.rent,pct(R.rent)):'—',{v:R=>R.rent});
   row('Rentabilidad por mes',R=>R.ok?sg(R.rm,pct(R.rm,2)):'—',{v:R=>R.rm,key:1,hint:'La que sirve para comparar negocios de distinta duración'});
@@ -1792,11 +1930,12 @@ function paintCmpVisual(rows,best){
 $('cmpAll').addEventListener('click',()=>{cmpSel=negs.map(n=>n.id); saveSel(); renderCmp();});
 $('cmpNone').addEventListener('click',()=>{cmpSel=[]; saveSel(); renderCmp();});
 function setView(v){
-  $('tab-ini').setAttribute('aria-selected',v==='ini'); $('tab-neg').setAttribute('aria-selected',v==='neg'); $('tab-cmp').setAttribute('aria-selected',v==='cmp'); $('tab-his').setAttribute('aria-selected',v==='his');
-  document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vcmp').forEach(e=>e.hidden=v!=='cmp'); document.querySelectorAll('.vhis').forEach(e=>e.hidden=v!=='his'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini');
-  curView=v;
+  $('tab-ini').setAttribute('aria-selected',v==='ini'); $('tab-neg').setAttribute('aria-selected',v==='neg'); $('tab-cmp').setAttribute('aria-selected',v==='cmp');
+  document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vcmp').forEach(e=>e.hidden=v!=='cmp'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini');
+  curView=v; { const t=$('toast'); if(t) t.hidden=true; }
   if(v==='ini'){ flush(); renderIni(); $('negTitle').textContent='Negocios de hacienda'; }
-  else if(v==='cmp'){ flush(); renderCmp(); $('negTitle').textContent='Comparar negocios'; } else if(v==='his'){ flush(); renderHist(); $('negTitle').textContent='Historial de cambios'; } else setTitle();
+  else if(v==='cmp'){ flush(); renderCmp(); $('negTitle').textContent='Comparar negocios'; } else setTitle();
+  paintBars();
   window.scrollTo({top:0});
 }
 // ---------- ampliar un cuadro ----------
@@ -1821,7 +1960,7 @@ const LAYKEY='recria-vista-v1';
 function setLay(l){ document.body.classList.toggle('cuadros',l==='cuadros'); $('lay-lista').setAttribute('aria-pressed',l==='lista'); $('lay-cuadros').setAttribute('aria-pressed',l==='cuadros'); try{localStorage.setItem(LAYKEY,l);}catch(e){} }
 $('lay-lista').addEventListener('click',()=>setLay('lista')); $('lay-cuadros').addEventListener('click',()=>setLay('cuadros'));
 { let l='cuadros'; try{ l=localStorage.getItem(LAYKEY)||'cuadros'; }catch(e){} setLay(l); }
-$('tab-neg').addEventListener('click',()=>setView('neg')); $('tab-cmp').addEventListener('click',()=>setView('cmp')); $('tab-his').addEventListener('click',()=>setView('his'));
+$('tab-neg').addEventListener('click',()=>setView('neg')); $('tab-cmp').addEventListener('click',()=>setView('cmp'));
 
 // ================= pantalla de inicio =================
 function renderIni(){
@@ -1840,10 +1979,10 @@ function renderIni(){
 $('tab-ini').addEventListener('click',()=>setView('ini'));
 document.querySelectorAll('#inicio [data-go]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.go)));
 document.querySelectorAll('#inicio [data-new]').forEach(b=>b.addEventListener('click',()=>{
-  const t=b.dataset.new; setView('neg'); $('negNew').click();
-  const btn=$(t==='cria'?'tp-cria':t==='invernada'?'tp-inv':'tp-recria'); if(btn) btn.click();
-  const n=cur(); if(n){ const nm=(t==='cria'?'Cría':t==='invernada'?'Invernada':'Recría')+' '+(negs.length); n.name=nm; $('negName').value=nm; renderBar(); setTitle(); save(); }
-  $('negName').focus(); $('negName').select(); }));
+  const t=b.dataset.new; setView('neg');
+  pedirSalir(()=>{ addNeg((t==='cria'?'Cría':t==='invernada'?'Invernada':'Recría')+' '+(negs.length+1),nuevoSt());
+    setTipo(t==='cria'?'cria':t==='invernada'?'invernada':'recria'); renderBar(); setTitle(); paintBars();
+    $('negName').focus(); $('negName').select(); }); }));
 
 if(location.hash==='#comparar') setView('cmp'); else setView('ini');
 
@@ -1995,6 +2134,7 @@ $('sanPlan').addEventListener('change',e=>{ const t=e.target; if(!t.dataset||t.d
 
 // ================= ⓘ explicaciones de términos =================
 const GLOS=[
+ ['Mes y año de compra','Cuándo entra la hacienda. Define en qué estaciones está en el campo y las fechas del calendario y del flujo. Los precios son siempre los de hoy (no se proyectan al año que elijas).'],
  ['Tierra y estructura','El alquiler de las hectáreas que ocupa la hacienda (aunque el campo sea propio, es lo que se deja de cobrar por no alquilarlo) más los gastos fijos del campo: asesor, camioneta, alambrados, aguadas e impuestos.'],
  ['Cabezas por hectárea','Carga: cuántos animales entran en cada hectárea mientras están a campo. Con esto se calcula cuántas hectáreas ocupa el negocio y cuánto cuesta la tierra.'],
  ['Ganancia','Lo que vendés menos todo lo que gastás: compra, campo, tierra, estructura y venta.'],
@@ -2002,7 +2142,7 @@ const GLOS=[
  ['Ganancia por hectárea','Ganancia del año dividida por las hectáreas que ocupa el rodeo.'],
  ['Rentabilidad por mes','Ganancia dividida por la plata puesta y por los meses que dura. Sirve para comparar negocios de distinta duración.'],
  ['Rentabilidad sobre lo invertido','Ganancia dividida por todo lo que se gastó, sin importar cuánto dura el negocio.'],
- ['Rentabilidad sobre la plata en el rodeo','Ganancia del año dividida por lo que valen las vacas.'],
+ ['Rentabilidad sobre lo invertido (cría)','Ganancia del año dividida por lo que valen las vacas más los costos del año. Se mide igual que en recría e invernada, para poder compararlos.'],
   ['TIR anual','Tasa interna de retorno: el interés anual que rinde la plata puesta, teniendo en cuenta cuándo sale y cuándo vuelve cada peso.'],
  ['Plata máxima puesta','Lo máximo que vas a tener invertido en algún momento del negocio, sumando compra y gastos hasta que entra la venta.'],
  ['Se recupera en','El mes en que lo que entró ya cubre todo lo que se puso.'],
@@ -2028,7 +2168,7 @@ const GLOS=[
  ['Destete mínimo para no perder','Porcentaje de destete por debajo del cual la cría pierde plata.'],
  ['Ganancia con inflación','La ganancia expresada en pesos del día de la venta, con la inflación esperada. Los números se ven más grandes, pero esa diferencia es inflación, no ganancia.'],
  ['Cambio esperado del precio de venta','Cuánto creés que va a subir o bajar el precio de venta en términos reales (por encima o por debajo de la inflación).'],
- ['Plata a poner en la compra','Lo que hay que poner al comprar: hacienda, comisión y flete.'],
+ ['Plata para comprar','Lo que hay que poner al comprar: hacienda, comisión y flete.'],
  ['Plata en el rodeo','Lo que valen las vacas: es la plata que tenés invertida en la cría.'],
 ];
 function glosFor(t){ t=(t||'').replace(/\s+/g,' ').trim(); for(const [k,v] of GLOS){ if(t.toLowerCase().startsWith(k.toLowerCase())) return [k,v]; } return null; }
@@ -2089,29 +2229,28 @@ function renderSens(){
 $('printRep').addEventListener('click',()=>{ flush(); const ph=$('printHead'); if(ph) ph.textContent='Informe: '+((cur()&&cur().name)||'Negocio')+' · generado el '+new Date().toLocaleDateString('es-AR')+' · Negocios de hacienda'; try{ window.print(); }catch(e){ status('Tu navegador no deja imprimir desde acá: usá Ctrl+P'); } });
 
 // ================= barra de negocios =================
-function setTitle(){ const t=$('negTitle'); if(t&&$('comparar').hidden&&$('historial').hidden&&$('inicio').hidden) t.textContent=(cur()&&cur().name)||'Negocio sin nombre'; }
+function setTitle(){ const t=$('negTitle'); if(t&&$('comparar').hidden&&$('inicio').hidden) t.textContent=(cur()&&cur().name)||'Negocio sin nombre'; }
 function renderBar(){
   negs.sort((a,b)=>(a.created||0)-(b.created||0));
   const s=$('negSel'); s.innerHTML='';
   negs.forEach(n=>{const o=document.createElement('option'); o.value=n.id; o.textContent=n.name||'Sin nombre'; s.appendChild(o);});
   s.value=active; if(s.dataset.act!==active){ $('negConfirm').hidden=true; s.dataset.act=active; } syncShadow(); renderHist(); if(curView==='ini') renderIni();
 }
-function loadActive(){ pfKeep=null; st={...EMPTY,...cur().st}; if(!cur().st||!cur().st.tipo) st.tipo=inferTipo(st.cat); if(!isNum(st.carga)&&isNum(st.ha)&&st.ha>0&&st.vacas>0) st.carga=st.vacas/st.ha; renderBar(); $('negName').value=cur().name||''; setTitle(); applyUI(); renderCmp(); saveLocal(); }
-function switchTo(id){ flush(); active=id; loadActive(); }
-$('negSel').addEventListener('change',e=>switchTo(e.target.value));
+function loadActive(){ pfKeep=null; { const n=cur(); editing=!!(n&&n.nuevo); dirty=editing; editBase=null; if(!editing) editSnap=null; } st={...EMPTY,...cur().st}; if(!cur().st||!cur().st.tipo) st.tipo=inferTipo(st.cat); if(!isNum(st.carga)&&isNum(st.ha)&&st.ha>0&&st.vacas>0) st.carga=st.vacas/st.ha; renderBar(); $('negName').value=cur().name||''; setTitle(); applyUI(); paintBars(); renderCmp(); saveLocal(); }
+function switchTo(id){ if(id===active) return; pedirSalir(()=>{ active=id; loadActive(); }); }
+$('negSel').addEventListener('change',e=>{ const id=e.target.value; switchTo(id); if(active!==id&&$('salirModal').hidden) renderBar(); });
 $('negName').addEventListener('input',e=>{const n=cur(); if(!n)return; n.name=e.target.value.slice(0,60); const o=[...$('negSel').options].find(o=>o.value===n.id); if(o) o.textContent=n.name||'Sin nombre'; setTitle(); save();});
 $('negName').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.blur();});
-function addNeg(name,s,why){ flush(); const n={id:newId(),name,st:{...s},created:Date.now(),touched:true,mine:true}; if(!isNum(n.st.anioCompra)) n.st.anioCompra=YEAR0; negs.push(n); active=n.id; loadActive(); writeNeg(n.id); logOne({tipo:why?why.t:'nuevo',negId:n.id,negName:n.name,texto:why?why.x:''}); const ni=$('negName'); ni.focus(); ni.select(); }
-$('negNew').addEventListener('click',()=>addNeg('Negocio '+(negs.length+1),{...EMPTY,...BASE,auto:Object.keys(BASE)}));
-$('negDup').addEventListener('click',()=>{ const o=cur().name||'Negocio'; addNeg(o+' (copia)',st,{t:'duplico',x:o}); });
+function addNeg(name,s){ const n={id:newId(),name,st:JSON.parse(JSON.stringify(s)),created:Date.now(),touched:true,mine:true,nuevo:true}; if(!isNum(n.st.anioCompra)) n.st.anioCompra=YEAR0; negs.push(n); active=n.id; editSnap=null; loadActive(); const ni=$('negName'); ni.focus(); ni.select(); }
+$('negNew').addEventListener('click',()=>pedirSalir(()=>addNeg('Negocio '+(negs.length+1),nuevoSt())));
+$('negDup').addEventListener('click',()=>pedirSalir(()=>{ const o=cur(); addNeg((o.name||'Negocio')+' (copia)',{...EMPTY,...o.st}); }));
 $('negDel').addEventListener('click',()=>{ $('negDelName').textContent=cur().name||'Sin nombre'; $('negConfirm').hidden=false; $('negDelNo').focus(); });
 $('negDelNo').addEventListener('click',()=>{$('negConfirm').hidden=true;});
 $('negDelYes').addEventListener('click',()=>{
-  const id=active; clearTimeout(timer); timer=null;
-  { const d=cur(); if(d) logOne({tipo:'borro',negId:d.id,negName:d.name,antes:{name:d.name,st:d.st,created:d.created}}); }
+  const id=active, era=cur(); editing=false; dirty=false; editSnap=null; $('negConfirm').hidden=true;
   negs=negs.filter(n=>n.id!==id);
-  if(col) col.doc(id).delete().catch(()=>{});
-  if(!negs.length){ const n={id:newId(),name:'Negocio 1',st:{...EMPTY},created:Date.now(),touched:true}; negs.push(n); writeNeg(n.id); }
+  if(col&&!(era&&era.nuevo)) col.doc(id).delete().catch(()=>{});
+  if(!negs.length){ saveLocal(); addNeg('Negocio 1',nuevoSt()); status('Negocio borrado'); return; }
   active=negs[0].id; loadActive(); status('Negocio borrado');
 });
 
@@ -2144,10 +2283,10 @@ $('shAdd').addEventListener('click',()=>{
   let d; try{ d=dec($('shPaste').value); }catch(e){ $('shMsg2').textContent='Ese código no es válido. Fijate de copiarlo completo.'; return; }
   const list=(d&&Array.isArray(d.negs)?d.negs:[]).slice(0,30).map(x=>({name:String(x.name||'Negocio').slice(0,52),st:cleanSt(x.st)})).filter(x=>x.st);
   if(!list.length){ $('shMsg2').textContent='El código no trae negocios.'; return; }
-  flush(); let first=null; const t0=Date.now();
+  pedirSalir(()=>{ let first=null; const t0=Date.now();
   list.forEach((x,i)=>{ const nm=negs.some(n=>n.name===x.name)?x.name+' (recibido)':x.name;
-    const n={id:newId(),name:nm,st:{...EMPTY,...x.st},created:t0+i,touched:true,mine:true}; negs.push(n); if(!first) first=n.id; writeNeg(n.id); logOne({tipo:'recibio',negId:n.id,negName:n.name}); });
-  active=first; loadActive(); shClose(); status(list.length===1?'Negocio recibido':list.length+' negocios recibidos');
+    const n={id:newId(),name:nm,st:{...EMPTY,...x.st},created:t0+i,touched:true,mine:true}; negs.push(n); if(!first) first=n.id; writeNeg(n.id); });
+  active=first; loadActive(); saveLocal(); shClose(); status(list.length===1?'Negocio recibido':list.length+' negocios recibidos'); });
 });
 
 // ================= página publicada en Google (Apps Script) =================
@@ -2185,157 +2324,15 @@ function localDb(){
   })};
 }
 
-// ================= historial de cambios y versiones =================
-function syncShadow(){ negs.forEach(n=>{ if(n.id===active&&timer&&shadow[n.id]) return; shadow[n.id]=snapN(n); }); }
-function showWho(){ const q=quien(); $('whoName').textContent=q||'sin nombre'; $('whoShow').hidden=!q; $('whoForm').hidden=!!q; if(!q) $('whoAsk').textContent='¿Quién está editando? Poné tu nombre para que el historial muestre quién hizo cada cambio:'; const hw=$('hisWho'); if(hw) hw.textContent=q?'Editás como '+q:''; }
-function setWho(v){ v=String(v||'').trim().slice(0,30); try{ if(v) localStorage.setItem(WHOKEY,v); }catch(e){} if(!v) return;
-  if(sess){ sess.quien=v; putSess(); } showWho(); renderHist(); }
-$('whoEdit').addEventListener('click',()=>{ $('whoShow').hidden=true; $('whoForm').hidden=false; $('whoAsk').textContent='Tu nombre:'; $('whoIn').value=quien(); $('whoIn').focus(); $('whoIn').select(); });
-$('whoOk').addEventListener('click',()=>setWho($('whoIn').value));
-$('whoIn').addEventListener('keydown',e=>{ if(e.key==='Enter') setWho(e.target.value); });
-showWho();
-
-// Nombres y unidades de cada dato, tomados de la página misma.
-const LBL_FIX={anioCompra:'Año de compra',mesCompra:'Mes de compra',fijo:'Qué queda fijo',destTor:'Para qué son',estac:'Aumento por estación',sanDet:'Plan sanitario detallado',sanPlan:'Plan sanitario',toros:'Toros cada 100 vacas',tipo:'Tipo de negocio',sistema:'Sistema',modoVenta:'Forma de venta',precioPor:'Compra por',ventaPor:'Venta por',conCria:'Con cría al pie',inf:'Inflación esperada',name:'Nombre'};
-const VAL_FIX={rep:'Reproductor',fae:'Faena',cria:'Cría',recria:'Recría',inv:'Invernada',campo:'A campo',feed:'Feedlot',mix:'Mix',kilo:'Por kilo',prenada:'Preñada',vcc:'Vaca con cría al pie',kg:'kilo',cab:'cabeza',jaula:'jaula'};
-const SKIP=new Set(['auto','vista','fijo']);
-function lblOf(k){ if(LBL_FIX[k]) return LBL_FIX[k]; const e=document.getElementById(k); const t=e&&e.closest('tr')&&e.closest('tr').querySelector('.lbl'); return t?[...t.childNodes].filter(n=>!(n.classList&&n.classList.contains('info-b'))).map(n=>n.textContent).join('').trim():k; }
-function valOf(k,v){
-  if(v===null||v===undefined||v==='') return '—';
-  if(Array.isArray(v)) return 'total '+money(sanTotal(v))+' por cabeza';
-  if(typeof v==='boolean') return v?'Sí':'No';
-  const e=document.getElementById(k);
-  if(e&&e.tagName==='SELECT'){ const o=[...e.options].find(o=>o.value===String(v)); if(o) return o.textContent.trim(); }
-  if(typeof v==='number'){ const u=e&&e.closest('.field')&&e.closest('.field').querySelector('.u'); return v.toLocaleString('es-AR',{maximumFractionDigits:2})+(u?' '+u.textContent.trim():''); }
-  return VAL_FIX[v]||String(v);
-}
-function diff(a,b){
-  const out=[]; if((a.name||'')!==(b.name||'')) out.push({k:'name',l:'Nombre',de:a.name||'—',a:b.name||'—'});
-  const ks=new Set([...Object.keys(a.st||{}),...Object.keys(b.st||{})]);
-  ks.forEach(k=>{ if(SKIP.has(k)) return; const x=(a.st||{})[k], y=(b.st||{})[k]; const nx=x===''||x===undefined?null:x, ny=y===''||y===undefined?null:y;
-    if(JSON.stringify(nx)!==JSON.stringify(ny)) out.push({k,l:lblOf(k),de:valOf(k,nx),a:valOf(k,ny)}); });
-  return out;
-}
-function hPut(e){ hPend[e.id]=e; clearTimeout(hTimers[e.id]); hTimers[e.id]=setTimeout(()=>hSend(e.id),1200); upsertLocalHist(e); }
-function hSend(id){ const e=hPend[id]; if(!e||!HC) return; delete hPend[id]; delete hTimers[id];
-  const p=e.__del?HC.doc(id).delete():HC.doc(id).set(e); Promise.resolve(p).catch(()=>{}); }
-function upsertLocalHist(e){ hist=hist.filter(x=>x.id!==e.id); if(!e.__del) hist.push(e); renderHist(); }
-function putSess(){ if(!sess) return; const ch=Object.values(sess.ch);
-  if(!ch.length){ if(sess.sent) hPut({id:sess.id,__del:true}); else upsertLocalHist({id:sess.id,__del:true}); return; }
-  sess.sent=true;
-  hPut({id:sess.id,tipo:sess.tipo,fecha:sess.fecha,ultima:sess.ultima,quien:sess.quien||'',negId:sess.negId,negName:sess.negName,texto:sess.texto||'',
-    cambios:ch.slice(0,15),mas:Math.max(0,ch.length-15),antes:sess.antes}); }
-function logEdit(n){
-  const prev=shadow[n.id], now=snapN(n); shadow[n.id]=now; if(!prev) return;
-  const d=diff(prev,now); if(!d.length) return;
-  const t=Date.now();
-  if(!sess||sess.negId!==n.id||t-sess.ultima>5*60e3||(sess.quien||'')!==quien()||sess.tipo!=='edito'){ sess={id:'h'+newId(),tipo:'edito',negId:n.id,fecha:t,antes:{...prev,created:n.created},ch:{}}; }
-  d.forEach(x=>{ const o=sess.ch[x.k]; const de=o?o.de:x.de; if(de===x.a) delete sess.ch[x.k]; else { if(o) delete sess.ch[x.k]; sess.ch[x.k]={l:x.l,de,a:x.a}; } });
-  sess.ultima=t; sess.quien=quien(); sess.negName=n.name;
-  putSess();
-  if(!quien()&&$('whoForm').hidden===false) {} else if(!quien()){ showWho(); }
-}
-function logOne(o){ sess=null; const t=Date.now(); hPut({id:'h'+newId(),fecha:t,ultima:t,quien:quien(),cambios:[],mas:0,antes:null,texto:'',...o}); }
-
-function histInit(db){
-  if(HC) return;
-  HC=db.collection('historial'); VC=db.collection('versiones');
-  Object.keys(hPend).forEach(id=>{ clearTimeout(hTimers[id]); hSend(id); });
-  HC.onSnapshot(snap=>{
-    const remote=snap.docs.filter(d=>d.exists).map(d=>({...d.data(),id:d.id}));
-    const pend=Object.values(hPend).filter(e=>!e.__del);
-    hist=[...remote.filter(r=>!hPend[r.id]),...pend];
-    // se guardan solo los últimos HMAX
-    if(hist.length>HMAX&&!readOnly){ hist.sort((a,b)=>(b.ultima||0)-(a.ultima||0)); hist.slice(HMAX).forEach(e=>{ Promise.resolve(HC.doc(e.id).delete()).catch(()=>{}); }); hist=hist.slice(0,HMAX); }
-    renderHist();
-  },()=>{});
-  VC.onSnapshot(snap=>{ vers=snap.docs.filter(d=>d.exists).map(d=>({...d.data(),id:d.id})); renderVers(); },()=>{});
-}
-
-function fechaAbs(t){ const d=new Date(t); return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hour12:false}); }
-function cuando(t){
-  if(!t) return ''; const d=new Date(t), now=new Date(), hm=d.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hour12:false});
-  const day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime();
-  const dd=(day(now)-day(d))/864e5;
-  const base=dd===0?'hoy '+hm:dd===1?'ayer '+hm:d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'})+' '+hm;
-  const m=Math.round((Date.now()-t)/6e4);
-  return base+(m<1?' · recién':m<60?' · hace '+m+' min':'');
-}
-function renderHist(){
-  const L=$('hisList'); if(!L) return;
-  const fil=$('hisFil'), fv=fil.value;
-  const names=new Map(); [...hist].sort((a,b)=>(b.ultima||0)-(a.ultima||0)).forEach(e=>{ if(!names.has(e.negId)) names.set(e.negId,e.negName); });
-  negs.forEach(n=>names.set(n.id,n.name));
-  const opts='<option value="">Todos los negocios</option>'+[...names].map(([id,nm])=>'<option value="'+esc(id)+'">'+esc(nm||'Sin nombre')+'</option>').join('');
-  if(fil.dataset.o!==opts){ fil.innerHTML=opts; fil.dataset.o=opts; fil.value=names.has(fv)?fv:''; }
-  if(curView!=='his'&&!L.dataset.init){ /* se dibuja igual para que esté listo */ }
-  L.dataset.init='1';
-  let list=[...hist].filter(e=>!fil.value||e.negId===fil.value).sort((a,b)=>(b.ultima||0)-(a.ultima||0));
-  const total=list.length; list=list.slice(0,hisAll?HMAX:HSHOW);
-  $('hisMore').hidden=total<=HSHOW; $('hisMore').textContent=hisAll?'Ver menos':'Ver más cambios ('+(total-HSHOW)+')';
-  if(!list.length){ L.innerHTML='<li class="his-empty">Todavía no hay cambios registrados.</li>'; return; }
-  const prevIds=new Set([...L.querySelectorAll('.his-it')].map(x=>x.dataset.id));
-  L.innerHTML=list.map(e=>{
-    const exists=negs.some(n=>n.id===e.negId);
-    let extra='';
-    if(e.tipo==='duplico') extra=' a partir de «'+esc(e.texto)+'»';
-    if(e.tipo==='version'||e.tipo==='restauro') extra=e.texto?' ('+esc(e.texto)+')':'';
-    const ch=(e.cambios||[]).map(c=>'<li>'+esc(c.l)+': <span class="de">'+esc(c.de)+'</span> → <span class="a">'+esc(c.a)+'</span></li>').join('')+(e.mas?'<li class="note">y '+e.mas+' cambios más</li>':'');
-    let act='';
-    if(e.antes&&e.tipo==='borro'&&!exists) act='<button class="btn sm" type="button" data-hundo="'+esc(e.id)+'">Recuperar el negocio</button>';
-    else if(e.antes&&e.tipo!=='borro') act='<button class="btn sm ghost" type="button" data-hundo="'+esc(e.id)+'">'+(exists?'Volver a como estaba antes':'Recuperar como estaba antes')+'</button>';
-    return '<li class="his-it'+(prevIds.size&&!prevIds.has(e.id)?' his-new':'')+'" data-id="'+esc(e.id)+'"><div class="his-meta"><span class="who">'+esc(e.quien||'Sin nombre')+'</span> '+(VERB[e.tipo]||'cambió')+' <span class="hneg">«'+esc(e.negName||'Sin nombre')+'»</span>'+extra+'<time>'+cuando(e.ultima||e.fecha)+'</time></div><div class="his-act">'+act+'</div>'+(ch?'<ul class="his-ch">'+ch+'</ul>':'')+'</li>';
-  }).join('');
-}
-function renderVers(){
-  const L=$('verList'); if(!L) return;
-  const list=[...vers].sort((a,b)=>(b.fecha||0)-(a.fecha||0));
-  $('verSave').textContent='Guardar versión de «'+((cur()&&cur().name)||'este negocio')+'»';
-  if(!list.length){ L.innerHTML='<li class="his-empty">Todavía no guardaron ninguna versión.</li>'; return; }
-  L.innerHTML=list.map(v=>'<li class="his-it" data-id="'+esc(v.id)+'"><div class="his-meta"><span class="hneg">'+esc(v.nombre||'Versión')+'</span> · '+esc(v.negName||'')+'<time>Guardada por '+esc(v.quien||'Sin nombre')+' · '+cuando(v.fecha)+'</time></div><div class="his-act">'
-    +'<button class="btn sm" type="button" data-vres="'+esc(v.id)+'">Restaurar</button><button class="btn sm" type="button" data-vcopy="'+esc(v.id)+'">Abrir como copia</button><button class="btn sm ghost" type="button" data-vdel="'+esc(v.id)+'">Borrar</button></div></li>').join('');
-}
-setInterval(()=>{ if(curView==='his'&&!document.hidden){ renderHist(); renderVers(); } },60000);
-$('hisFil').addEventListener('change',renderHist);
-$('hisMore').addEventListener('click',()=>{ hisAll=!hisAll; renderHist(); });
-
-function restoreTo(negId,snap,tipo,texto){
-  flush(); sess=null;
-  let n=negs.find(x=>x.id===negId); const before=n?{...snapN(n),created:n.created}:null; delete lastW[negId];
-  if(!n){ n={id:negId,name:snap.name,st:JSON.parse(JSON.stringify(snap.st||{})),created:snap.created||Date.now(),touched:true,mine:true}; negs.push(n); }
-  else { n.name=snap.name; n.st=JSON.parse(JSON.stringify(snap.st||{})); n.touched=true; }
-  const t=Date.now();
-  hPut({id:'h'+newId(),tipo:before?tipo:'recupero',fecha:t,ultima:t,quien:quien(),negId,negName:n.name,texto:texto||'',
-    cambios:before?diff(before,snapN(n)).slice(0,15):[],mas:0,antes:before});
-  active=negId; shadow[negId]=snapN(n); loadActive(); writeNeg(negId); setView('neg'); status(before?'Negocio vuelto atrás':'Negocio recuperado');
-}
-$('hisList').addEventListener('click',e=>{ const b=e.target.closest('[data-hundo]'); if(!b) return;
-  const h=hist.find(x=>x.id===b.dataset.hundo); if(!h||!h.antes) return;
-  restoreTo(h.negId,h.antes,'restauro','a como estaba '+cuando(h.fecha).split(' · ')[0]); });
-function saveVersion(nombre){
-  flush(); const n=cur(); if(!n||!VC) return; const t=Date.now();
-  const v={fecha:t,quien:quien(),negId:n.id,negName:n.name,nombre:(nombre||'').trim().slice(0,50)||('Versión del '+fechaAbs(t)),snap:{...snapN(n),created:n.created}};
-  const id='v'+newId(); vers.push({...v,id}); renderVers();
-  Promise.resolve(VC.doc(id).set(v)).catch(()=>{});
-  if(vers.length>VMAX){ [...vers].sort((a,b)=>(a.fecha||0)-(b.fecha||0)).slice(0,vers.length-VMAX).forEach(x=>Promise.resolve(VC.doc(x.id).delete()).catch(()=>{})); }
-  return v.nombre;
-}
-$('verSave').addEventListener('click',()=>{ const nm=saveVersion($('verName').value); $('verName').value=''; if(nm) status('Versión guardada: '+nm); });
-$('verQuick').addEventListener('click',()=>{ const nm=saveVersion(''); if(nm) status('Versión guardada. La ves en Historial.'); });
-$('verList').addEventListener('click',e=>{
-  const r=e.target.closest('[data-vres]'), c=e.target.closest('[data-vcopy]'), d=e.target.closest('[data-vdel]');
-  const v=vers.find(x=>x.id===(r||c||d||{}).dataset?.[r?'vres':c?'vcopy':'vdel']); if(!v) return;
-  if(r) restoreTo(v.negId,v.snap,'version',v.nombre);
-  if(c){ addNeg((v.snap.name||'Negocio')+' ('+v.nombre+')',{...EMPTY,...v.snap.st},{t:'duplico',x:v.nombre}); setView('neg'); }
-  if(d){ if(d.dataset.sure){ vers=vers.filter(x=>x.id!==v.id); renderVers(); Promise.resolve(VC.doc(v.id).delete()).catch(()=>{}); } else { d.dataset.sure='1'; d.textContent='¿Seguro? Borrar'; d.classList.add('danger'); } }
-});
+// ================= sin historial: los cambios se guardan con EDITAR / GUARDAR =================
+function syncShadow(){} function renderHist(){} function logEdit(){} function logOne(){} function histInit(){} function showWho(){}
 
 // ================= guardar compartido =================
 // Los negocios se guardan en la base compartida de la página: todos los que abren el link ven los mismos.
 // Quien solo tiene permiso de lectura los ve pero sus cambios quedan en su navegador.
 (async()=>{
   try{
-    const local=()=>{ status('Sin cuenta de Claude: tus cambios quedan en este navegador'); histInit(localDb()); };
+    const local=()=>{ status('Sin cuenta de Claude: tus cambios quedan en este navegador'); listo=true; paintBars(); };
     const GAS=!!(window.google&&google.script&&google.script.run);
     let dbx=null,user=null;
     if(GAS){ dbx=gasDb(); const nn=$('negNote'); if(nn) nn.textContent='Todos los que abren el link ven y editan los mismos negocios: los cambios de los demás aparecen solos en unos segundos. “Nuevo negocio” viene con costos sugeridos; al elegir la categoría se completan precios, pesos y meses. “Duplicar” copia el que estás viendo para probar variantes.'; status('Conectando…'); }
@@ -2361,7 +2358,7 @@ $('verList').addEventListener('click',e=>{
         const locales=negs.filter(n=>(n.touched||(!uid&&n.seed))&&!base.find(b=>b.id===n.id)&&!isOld(n.st));
         if(base.length||locales.length){ negs=[...base,...locales]; if(!cur()) active=negs[0].id; }
         if(!readOnly) negs.forEach(n=>writeNeg(n.id));
-        loadActive(); status(readOnly?'Solo lectura: tus cambios quedan en este navegador':'Guardado'); return;
+        listo=true; loadActive(); status(readOnly?'Solo lectura: tus cambios quedan en este navegador':'Guardado'); return;
       }
       const old=remote.filter(r=>isOld(r.st));
       if(old.length&&!readOnly){ const add=[]; old.forEach(o=>{ const mm=migrate(o); if(mm.length===1&&mm[0].id===o.id) add.push({...mm[0],touched:true}); else { add.push(...mm); c.doc(o.id).delete().catch(()=>{}); delete lastW[o.id]; } }); remote=remote.filter(r=>!isOld(r.st)).concat(add); }
@@ -2370,7 +2367,7 @@ $('verList').addEventListener('click',e=>{
       negs=[...remote.filter(r=>!isOld(r.st)),...keep];
       if(!readOnly) negs.forEach(n=>{ if(!n.synced||!lastW[n.id]) writeNeg(n.id); });
       if(!negs.find(n=>n.id===wasActive)) active=negs[0].id;
-      loadActive(); status(readOnly?'Solo lectura: tus cambios quedan en este navegador':'Guardado');
+      listo=true; loadActive(); status(readOnly?'Solo lectura: tus cambios quedan en este navegador':'Guardado');
     }
     c.onSnapshot(snap=>{
       if(first&&snap.empty&&snap.metadata.fromCache) return;
@@ -2382,14 +2379,15 @@ $('verList').addEventListener('click',e=>{
       // cambios de otras personas o de otro dispositivo
       const local=new Map(negs.map(n=>[n.id,n]));
       const pendingLocal=negs.filter(n=>!n.synced&&!remote.find(r=>r.id===n.id));
-      negs=[...remote.filter(r=>!isOld(r.st)).map(r=>{const l=local.get(r.id); if(l&&r.id===active&&timer) return {...r,name:l.name,st:l.st}; if(l&&r.id===active&&document.activeElement===$('negName')) return {...r,name:l.name}; return r;}),...pendingLocal];
+      negs=[...remote.filter(r=>!isOld(r.st)).map(r=>{const l=local.get(r.id); if(l&&r.id===active&&(timer||editing)){ if(editing&&editSnap&&JSON.stringify({name:r.name,st:r.st})!==JSON.stringify(editBase||editSnap)) editBase={name:r.name,st:JSON.parse(JSON.stringify(r.st))}; return {...r,name:l.name,st:l.st,nuevo:l.nuevo}; } if(l&&r.id===active&&document.activeElement===$('negName')) return {...r,name:l.name}; return r;}),...pendingLocal];
       if(!cur()){ active=negs.length?negs[0].id:null; if(!active){ const n={id:newId(),name:'Negocio 1',st:{...EMPTY},created:Date.now(),touched:true}; negs.push(n); active=n.id; writeNeg(n.id);} loadActive(); return; }
       const a=cur();
-      if(!timer&&JSON.stringify({...EMPTY,...a.st})!==JSON.stringify(st)&&!document.activeElement?.classList.contains('in')){ st={...EMPTY,...a.st}; if(!a.st.tipo) st.tipo=inferTipo(st.cat); applyUI(); }
-      if(document.activeElement!==$('negName')) $('negName').value=a.name||'';
+      if(!timer&&!editing&&JSON.stringify({...EMPTY,...a.st})!==JSON.stringify(st)&&!document.activeElement?.classList.contains('in')){ st={...EMPTY,...a.st}; if(!a.st.tipo) st.tipo=inferTipo(st.cat); applyUI(); }
+      if(document.activeElement!==$('negName')&&!editing) $('negName').value=a.name||'';
+      paintBars();
       renderBar(); setTitle(); renderCmp(); saveLocal();
-    },()=>{ status('Sin conexión: los cambios quedan en este navegador'); });
-  }catch(e){}
+    },()=>{ status('Sin conexión: los cambios quedan en este navegador'); if(!listo){ listo=true; paintBars(); } });
+  }catch(e){ listo=true; paintBars(); }
 })();
 })();
 </script>
