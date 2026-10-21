@@ -668,10 +668,6 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
 table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mix(in srgb,var(--c-inv) 18%,var(--surface)),var(--surface))!important}
 @media print{ .wrap,body{background:#fff!important} .board>section .sec-head{background:none!important;margin:0!important;padding:0 0 6px!important} }
 /* ===== EDITAR / GUARDAR ===== */
-.editbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;margin:-2px 0 6px;border-radius:10px;background:color-mix(in srgb,var(--tc,#2F7A3B) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--tc,#2F7A3B) 30%,var(--line))}
-.editbar .em{flex:1 1 220px;font-size:.95rem;color:var(--muted)}
-.editbar .em b{color:var(--ink)}
-.editando .editbar{background:color-mix(in srgb,#C08A1E 14%,var(--surface));border-color:color-mix(in srgb,#C08A1E 55%,var(--line))}
 .btn.edit,.btn.save{font-family:var(--display);letter-spacing:.06em;font-weight:700;min-width:118px;padding:8px 18px;border:0;color:#fff}
 .btn.edit{background:var(--tc,#2F7A3B)}
 .btn.save{background:#B5651D}
@@ -773,7 +769,6 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
     <button type="button" role="tab" id="tab-cmp" aria-selected="false">Comparar negocios</button>
   </div>
   <div class="negbar vneg" role="region" aria-label="Mis negocios">
-    <div class="editbar" id="editTop"></div>
     <div class="negrow">
       <label for="negSel" class="eyebrow">Negocio</label>
       <select id="negSel"></select>
@@ -1593,23 +1588,18 @@ function paintEdit(){
   if(!editing) document.querySelectorAll(LOCK).forEach(el=>{ if(!el.disabled){ el.disabled=true; el.dataset.ro='1'; } });
 }
 function paintBars(){
-  const n=cur(), nm=esc((n&&n.name)||'este negocio'), top=$('editTop'), fl=$('editFloat'); if(!top||!fl) return;
+  const n=cur(), fl=$('editFloat'); if(!fl) return;
   const eb='<button class="btn edit" type="button" data-act="edit"'+(listo?'':' disabled')+'>'+(listo?'EDITAR':'Conectando…')+'</button>';
-  if(!editing){
-    top.innerHTML='<span class="em">Estás viendo «<b>'+nm+'</b>». Para cambiar algo, tocá <b>EDITAR</b>.</span>'+eb;
-    fl.innerHTML='<span class="em">Modo lectura</span>'+eb;
-  } else {
-    const d=dirty?'<span class="dirty">cambios sin guardar</span>':'sin cambios todavía', nuevo=n&&n.nuevo;
-    const sv='<button class="btn save" type="button" data-act="save"'+(dirty?'':' disabled')+'>GUARDAR</button>';
-    const otro=editBase&&editSnap&&JSON.stringify(editBase)!==JSON.stringify(editSnap)?' <span class="dirty">⚠ Otra persona guardó cambios en este negocio mientras editabas: si guardás, quedan los tuyos.</span>':'';
-    top.innerHTML='<span class="em">Editando «<b>'+nm+'</b>» · '+d+'. Si cerrás la página sin tocar <b>GUARDAR</b>, '+(nuevo?'el negocio no se crea.':'los cambios se pierden.')+otro+'</span>'
-      +'<button class="btn ghost" type="button" data-act="disc">'+(nuevo?'Descartar negocio':'Descartar cambios')+'</button>'+sv;
-    fl.innerHTML='<span class="em">Editando · '+d+'</span><button class="btn ghost" type="button" data-act="disc">Descartar</button>'+sv;
+  if(!editing) fl.innerHTML='<span class="em">Modo lectura</span>'+eb;
+  else {
+    const nuevo=n&&n.nuevo, otro=editBase&&editSnap&&JSON.stringify(editBase)!==JSON.stringify(editSnap);
+    const d=otro?'<span class="dirty">⚠ Otra persona guardó cambios mientras editabas</span>':dirty?'<span class="dirty">'+(nuevo?'negocio nuevo sin guardar':'cambios sin guardar')+'</span>':'sin cambios todavía';
+    fl.innerHTML='<span class="em" title="Si cerrás la página sin tocar GUARDAR, '+(nuevo?'el negocio no se crea':'los cambios se pierden')+'.">Editando · '+d+'</span><button class="btn ghost" type="button" data-act="disc">Descartar</button><button class="btn save" type="button" data-act="save"'+(dirty?'':' disabled')+'>GUARDAR</button>';
   }
   fl.hidden=curView!=='neg';
 }
 function toast(t){ const el=$('toast'); if(!el) return; el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>{ el.hidden=true; },2600); }
-['editTop','editFloat'].forEach(id=>$(id).addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(!b||b.disabled) return;
+['editFloat'].forEach(id=>$(id).addEventListener('click',e=>{ const b=e.target.closest('[data-act]'); if(!b||b.disabled) return;
   const a=b.dataset.act;
   if(a==='edit') editar();
   else if(a==='save') guardar();
