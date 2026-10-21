@@ -784,7 +784,6 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
   <div class="viewtabs" role="tablist" aria-label="Vista">
     <button type="button" role="tab" id="tab-ini" aria-selected="false">Inicio</button>
     <button type="button" role="tab" id="tab-neg" aria-selected="true">Mis negocios</button>
-    <button type="button" role="tab" id="tab-cmp" aria-selected="false">Comparar negocios</button>
   </div>
   <div class="negbar vneg" role="region" aria-label="Mis negocios">
     <div class="negrow">
@@ -1262,21 +1261,6 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
   </div>
 </section>
 
-<section id="comparar" class="vcmp" hidden>
-  <div class="sec-head"><h2>Comparar negocios</h2></div>
-  <div class="pick">
-    <div class="pick-head"><span class="eyebrow">¿Qué negocios querés comparar?</span>
-      <span class="pick-btns"><button class="btn sm" type="button" id="cmpAll">Todos</button><button class="btn sm ghost" type="button" id="cmpNone">Ninguno</button></span></div>
-    <div class="pick-list" id="cmpPick"></div>
-  </div>
-  <p class="note" id="cmpNote"></p>
-  <div id="cmpWin" class="cmp-win" hidden></div>
-  <div id="cmpCards" class="cmp-cards"></div>
-  <div id="cmpCharts" class="cmp-charts"></div>
-  <h3 class="cmp-h" id="cmpDetH">Detalle completo</h3>
-  <p class="cmp-legend" id="cmpLeg"><span>✓</span> marca el mejor valor de cada fila.</p>
-  <div class="tbl-wrap" id="cmpWrap"><table class="cmp" id="cmpTbl"></table></div>
-</section>
 
 
 <section id="fuentes">
@@ -2036,14 +2020,12 @@ function paintCmpVisual(rows,best){
       return '<div class="row'+(best&&x===best?' best':'')+(v<0?' neg':'')+'"><span class="nm" title="'+esc(x.n.name||'')+'">'+esc(x.n.name||'Sin nombre')+'</span><span class="track"><i style="width:'+Math.max(1.5,Math.abs(v)/mx*100).toFixed(1)+'%"></i></span><em>'+fmt(v)+'</em></div>'; }).join('')+'</div>'; };
   G.innerHTML=chart('Rentabilidad por mes',R=>R.rm,v=>pct(v,2))+chart('Ganancia',R=>R.gr,v=>mill(v));
 }
-$('cmpAll').addEventListener('click',()=>{cmpSel=negs.map(n=>n.id); saveSel(); renderCmp();});
-$('cmpNone').addEventListener('click',()=>{cmpSel=[]; saveSel(); renderCmp();});
 function setView(v){
-  $('tab-ini').setAttribute('aria-selected',v==='ini'); $('tab-neg').setAttribute('aria-selected',v==='neg'); $('tab-cmp').setAttribute('aria-selected',v==='cmp');
-  document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vcmp').forEach(e=>e.hidden=v!=='cmp'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini');
+  $('tab-ini').setAttribute('aria-selected',v==='ini'); $('tab-neg').setAttribute('aria-selected',v==='neg');
+  document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini');
   curView=v; { const t=$('toast'); if(t) t.hidden=true; }
   if(v==='ini'){ flush(); renderIni(); $('negTitle').textContent='Negocios de hacienda'; }
-  else if(v==='cmp'){ flush(); renderCmp(); $('negTitle').textContent='Comparar negocios'; } else setTitle();
+  else setTitle();
   paintBars();
   window.scrollTo({top:0});
 }
@@ -2069,7 +2051,7 @@ const LAYKEY='recria-vista-v1';
 function setLay(l){ document.body.classList.toggle('cuadros',l==='cuadros'); $('lay-lista').setAttribute('aria-pressed',l==='lista'); $('lay-cuadros').setAttribute('aria-pressed',l==='cuadros'); try{localStorage.setItem(LAYKEY,l);}catch(e){} }
 $('lay-lista').addEventListener('click',()=>setLay('lista')); $('lay-cuadros').addEventListener('click',()=>setLay('cuadros'));
 { let l='cuadros'; try{ l=localStorage.getItem(LAYKEY)||'cuadros'; }catch(e){} setLay(l); }
-$('tab-neg').addEventListener('click',()=>setView('neg')); $('tab-cmp').addEventListener('click',()=>setView('cmp'));
+$('tab-neg').addEventListener('click',()=>setView('neg'));
 
 // ================= pantalla de inicio =================
 function renderIni(){
@@ -2093,7 +2075,7 @@ document.querySelectorAll('#inicio [data-new]').forEach(b=>b.addEventListener('c
     setTipo(t==='cria'?'cria':t==='invernada'?'invernada':'recria'); renderBar(); setTitle(); paintBars();
     $('negName').focus(); $('negName').select(); }); }));
 
-if(location.hash==='#comparar') setView('cmp'); else setView('ini');
+setView('ini');
 
 
 
@@ -2394,7 +2376,7 @@ function renderSens(){
 $('printRep').addEventListener('click',()=>{ flush(); const ph=$('printHead'); if(ph) ph.textContent='Informe: '+((cur()&&cur().name)||'Negocio')+' · generado el '+new Date().toLocaleDateString('es-AR')+' · Negocios de hacienda'; try{ window.print(); }catch(e){ status('Tu navegador no deja imprimir desde acá: usá Ctrl+P'); } });
 
 // ================= barra de negocios =================
-function setTitle(){ const t=$('negTitle'); if(t&&$('comparar').hidden&&$('inicio').hidden) t.textContent=(cur()&&cur().name)||'Negocio sin nombre'; }
+function setTitle(){ const t=$('negTitle'); if(t&&$('inicio').hidden) t.textContent=(cur()&&cur().name)||'Negocio sin nombre'; }
 function renderBar(){
   negs.sort((a,b)=>(a.created||0)-(b.created||0));
   const s=$('negSel'); s.innerHTML='';
