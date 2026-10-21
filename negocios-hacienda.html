@@ -342,7 +342,7 @@ table.sens th.corner{text-align:left;font-size:.78rem;color:var(--muted);font-we
 table.sens td.pos{color:var(--pos)} table.sens td.neg{color:var(--neg)}
 table.sens td.base{outline:2px solid var(--ink);outline-offset:-2px;font-weight:700}
 table.sens .lvl{display:block;font-size:.72rem;color:var(--muted);font-weight:500}
-@media (min-width:1100px){ body.cuadros #sens,body.cuadros #flujo{grid-column:1/-1} }
+@media (min-width:1100px){ body.cuadros #sens,body.cuadros #flujo,body.cuadros #capital{grid-column:1/-1} }
 #sens table.sens{display:table!important;width:100%!important;table-layout:fixed}
 #sens table.sens thead{display:table-header-group!important}
 #sens table.sens tbody{display:table-row-group!important}
@@ -667,6 +667,24 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
 .ini-ico{background:linear-gradient(135deg,color-mix(in srgb,var(--c-recria) 22%,transparent),color-mix(in srgb,var(--c-inv) 22%,transparent))!important}
 table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mix(in srgb,var(--c-inv) 18%,var(--surface)),var(--surface))!important}
 @media print{ .wrap,body{background:#fff!important} .board>section .sec-head{background:none!important;margin:0!important;padding:0 0 6px!important} }
+/* ===== capitalización ===== */
+.cap-body{display:grid;grid-template-columns:1fr;gap:16px}
+.cap-body[hidden]{display:none}
+.cap-body>.note{grid-column:1/-1;margin:0}
+.cap-in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:stretch}
+.cap-in .cap-eq{display:flex;align-items:center;max-width:none}
+.cap-eq{margin:0;padding:12px 14px;border-radius:10px;background:color-mix(in srgb,var(--tc,#2F7A3B) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--tc,#2F7A3B) 30%,var(--line));font-size:.95rem;line-height:1.45}
+.cap-eq b{color:var(--ink)}
+table.cap-t{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.cap-t th,table.cap-t td{padding:8px 10px;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent);text-align:right}
+table.cap-t th:first-child,table.cap-t td:first-child{text-align:left}
+table.cap-t thead th{font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:.8rem;color:var(--muted);width:30%}
+table.cap-t thead th:first-child{width:40%}
+table.cap-t tr.sub td{background:color-mix(in srgb,var(--tc,#2F7A3B) 7%,var(--surface));font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:.78rem;color:var(--muted);text-align:left}
+table.cap-t tr.key td{font-weight:700;font-size:1.02rem}
+table.cap-t td small{display:block;font-size:.76rem;color:var(--muted);font-weight:400}
+@media (max-width:760px){.cap-in{grid-template-columns:1fr}}
+@media (max-width:560px){table.cap-t{table-layout:fixed;font-size:.76rem} table.cap-t th,table.cap-t td{padding:7px 4px} table.cap-t thead th:first-child,table.cap-t td:first-child{width:40%} table.cap-t thead th{font-size:.68rem} table.cap-t tr.key td{font-size:.84rem} table.cap-t td,table.cap-t th{overflow-wrap:anywhere;white-space:normal!important} table.cap-t td small{font-size:.68rem}}
 /* ===== EDITAR / GUARDAR ===== */
 .btn.edit,.btn.save{font-family:var(--display);letter-spacing:.06em;font-weight:700;min-width:118px;padding:8px 18px;border:0;color:#fff}
 .btn.edit{background:var(--tc,#2F7A3B)}
@@ -826,7 +844,7 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <nav class="secnav vneg" aria-label="Secciones">
   <div class="seg lay" role="group" aria-label="Forma de ver"><button type="button" id="lay-lista" aria-pressed="false">Lista</button><button type="button" id="lay-cuadros" aria-pressed="true">Cuadros</button></div>
-  <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a><a href="#flujo">Flujo de fondos</a><a href="#sens">Sensibilidad</a>
+  <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a><a class="no-cria" href="#capital">Socios</a><a href="#flujo">Flujo de fondos</a><a href="#sens">Sensibilidad</a>
 </nav>
 <div class="refbar vneg">
   <div class="no-cria">
@@ -1180,6 +1198,26 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
   </tbody></table></div>
 </section>
 
+<section id="capital" class="vneg no-cria">
+  <div class="sec-head"><h2><svg class="sec-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5M10.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5"/></svg>Capitalización: reparto con socios</h2><button type="button" class="zoom-btn" data-zoom="capital" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
+  <div class="tbar">
+    <p class="note">Los socios capitalistas ponen la plata para comprar la hacienda; el campo pone el pasto, el trabajo y la tierra. Al vender, lo que aumentó el valor de la hacienda se reparte.</p>
+    <div class="seg" role="group" aria-label="Hay socios capitalistas"><button type="button" id="cap-no" aria-pressed="true">Sin socios</button><button type="button" id="cap-si" aria-pressed="false">Con socios</button></div>
+  </div>
+  <div class="cap-body" id="capBody" hidden>
+    <div class="cap-in">
+      <div class="tbl-wrap"><table class="one"><tbody>
+        <tr><td><span class="lbl">Parte de los socios en lo que aumentó el valor</span><span class="hint">El resto es para el campo. Es el porcentaje que se pacta</span></td>
+            <td><span class="field"><input class="in s" id="capPct" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-capPct"></span></td></tr>
+        <tr><td><span class="lbl">Gastos directos que pagan los socios</span><span class="hint">Sanidad, suplemento, servicio, tacto, corral y otros. El resto lo paga el campo</span></td>
+            <td><span class="field"><input class="in s" id="capGs" inputmode="decimal"><span class="u">%</span></span><span class="eq" id="e-capGs"></span></td></tr>
+      </tbody></table></div>
+      <p class="cap-eq" id="capEq"></p>
+    </div>
+    <div class="tbl-wrap"><table class="cap-t" id="capTbl"></table></div>
+    <p class="note" id="capNote"></p>
+  </div>
+</section>
 <section id="flujo" class="vneg">
   <div class="sec-head"><h2><svg class="sec-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h14l-3-3M21 16H7l3 3"/></svg>Flujo de fondos e inversión</h2><button type="button" class="zoom-btn" data-zoom="flujo" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
   <p class="note" id="fluNote"></p>
@@ -1281,7 +1319,7 @@ const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:nu
   mesCompra:4,anioCompra:null,meses:null,gdp:null,mort:null,
   modoVenta:'kilo',ventaPor:'kg',pVkg:null,pVcab:null,ms:null,entoreObj:null,pr:null,pPren:null,pVac:null,
   conCria:false,pcria:null,pVcc:null,dest:null,pdes:null,pTer:null,varVenta:null,
-  alKg:null,alMes:null,cargaR:null,estMes:null,calif:null,pDesc:null,cabM:null,cabH:null,pcM:null,pcH:null,pCkgM:null,pCkgH:null,gdpH:null,pVkgH:null,mesesH:null,destH:null,san:null,serv:null,tacto:null,mob:null,otros:null,cv:null,gv:null,
+  alKg:null,alMes:null,cargaR:null,estMes:null,calif:null,pDesc:null,capOn:false,capPct:null,capGs:null,cabM:null,cabH:null,pcM:null,pcH:null,pCkgM:null,pCkgH:null,gdpH:null,pVkgH:null,mesesH:null,destH:null,san:null,serv:null,tacto:null,mob:null,otros:null,cv:null,gv:null,
   tasa:null,inf:null,vista:'cab',fijo:'gdp',
   tipo:'recria',sistema:'campo',mesesF:null,gdpF:null,conv:null,pRac:null,diaF:null,
   vacas:null,toros:null,ha:null,carga:null,valVaca:null,mortV:null,destC:null,pdesC:null,machos:null,desc:null,pVd:null,
@@ -1402,7 +1440,7 @@ function modelMixto(s,simple){
   const r={mixto:true,sM,sH,M:RM,H:RH}, sum=k=>parts.reduce((a,x)=>a+(isNum(x[k])?x[k]:0),0);
   r.ok=parts.length>0&&parts.every(x=>x.ok);
   r.n=Z('cabM')+Z('cabH');
-  ['viv','ing','ingMain','compra','cc','fl','cpra','alim','campo','tierra','estr','tie','rec','cv','gv','gven','ct','mb','cp','gr','nom','ha','nPren','nVac'].forEach(k=>{ r[k]=sum(k); });
+  ['cPasto','cCorral','cSup','cSan','cServ','cMob','cOtros','viv','ing','ingMain','compra','cc','fl','cpra','alim','campo','tierra','estr','tie','rec','cv','gv','gven','ct','mb','cp','gr','nom','ha','nPren','nVac'].forEach(k=>{ r[k]=sum(k); });
   r.ingCria=0; r.cria=false; r.meses=parts.length?Math.max(...parts.map(x=>isNum(x.meses)?x.meses:0)):NaN;
   r.pc=r.n>0?(Z('cabM')*Z('pcM')+Z('cabH')*Z('pcH'))/r.n:NaN;
   r.pf=r.viv>0?parts.reduce((a,x)=>a+x.viv*(isNum(x.pf)?x.pf:0),0)/r.viv:NaN;
@@ -1453,6 +1491,9 @@ function model(s){
   r.sup=(s.sistema||'campo')==='feed'?0:Z('supKg')*Z('supDias')*Z('supPrecio');
   r.alim=r.n*(T.kC*Z('alKg')+Z('alMes')*T.mC+T.kF*Z('conv')*Z('pRac')+Z('diaF')*T.mF*D+r.sup);
   r.campo=r.alim+r.n*(Z('san')+(r.pren?Z('serv')+Z('tacto'):0)+Z('mob')+Z('otros'));
+  // partes del gasto en el campo (para repartir en una capitalización)
+  r.cPasto=r.n*(T.kC*Z('alKg')+Z('alMes')*T.mC); r.cCorral=r.n*(T.kF*Z('conv')*Z('pRac')+Z('diaF')*T.mF*D); r.cSup=r.n*r.sup;
+  r.cSan=r.n*Z('san'); r.cServ=r.pren?r.n*(Z('serv')+Z('tacto')):0; r.cMob=r.n*Z('mob'); r.cOtros=r.n*Z('otros');
   // tierra (lo que cuesta, o lo que se dejaría de cobrar alquilándola) mientras está a campo, y estructura
   r.ha=Z('cargaR')>0&&r.n>0?r.n/Z('cargaR'):0; r.tierra=r.ha*Z('arrHa')*T.mC/12; r.estr=r.n*Z('estMes')*(isNum(r.meses)?r.meses:0);
   r.tie=r.tierra+r.estr; r.rec=r.campo+r.tie;
@@ -1625,7 +1666,7 @@ prim('gdp',2); ['gdpVer','gdpOto','gdpInv','gdpPri','supKg'].forEach(k=>prim(k,2
 ['vacas','toros','valVaca','pdesC','pVd','pTro','pTra','pVdKg','sanV','alV','mobV','ctoro','otrosV','arrHa','pRac','diaF'].forEach(k=>prim(k,0));
 ['mortV','destC','machos','desc','mesesF','conv'].forEach(k=>prim(k,1));
 prim('gdpF',2); prim('cargaR',1); prim('estMes',0); prim('calif',0); prim('pDesc',0);
-prim('gdpH',2); prim('pVkgH',0); prim('mesesH',1); prim('pcH',0); prim('pCkgH',0);
+prim('capPct',0); prim('capGs',0); prim('gdpH',2); prim('pVkgH',0); prim('mesesH',1); prim('pcH',0); prim('pCkgH',0);
 // jaula mixta: las cabezas suman; el peso y el precio de los terneros son los del negocio base
 ['cabM','cabH'].forEach(k=>{ L[k]={g:()=>st[k],d:0,s:v=>{ st[k]=v; st.cab=(st.cabM||0)+(st.cabH||0); },clear:()=>{ st[k]=null; st.cab=(st.cabM||0)+(st.cabH||0); }}; });
 L.pCkgM={g:()=>st.pCkgM,d:0,s:v=>{ st.pCkgM=v; st.pCkg=v; st.precioPor='kg'; },clear:()=>{ st.pCkgM=null; st.pCkg=null; }};
@@ -1686,7 +1727,7 @@ function refresh(except){
 // rangos posibles: [mínimo, máximo, unidad]
 const LIMS={mort:[0,50,'%'],mortV:[0,50,'%'],pr:[0,100,'%'],pcria:[0,100,'%'],dest:[0,100,'%'],destC:[0,100,'%'],machos:[0,100,'%'],desc:[0,60,'%'],calif:[0,100,'%'],
   cc:[0,20,'%'],cv:[0,20,'%'],dC:[0,15,'%'],dV:[0,15,'%'],varVenta:[-90,300,'%'],inf:[0,30,'% por mes'],meses:[0,60,'meses'],mesesF:[0,60,'meses'],ms:[0,12,'meses'],
-  gdp:[0,3,'kg/día'],gdpH:[0,3,'kg/día'],mesesH:[0,60,'meses'],gdpVer:[0,3,'kg/día'],gdpOto:[0,3,'kg/día'],gdpInv:[0,3,'kg/día'],gdpPri:[0,3,'kg/día'],gdpF:[0,3,'kg/día'],cargaR:[0,20,'cab/ha'],carga:[0,10,'vacas/ha']};
+  capPct:[0,100,'%'],capGs:[0,100,'%'],gdp:[0,3,'kg/día'],gdpH:[0,3,'kg/día'],mesesH:[0,60,'meses'],gdpVer:[0,3,'kg/día'],gdpOto:[0,3,'kg/día'],gdpInv:[0,3,'kg/día'],gdpPri:[0,3,'kg/día'],gdpF:[0,3,'kg/día'],cargaR:[0,20,'cab/ha'],carga:[0,10,'vacas/ha']};
 function pintaFijo(){ $('f-gdp').setAttribute('aria-pressed',st.fijo==='gdp'); $('f-peso').setAttribute('aria-pressed',st.fijo==='peso'); }
 document.querySelectorAll('input.in').forEach(el=>{
   if(!L[el.id]) return;
@@ -1817,6 +1858,7 @@ function calc(except){
   }
   try{ paintMini(R); }catch(e){}
   try{ renderFlujo(R); }catch(e){ console.error(e); }
+  try{ renderCap(R); }catch(e){ console.error(e); }
   setTimeout(()=>{ try{ infoScan(); }catch(e){} },0);
   setT('e-cc',isNum(R.cc)&&R.cc>0?'= '+money(R.cc/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
   setT('e-cv',isNum(R.cv)&&R.cv>0?'= '+money(R.cv/(st.vista==='jaula'?1:R.n))+(st.vista==='jaula'?' en la jaula':' por cabeza'):'');
@@ -2140,6 +2182,54 @@ function flujo(s,R){
   const m0=isNum(s.mesCompra)?s.mesCompra:0, y0=anioDe(s);
   return {rows:out,labels:out.map((_,k)=>{ const mm=(m0+k)%12, yy=y0+Math.floor((m0+k)/12); return MES[mm].charAt(0).toUpperCase()+MES[mm].slice(1)+' '+String(yy).slice(2); })};
 }
+// ================= capitalización =================
+// Socios: ponen la compra (con comisión y flete) y su parte de los gastos directos; recuperan la compra.
+// Campo: pone pasto, mano de obra, estructura, su parte de los gastos directos y la tierra.
+// Lo que aumentó el valor de la hacienda (venta neta menos compra) se reparte según el porcentaje pactado.
+function capCalc(R,s){
+  const pct=(isNum(s.capPct)?s.capPct:50)/100, gs=(isNum(s.capGs)?s.capGs:50)/100;
+  const dir=R.cSan+R.cSup+R.cServ+R.cCorral+R.cOtros, propios=R.cPasto+R.cMob+R.estr;
+  const venta=R.ing-R.gven, va=venta-R.cpra;
+  const sPone=R.cpra+dir*gs, sGas=dir*gs, sCobra=R.cpra+va*pct, sGan=va*pct-sGas;
+  const cPone=propios+dir*(1-gs), cCobra=va*(1-pct), cGan=cCobra-cPone, cGanT=cGan-R.tierra, cPoneT=cPone+R.tierra;
+  // porcentaje con el que los dos ganan lo mismo por cada peso que ponen (la tierra cuenta como aporte del campo)
+  const rIg=R.mb/(sPone+cPoneT), pctIg=va>0?(sGas+rIg*sPone)/va:NaN;
+  return {pct,gs,dir,propios,venta,va,sPone,sGas,sCobra,sGan,cPone,cCobra,cGan,cGanT,cPoneT,rS:sGan/sPone,rC:cGanT/cPoneT,rIg,pctIg};
+}
+function renderCap(R){
+  const on=!!st.capOn&&st.tipo!=='cria'; pr2('cap-no',!on); pr2('cap-si',on); $('capBody').hidden=!on; if(!on) return;
+  const T=$('capTbl'); if(!R.ok){ T.innerHTML=''; $('capEq').textContent='Completá los datos del negocio para ver el reparto.'; $('capNote').textContent=''; return; }
+  const c=capCalc(R,st), m=R.meses, cls=v=>isNum(v)?(v>=0?'pos':'neg'):'';
+  const pm=v=>isNum(v)&&m>0?pct(v/m,2)+' por mes':'';
+  setT('e-capPct',isNum(c.va)?'= '+mill(c.va*c.pct)+' para los socios y '+mill(c.va*(1-c.pct))+' para el campo':'');
+  setT('e-capGs',c.dir>0?'= '+mill(c.dir*c.gs)+' los socios y '+mill(c.dir*(1-c.gs))+' el campo':'');
+  const row=(l,a,b,o={})=>'<tr'+(o.k?' class="key"':'')+'><td>'+l+(o.h?'<small>'+o.h+'</small>':'')+'</td><td class="'+(o.sg?cls(a):'')+'">'+(a===null?'—':isNum(a)?money(a):a)+(o.sa?'<small>'+o.sa+'</small>':'')+'</td><td class="'+(o.sg?cls(b):'')+'">'+(b===null?'—':isNum(b)?money(b):b)+(o.sb?'<small>'+o.sb+'</small>':'')+'</td></tr>';
+  const sub=t=>'<tr class="sub"><td colspan="3">'+t+'</td></tr>';
+  T.innerHTML='<thead><tr><th>Toda la jaula</th><th>Socios</th><th>Campo</th></tr></thead><tbody>'
+    +sub('Lo que pone cada uno')
+    +row('Compra de la hacienda',R.cpra,null,{h:'Con comisión y flete'})
+    +row('Gastos directos',c.dir*c.gs,c.dir*(1-c.gs),{h:'Sanidad, suplemento, servicio, tacto, corral, otros'})
+    +row('Pasto, mano de obra y estructura',null,c.propios)
+    +row('Tierra',null,R.tierra,{h:'Lo que valdría alquilar el campo ese tiempo'})
+    +row('Total que pone',c.sPone,c.cPoneT,{k:1})
+    +sub('Lo que recibe cada uno al vender')
+    +row('Recupera la compra',R.cpra,null)
+    +row('Parte de lo que aumentó el valor',c.va*c.pct,c.va*(1-c.pct),{h:'Aumento total: '+mill(c.va)+' (venta neta '+mill(c.venta)+' menos la compra)',sa:nf(c.pct*100,0)+' %',sb:nf((1-c.pct)*100,0)+' %'})
+    +sub('Resultado')
+    +row('Ganancia',c.sGan,c.cGan,{k:1,sg:1,sb:'sin contar la tierra'})
+    +row('Ganancia contra alquilar el campo',null,c.cGanT,{sg:1,h:'Lo que gana el campo descontando lo que cobraría alquilándolo'})
+    +row('Rentabilidad sobre lo que pone',pct(c.rS),pct(c.rC),{k:1,sa:pm(c.rS),sb:pm(c.rC)})
+    +'</tbody>';
+  [...T.querySelectorAll('tbody tr')].slice(-1)[0].querySelectorAll('td').forEach((td,i)=>{ if(i) td.className=cls(i===1?c.rS:c.rC); });
+  $('capEq').innerHTML='<span>'+( !(c.va>0) ? 'Con estos números la hacienda <b>no aumenta de valor</b>: no hay nada para repartir.'
+    : !(R.mb>0)||!(c.pctIg>=0&&c.pctIg<=1) ? 'Con estos números el negocio <b>pierde plata</b> ('+mill(R.mb)+'): no hay reparto que deje ganando a los dos. Primero tiene que cerrar el negocio.'
+    : 'Con <b>'+nf(c.pctIg*100,0)+' % para los socios</b> y '+nf((1-c.pctIg)*100,0)+' % para el campo, los dos ganan lo mismo por cada peso que ponen: <b>'+pct(c.rIg)+'</b> en '+nf(m,1)+' meses. '
+      +(Math.abs(c.pctIg-c.pct)<0.005?'Es el porcentaje que cargaste.':c.pct>c.pctIg?'Con el '+nf(c.pct*100,0)+' % que cargaste, les conviene más a los socios.':'Con el '+nf(c.pct*100,0)+' % que cargaste, le conviene más al campo.'))+'</span>';
+  $('capNote').textContent='La tierra se cuenta como aporte del campo, por lo que valdría alquilarlo. Ganancia de socios + ganancia del campo contra alquilar = ganancia del negocio ('+mill(R.mb)+').';
+}
+const pr2=(id,on)=>{ const e=$(id); if(e) e.setAttribute('aria-pressed',on); };
+$('cap-no').addEventListener('click',()=>{ st.capOn=false; applyUI(); save(); });
+$('cap-si').addEventListener('click',()=>{ st.capOn=true; if(!isNum(st.capPct)) st.capPct=50; if(!isNum(st.capGs)) st.capGs=50; applyUI(); save(); });
 function tirMensual(cf){
   const npv=r=>cf.reduce((a,v,i)=>a+v/Math.pow(1+r,i),0);
   let lo=-0.9, hi=1; if(npv(lo)*npv(hi)>0) return NaN;
