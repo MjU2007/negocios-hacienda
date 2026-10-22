@@ -290,6 +290,13 @@ body.cuadros .board .sec-head h2{cursor:zoom-in}
 .zoomwrap{position:fixed;inset:0;z-index:50;background:rgba(12,16,10,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:flex-start;justify-content:center;
   padding:calc(env(safe-area-inset-top,0px) + 24px) 16px calc(env(safe-area-inset-bottom,0px) + 24px);overflow:auto}
 .zoomwrap[hidden]{display:none}
+.zoom-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:55;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:72px;height:92px;padding:8px 0;box-sizing:border-box;border:0;border-radius:14px;background:color-mix(in srgb,var(--surface) 92%,transparent);color:var(--ink);cursor:pointer;box-shadow:0 10px 30px -10px rgba(0,0,0,.45)}
+.zoom-nav span{font-size:2.2rem;line-height:1;font-weight:700}
+.zoom-nav small{font-size:.66rem;line-height:1.15;color:var(--muted);text-align:center;padding:0 4px;max-width:72px;min-height:2.3em;display:flex;align-items:center;justify-content:center}
+.zoom-nav.prev{left:16px}.zoom-nav.next{right:16px}
+.zoom-nav:hover{background:var(--surface)}.zoom-nav:focus-visible{outline:3px solid var(--input-line)}
+.zoom-nav[hidden]{display:none}
+@media (max-width:900px){.zoom-nav{top:auto;bottom:14px;transform:none;flex-direction:row;width:auto;height:auto;padding:8px 14px}.zoom-nav small{min-height:0}.zoom-nav span{font-size:1.6rem}.zoom-nav small{max-width:none;font-size:.78rem}}
 .zoompanel{position:relative;background:var(--bg);border-radius:18px;width:min(980px,100%);padding:22px 24px 28px;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);animation:zin .18s ease-out}
 .zoompanel section{font-size:1.08rem}
 .zoompanel .sec-head h2{font-size:2rem;padding-right:110px}
@@ -1281,7 +1288,9 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
 </div>
 
 <div class="zoomwrap" id="zoomWrap" hidden role="dialog" aria-modal="true" aria-label="Cuadro ampliado">
+  <button type="button" class="zoom-nav prev" id="zoomPrev" aria-label="Cuadro anterior"><span aria-hidden="true">‹</span><small id="zoomPrevL"></small></button>
   <div class="zoompanel" id="zoomPanel"><button type="button" class="btn zoom-close" id="zoomClose">✕ Cerrar</button></div>
+  <button type="button" class="zoom-nav next" id="zoomNext" aria-label="Cuadro siguiente"><span aria-hidden="true">›</span><small id="zoomNextL"></small></button>
 </div>
 
 <script>
@@ -1320,12 +1329,23 @@ const ARR_REF=178000, EST_REF=6000;
 const PRECIOS={
   semana:'16 al 22/10/2026', urlCG:'https://www.circuloganadero.com/precios',
   magFecha:'21/10/2026', urlMAG:'https://ruralnet.com.ar/mag-7197-cabezas-novillitos-4184/',
-  cg:{ternero:6229, ternera:5711, terneroDest:6523, terneraDest:6215, novillito:5259, novilloInv:4820, vaquillona:5381,
-      vaqPren:2567000, vacaNuevaPren:2557000, vacaMedioPren:2100000, vacaNuevaCria:1584000},
+  rangos:{
+    terneros:{'100-130':8333, '130-160':7170, '160-180':6523, '180-200':6373, '200-230':6229, '230-260':5677},
+    terneras:{'130-160':6548, '160-180':6215, '180-200':5711},
+    novillitos:{'260-280':5480, '300-330':5259, '330-360':5146, '380-400':4820},
+    vaquillonas:{'260-280':5381, '300-330':4852, '330-360':5000}
+  },
+  cg:{vaqPren:2567000, vacaNuevaPren:2557000, vacaMedioPren:2100000, vacaNuevaCria:1584000},
   mag:{novillito:4184, vaquillona:3930, novillo:3926, vaca:2892, toro:3399, mej:3835, vacaConserva:2563}
 };
 /*PRECIOS:FIN*/
-const CG=PRECIOS.cg, MG=PRECIOS.mag, f$=x=>'$'+Math.round(x).toLocaleString('es-AR');
+// precio por kilo según el peso: se interpola entre los rangos publicados (al centro de cada rango)
+function pkg(cat,kg){ const t=PRECIOS.rangos[cat]; if(!t||!isFinite(kg)) return NaN;
+  const pts=Object.entries(t).map(([r,v])=>{ const [a,b]=r.split('-').map(Number); return [(a+b)/2,v]; }).sort((x,y)=>x[0]-y[0]);
+  if(!pts.length) return NaN; if(kg<=pts[0][0]) return pts[0][1]; if(kg>=pts[pts.length-1][0]) return pts[pts.length-1][1];
+  for(let i=1;i<pts.length;i++){ const [x0,y0]=pts[i-1],[x1,y1]=pts[i]; if(kg<=x1) return Math.round(y0+(y1-y0)*(kg-x0)/(x1-x0)); } return NaN; }
+const pfDe=(pc,gdp,meses)=>pc+gdp*meses*30.4;
+const CG={...PRECIOS.cg,terneroDest:pkg('terneros',170),terneraDest:pkg('terneras',170)}, MG=PRECIOS.mag, f$=x=>'$'+Math.round(x).toLocaleString('es-AR');
 const FCG='Círculo Ganadero, semana del '+PRECIOS.semana, FMG='Mercado Agroganadero, '+PRECIOS.magFecha;
 const REF_CRIA={txt:'Ternero de destete a '+f$(CG.terneroDest)+'/kg, ternera a '+f$(CG.terneraDest)+'/kg y vaca de medio uso con garantía de preñez a '+f$(CG.vacaMedioPren)+' ('+FCG+'); vaca a faena a '+f$(MG.vaca)+'/kg ('+FMG+'). Costos por vaca estimados para un sistema pastoril.',
   v:{vacas:100,toros:100/28,carga:0.7,valVaca:CG.vacaMedioPren,mortV:2,destC:80,pdesC:170,machos:50,desc:18,pVd:420,pTro:CG.terneroDest,pTra:CG.terneraDest,pVdKg:MG.vaca,cv:4,gv:12000,varVenta:0,
@@ -1342,32 +1362,32 @@ const STRUCT=['precioPor','ventaPor','modoVenta','conCria'];
 // Valores sugeridos por categoría. Precios: De Campo a Campo (informes semanales AZ Group, sep-2026).
 // Flete estimado ~$1,2 M por jaula a ~300 km, repartido entre las cabezas que entran.
 const REF={
-  ternero:{txt:'Ternero de 200–230 kg a '+f$(CG.ternero)+'/kg y novillito de 300–330 kg a '+f$(CG.novillito)+'/kg ('+FCG+'). Recría a campo de ~5 meses a 0,68 kg/día y venta del recriado.',
-    v:{cargaR:1.5,cab:80,pc:215,pCkg:CG.ternero,meses:5,gdp:0.68,mort:1.5,modoVenta:'kilo',pVkg:CG.novillito,fl:15000,san:30000,mob:30000,alKg:2000}},
-  ternera:{txt:'Ternera de 180–200 kg a '+f$(CG.ternera)+'/kg y vaquillona con garantía de preñez a '+f$(CG.vaqPren)+' ('+FCG+'); las vacías, a faena como vaquillonas a '+f$(MG.vaquillona)+'/kg ('+FMG+'). Recría hasta el entore, servicio, tacto y venta preñada: ~9 meses.',
-    v:{cargaR:1.5,cab:80,pc:190,pCkg:CG.ternera,meses:9,gdp:0.5,mort:1.5,modoVenta:'prenada',ms:3,entoreObj:280,pr:80,pPren:CG.vaqPren,pVac:MG.vaquillona,fl:15000,san:45000,serv:60000,tacto:6000,mob:50000,alKg:2000}},
-  novillito:{txt:'Novillito de 300–330 kg a '+f$(CG.novillito)+'/kg ('+FCG+') y novillito gordo a '+f$(MG.novillito)+'/kg ('+FMG+'). Terminación a campo hasta ~420 kg.',
-    v:{cargaR:1.2,cab:45,pc:310,pCkg:CG.novillito,meses:6,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:MG.novillito,fl:27000,san:25000,mob:30000,alKg:2000}},
-  vaquillona:{txt:'Vaquillona de 260–280 kg a '+f$(CG.vaquillona)+'/kg y vaquillona con garantía de preñez a '+f$(CG.vaqPren)+' ('+FCG+'); las vacías, a faena a '+f$(MG.vaquillona)+'/kg ('+FMG+'). Entore, tacto y venta preñada: ~6 meses.',
-    v:{cargaR:1.2,cab:50,pc:270,pCkg:CG.vaquillona,meses:6,gdp:0.35,mort:1,modoVenta:'prenada',ms:3,entoreObj:280,pr:82,pPren:CG.vaqPren,pVac:MG.vaquillona,fl:24000,san:40000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
-  novillo:{txt:'Novillo de invernada (novillitos de 380–400 kg) a '+f$(CG.novilloInv)+'/kg ('+FCG+') y novillo gordo a '+f$(MG.novillo)+'/kg ('+FMG+'). Terminación a campo de ~5 meses.',
-    v:{cargaR:1,cab:35,pc:390,pCkg:CG.novilloInv,meses:5,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:MG.novillo,fl:34000,san:20000,mob:25000,alKg:2000}},
+  ternero:{txt:'Ternero de 180 kg a '+f$(pkg('terneros',180))+'/kg y novillito de ~305 kg a '+f$(pkg('novillitos',pfDe(180,0.68,6)))+'/kg ('+FCG+'). El precio por kilo sigue al peso: si cambiás el peso de compra o el final, se ajusta solo. Recría a campo de ~6 meses a 0,68 kg/día.',
+    v:{cargaR:1.5,cab:80,pc:180,pCkg:pkg('terneros',180),meses:6,gdp:0.68,mort:1.5,modoVenta:'kilo',pVkg:pkg('novillitos',pfDe(180,0.68,6)),fl:15000,san:30000,mob:30000,alKg:2000}},
+  ternera:{txt:'Ternera de 170 kg a '+f$(pkg('terneras',170))+'/kg y vaquillona con garantía de preñez a '+f$(CG.vaqPren)+' ('+FCG+'); las vacías, a faena como vaquillonas a '+f$(MG.vaquillona)+'/kg ('+FMG+'). Recría hasta el entore, servicio, tacto y venta preñada: ~11 meses (llega al entore con ~290 kg).',
+    v:{cargaR:1.5,cab:80,pc:170,pCkg:pkg('terneras',170),meses:11,gdp:0.5,mort:1.5,modoVenta:'prenada',ms:3,entoreObj:280,pr:80,pPren:CG.vaqPren,pVac:MG.vaquillona,fl:15000,san:45000,serv:60000,tacto:6000,mob:50000,alKg:2000}},
+  novillito:{txt:'Novillito de 310 kg a '+f$(pkg('novillitos',310))+'/kg ('+FCG+') y novillito gordo a '+f$(MG.novillito)+'/kg ('+FMG+'). Terminación a campo hasta ~420 kg.',
+    v:{cargaR:1.2,cab:45,pc:310,pCkg:pkg('novillitos',310),meses:6,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:MG.novillito,fl:27000,san:25000,mob:30000,alKg:2000}},
+  vaquillona:{txt:'Vaquillona de 270 kg a '+f$(pkg('vaquillonas',270))+'/kg y vaquillona con garantía de preñez a '+f$(CG.vaqPren)+' ('+FCG+'); las vacías, a faena a '+f$(MG.vaquillona)+'/kg ('+FMG+'). Entore, tacto y venta preñada: ~6 meses.',
+    v:{cargaR:1.2,cab:50,pc:270,pCkg:pkg('vaquillonas',270),meses:6,gdp:0.35,mort:1,modoVenta:'prenada',ms:3,entoreObj:280,pr:82,pPren:CG.vaqPren,pVac:MG.vaquillona,fl:24000,san:40000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
+  novillo:{txt:'Novillo de invernada de 390 kg a '+f$(pkg('novillitos',390))+'/kg ('+FCG+') y novillo gordo a '+f$(MG.novillo)+'/kg ('+FMG+'). Terminación a campo de ~5 meses.',
+    v:{cargaR:1,cab:35,pc:390,pCkg:pkg('novillitos',390),meses:5,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:MG.novillo,fl:34000,san:20000,mob:25000,alKg:2000}},
   vaca:{txt:'Vaca flaca para engordar a '+f$(MG.vacaConserva)+'/kg (vaca conserva buena) y vaca gorda a '+f$(MG.vaca)+'/kg ('+FMG+'). Engorde a campo de ~4 meses.',
     v:{cargaR:0.9,cab:35,precioPor:'kg',pCkg:MG.vacaConserva,pc:400,meses:4,gdp:0.7,mort:1,modoVenta:'kilo',pVkg:MG.vaca,fl:34000,san:15000,mob:20000,alKg:1300,alMes:0}},
-  vacaPren:{txt:'Vaca nueva con garantía de preñez a '+f$(CG.vacaNuevaPren)+'/cab; al año se vende como vaca de medio uso preñada a '+f$(CG.vacaMedioPren)+'; ternero a '+f$(CG.terneroDest)+'/kg ('+FCG+'); vacías a faena a '+f$(MG.vaca)+'/kg ('+FMG+'). Pare, cría, destete y se vuelve a preñar: ~10 meses.',
+  vacaPren:{txt:'Vaca nueva con garantía de preñez a '+f$(CG.vacaNuevaPren)+'/cab; al año se vende como vaca de medio uso preñada a '+f$(CG.vacaMedioPren)+'; ternero de destete a '+f$(CG.terneroDest)+'/kg ('+FCG+'); vacías a faena a '+f$(MG.vaca)+'/kg ('+FMG+'). Pare, cría, destete y se vuelve a preñar: ~10 meses.',
     v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:CG.vacaNuevaPren,pc:430,meses:10,gdp:0.03,mort:1,modoVenta:'prenada',ms:3,pr:85,pPren:CG.vacaMedioPren,pVac:MG.vaca,conCria:true,dest:90,pdes:170,pTer:CG.terneroDest,fl:34000,alKg:0,alMes:15000,san:35000,serv:30000,tacto:6000,mob:45000}},
-  vacaCria:{txt:'Vaca nueva con cría al pie a '+f$(CG.vacaNuevaCria)+'/cab y ternero a '+f$(CG.terneroDest)+'/kg ('+FCG+'); vaca a faena a '+f$(MG.vaca)+'/kg ('+FMG+'). Se desteta el ternero y se venden los dos: ~5 meses.',
+  vacaCria:{txt:'Vaca nueva con cría al pie a '+f$(CG.vacaNuevaCria)+'/cab y ternero de destete a '+f$(CG.terneroDest)+'/kg ('+FCG+'); vaca a faena a '+f$(MG.vaca)+'/kg ('+FMG+'). Se desteta el ternero y se venden los dos: ~5 meses.',
     v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:CG.vacaNuevaCria,pc:430,meses:5,gdp:0.03,mort:1,modoVenta:'kilo',pVkg:MG.vaca,conCria:true,dest:95,pdes:170,pTer:CG.terneroDest,fl:34000,alKg:0,alMes:15000,san:30000,mob:25000}},
-  torito_rep:{txt:'Toritos para reproductores: se venden a $5.668.304 por cabeza los que califican (toro PC Angus, promedio de remates 2025, Asociación Argentina de Angus); se toma que califica el 70 % y el resto va a faena como MEJ a '+f$(MG.mej)+'/kg ('+FMG+'). Compra al precio del ternero, '+f$(CG.ternero)+'/kg ('+FCG+'); si son de cabaña, cuestan más. Incluye revisación y registros en otros gastos.',
-    v:{cargaR:1.3,cab:30,pc:215,pCkg:CG.ternero,meses:18,gdp:0.6,mort:2,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,calif:70,pDesc:MG.mej,fl:15000,san:60000,mob:60000,otros:120000,alKg:2000}},
-  torito_fae:{txt:'Toritos a faena: ternero entero a '+f$(CG.ternero)+'/kg ('+FCG+') y venta como MEJ (machos enteros jóvenes) a '+f$(MG.mej)+'/kg ('+FMG+'). Recría a campo de ~12 meses. Si los castrás, evaluálo como recría de terneros.',
-    v:{cargaR:1.3,cab:40,pc:215,pCkg:CG.ternero,meses:12,gdp:0.7,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:MG.mej,fl:15000,san:30000,mob:40000,otros:0,alKg:2000}},
+  torito_rep:{txt:'Toritos para reproductores: se venden a $5.668.304 por cabeza los que califican (toro PC Angus, promedio de remates 2025, Asociación Argentina de Angus); se toma que califica el 70 % y el resto va a faena como MEJ a '+f$(MG.mej)+'/kg ('+FMG+'). Compra al precio del ternero de 180 kg, '+f$(pkg('terneros',180))+'/kg ('+FCG+'); si son de cabaña, cuestan más. Incluye revisación y registros en otros gastos.',
+    v:{cargaR:1.3,cab:30,pc:180,pCkg:pkg('terneros',180),meses:18,gdp:0.6,mort:2,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,calif:70,pDesc:MG.mej,fl:15000,san:60000,mob:60000,otros:120000,alKg:2000}},
+  torito_fae:{txt:'Toritos a faena: ternero entero de 180 kg a '+f$(pkg('terneros',180))+'/kg ('+FCG+') y venta como MEJ (machos enteros jóvenes) a '+f$(MG.mej)+'/kg ('+FMG+'). Recría a campo de ~12 meses. Si los castrás, evaluálo como recría de terneros.',
+    v:{cargaR:1.3,cab:40,pc:180,pCkg:pkg('terneros',180),meses:12,gdp:0.7,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:MG.mej,fl:15000,san:30000,mob:40000,otros:0,alKg:2000}},
   toro_rep:{txt:'Toros para reproductores: venta a $5.668.304 por cabeza (toro PC Angus, promedio de remates 2025); se toma que califica el 95 % y el resto va a faena a '+f$(MG.toro)+'/kg ('+FMG+'). Compra de toros jóvenes por cabeza: estimada. Incluye revisación en otros gastos.',
     v:{cargaR:0.8,cab:20,pc:600,precioPor:'cab',pCcab:4500000,meses:6,gdp:0.4,mort:1,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,calif:95,pDesc:MG.toro,fl:40000,san:40000,mob:30000,otros:80000,alKg:2000}},
   toro_fae:{txt:'Toros a faena: toro a '+f$(MG.toro)+'/kg ('+FMG+'). Toro comprado flaco y terminado a campo en ~3 meses; precio de compra estimado ~10 % por debajo del toro gordo.',
     v:{cargaR:0.8,cab:30,pc:600,pCkg:Math.round(MG.toro*0.9),meses:3,gdp:0.8,mort:1,modoVenta:'kilo',ventaPor:'kg',pVkg:MG.toro,fl:40000,san:15000,mob:20000,otros:0,alKg:2000}},
-  mixto:{txt:'Jaula mixta: terneros de 200–230 kg a '+f$(CG.ternero)+'/kg y terneras de 180–200 kg a '+f$(CG.ternera)+'/kg; los machos se venden como novillitos a '+f$(CG.novillito)+'/kg y las terneras como vaquillonas a '+f$(CG.vaquillona)+'/kg, o entoradas y preñadas a '+f$(CG.vaqPren)+' ('+FCG+'). Recría a campo de ~5 meses; si las terneras se venden preñadas, ~9 meses.',
-    v:{cargaR:1.5,cab:48,cabM:25,cabH:23,pcM:215,pcH:190,pc:215,pCkgM:CG.ternero,pCkgH:CG.ternera,pCkg:CG.ternero,precioPor:'kg',meses:5,gdp:0.68,gdpH:0.5,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:CG.novillito,pVkgH:CG.vaquillona,destH:'kilo',mesesH:9,ms:3,entoreObj:280,pr:80,pPren:CG.vaqPren,pVac:MG.vaquillona,fl:15000,san:30000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
+  mixto:{txt:'Jaula mixta: terneros de 180 kg a '+f$(pkg('terneros',180))+'/kg y terneras de 170 kg a '+f$(pkg('terneras',170))+'/kg; los machos se venden como novillitos y las terneras como vaquillonas, al precio de su peso final, o entoradas y preñadas a '+f$(CG.vaqPren)+' ('+FCG+'). Recría a campo de ~6 meses; si las terneras se venden preñadas, ~11 meses.',
+    v:{cargaR:1.5,cab:48,cabM:25,cabH:23,pcM:180,pcH:170,pc:180,pCkgM:pkg('terneros',180),pCkgH:pkg('terneras',170),pCkg:pkg('terneros',180),precioPor:'kg',meses:6,gdp:0.68,gdpH:0.5,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:pkg('novillitos',pfDe(180,0.68,6)),pVkgH:pkg('vaquillonas',pfDe(170,0.5,6)),destH:'kilo',mesesH:11,ms:3,entoreObj:280,pr:80,pPren:CG.vaqPren,pVac:MG.vaquillona,fl:15000,san:30000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
   otro:{txt:'Sin precios de referencia para esta categoría: cargá los tuyos. Los costos tienen valores sugeridos generales.',v:{}}
 };
 const KEYDEF={...EMPTY};
@@ -1670,7 +1690,8 @@ L.pCkgM={g:()=>st.pCkgM,d:0,s:v=>{ st.pCkgM=v; st.pCkg=v; st.precioPor='kg'; },c
 // en cría, comisión, gastos de venta, cambio de precio y tasa usan los mismos datos que el resto
 const alias=(id,k,d)=>{L[id]={g:()=>st[k],s:v=>{st[k]=v},clear:()=>{st[k]=null},d};};
 L.carga={g:()=>CARGA(st),s:v=>{st.carga=v;},clear:()=>{st.carga=null;st.ha=null;},d:2};
-L.ha={g:()=>HA(st),s:v=>{ if(st.vacas>0&&v>0){ st.carga=st.vacas/v; } else st.ha=v; },clear:()=>{st.carga=null;st.ha=null;},d:0};
+// con la carga fija, las hectáreas definen cuántas vacas entran
+L.ha={g:()=>HA(st),s:v=>{ const c=CARGA(st); if(c>0){ st.vacas=Math.max(0,Math.round(v*c)); st.carga=c; } else if(st.vacas>0&&v>0){ st.carga=st.vacas/v; } else st.ha=v; },clear:()=>{st.ha=null;},d:0};
 L.nToros={g:()=>{ const t=isNum(st.toros)?st.toros:TOROS_REF; return st.vacas>0&&t>0?Math.max(1,Math.round(st.vacas*t/100)):0; },dep:['vacas'],s:v=>{ if(st.vacas>0) st.toros=Math.max(0,v)/st.vacas*100; },clear:()=>{st.toros=null},d:0};
 alias('arrR','arrHa',0); alias('cvC','cv',1); alias('gvC','gv',0); alias('varC','varVenta',1); alias('tasaC','tasa',1);
 const pfOf=()=>tramos(st).pf;
@@ -1712,7 +1733,7 @@ L.gv={g:()=>isNum(st.gv)?st.gv*(st.vista==='jaula'?(st.cab||0)*(1-(st.mort||0)/1
 L.compraT={g:()=>{const c=st.precioPor==='cab'?st.pCcab:(isNum(st.pCkg)&&isNum(st.pc)?st.pCkg*st.pc*(1-(st.dC||0)/100):null); return isNum(c)?c*fac():null;},
   s:v=>{const f=fac(); if(!(f>0))return; const c=v/f; if(st.precioPor==='cab'||!(st.pc>0)){st.precioPor='cab';st.pCcab=c;} else st.pCkg=c/st.pc;},clear:()=>{st.pCkg=null;st.pCcab=null;},d:0};
 
-const KEYS={pcM:['pcM','pc'],pCkgM:['pCkgM','pCkg'],arrR:['arrHa'],gdp:['gdp','gdpVer','gdpOto','gdpInv','gdpPri'],cvC:['cv'],gvC:['gv'],varC:['varVenta'],tasaC:['tasa'],pCkg:['pCkg','pCcab'],pCcab:['pCkg','pCcab'],compraT:['pCkg','pCcab'],pVkg:['pVkg','pVcab'],pVcab:['pVkg','pVcab'],pf:['gdp'],kgc:['cab'],nToros:['toros'],ha:['carga'],pPrenKg:['pPren']};
+const KEYS={pcM:['pcM','pc'],pCkgM:['pCkgM','pCkg'],arrR:['arrHa'],gdp:['gdp','gdpVer','gdpOto','gdpInv','gdpPri'],cvC:['cv'],gvC:['gv'],varC:['varVenta'],tasaC:['tasa'],pCkg:['pCkg','pCcab'],pCcab:['pCkg','pCcab'],compraT:['pCkg','pCcab'],pVkg:['pVkg','pVcab'],pVcab:['pVkg','pVcab'],pf:['gdp'],kgc:['cab'],nToros:['toros'],ha:['vacas','carga'],pPrenKg:['pPren']};
 const autoSet=()=>new Set(st.auto||[]);
 function unAuto(keys){ if(!st.auto) return; const a=autoSet(); keys.forEach(k=>a.delete(k)); st.auto=[...a]; }
 function fmtIn(id){ if((L[id].dep||[]).some(k=>!isNum(st[k]))) return ''; const v=L[id].g(); return isNum(v)?nf(v,L[id].d):''; }
@@ -1725,6 +1746,21 @@ function refresh(except){
 const LIMS={mort:[0,50,'%'],mortV:[0,50,'%'],pr:[0,100,'%'],pcria:[0,100,'%'],dest:[0,100,'%'],destC:[0,100,'%'],machos:[0,100,'%'],desc:[0,60,'%'],calif:[0,100,'%'],
   cc:[0,20,'%'],cv:[0,20,'%'],dC:[0,15,'%'],dV:[0,15,'%'],varVenta:[-90,300,'%'],inf:[0,30,'% por mes'],meses:[0,60,'meses'],mesesF:[0,60,'meses'],ms:[0,12,'meses'],
   capPct:[0,100,'%'],capGs:[0,100,'%'],gdp:[0,3,'kg/día'],gdpH:[0,3,'kg/día'],mesesH:[0,60,'meses'],gdpVer:[0,3,'kg/día'],gdpOto:[0,3,'kg/día'],gdpInv:[0,3,'kg/día'],gdpPri:[0,3,'kg/día'],gdpF:[0,3,'kg/día'],cargaR:[0,20,'cab/ha'],carga:[0,10,'vacas/ha']};
+// Si cambia un peso, los precios por kilo que siguen siendo sugeridos se recalculan con el precio de ese kilaje.
+const PESOS=['pc','pcM','pcH','kgc','meses','mesesH','mesesF','gdp','gdpH','gdpF','pf','gdpVer','gdpOto','gdpInv','gdpPri','pdes','pdesC','mesCompra'];
+function autoPrecios(){
+  if(st.tipo==='cria'){ const a=autoSet(), w=st.pdesC;
+    if(a.has('pTro')&&isNum(w)) st.pTro=pkg('terneros',w); if(a.has('pTra')&&isNum(w)) st.pTra=pkg('terneras',w); return; }
+  const a=autoSet(), set=(k,v)=>{ if(a.has(k)&&isNum(v)) st[k]=v; }, c=st.cat;
+  if(st.conCria&&isNum(st.pdes)) set('pTer',pkg('terneros',st.pdes));
+  if(c==='mixto'){ set('pCkgM',pkg('terneros',st.pcM)); if(a.has('pCkgM')) st.pCkg=st.pCkgM; set('pCkgH',pkg('terneras',st.pcH));
+    const R=model(st); if(R.M) set('pVkg',pkg('novillitos',R.M.pf)); if(R.H&&st.destH!=='pren') set('pVkgH',pkg('vaquillonas',R.H.pf)); return; }
+  const tb={ternero:'terneros',torito:'terneros',ternera:'terneras',novillito:'novillitos',novillo:'novillitos',vaquillona:'vaquillonas'}[c];
+  if(tb&&st.precioPor!=='cab') set('pCkg',pkg(tb,st.pc));
+  const pf=tramos(st).pf;
+  if(c==='ternero'&&st.ventaPor!=='cab') set('pVkg',pkg('novillitos',pf));
+  if(c==='ternera'&&(st.modoVenta||'kilo')==='kilo'&&st.ventaPor!=='cab') set('pVkg',pkg('vaquillonas',pf));
+}
 function pintaFijo(){ $('f-gdp').setAttribute('aria-pressed',st.fijo==='gdp'); $('f-peso').setAttribute('aria-pressed',st.fijo==='peso'); }
 document.querySelectorAll('input.in').forEach(el=>{
   if(!L[el.id]) return;
@@ -1737,13 +1773,13 @@ document.querySelectorAll('input.in').forEach(el=>{
     el.classList.remove('bad');
     if(el.id==='pf'&&st.fijo!=='peso'){ st.fijo='peso'; pintaFijo(); }
     else if(['gdp','gdpVer','gdpOto','gdpInv','gdpPri','gdpF'].includes(el.id)&&st.fijo!=='gdp'){ st.fijo='gdp'; pintaFijo(); }
-    L[el.id].s(v); unAuto(Object.keys(st).filter(k=>st[k]!==before[k]).concat(KEYS[el.id]||[el.id])); for(const k in st){ if(typeof st[k]==='number'&&!isFinite(st[k])) st[k]=null; } calc(el); save();});
+    L[el.id].s(v); unAuto(Object.keys(st).filter(k=>st[k]!==before[k]).concat(KEYS[el.id]||[el.id])); if(PESOS.includes(el.id)) autoPrecios(); for(const k in st){ if(typeof st[k]==='number'&&!isFinite(st[k])) st[k]=null; } calc(el); save();});
   el.addEventListener('blur',()=>{ el.classList.remove('bad'); el.value=fmtIn(el.id); });
   el.addEventListener('focus',()=>el.select());
   el.addEventListener('keydown',e=>{if(e.key==='Enter')el.blur();});
 });
 const selM=$('mesCompra'); MES.forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m[0].toUpperCase()+m.slice(1);selM.appendChild(o);});
-selM.addEventListener('change',()=>{st.mesCompra=+selM.value; calc(); save();});
+selM.addEventListener('change',()=>{st.mesCompra=+selM.value; autoPrecios(); calc(); save();});
 function fillAnios(){ const sel=$('anioCompra'), y=anioDe(st), lo=Math.min(YEAR0-1,y), hi=Math.max(YEAR0+4,y);
   if(sel.dataset.r===lo+'-'+hi) return; sel.dataset.r=lo+'-'+hi; sel.innerHTML=''; for(let a=lo;a<=hi;a++){ const o=document.createElement('option'); o.value=a; o.textContent=a; sel.appendChild(o);} }
 $('anioCompra').addEventListener('change',()=>{ st.anioCompra=+$('anioCompra').value; calc(); save(); });
@@ -1804,10 +1840,13 @@ function applyUI(){
   document.body.classList.toggle('tipo-cria',esCria); document.body.classList.toggle('tipo-inv',st.tipo==='invernada'); document.body.classList.toggle('tipo-recria',!esCria&&st.tipo!=='invernada');
   pr('tp-cria',esCria); pr('tp-recria',st.tipo==='recria'||!st.tipo); pr('tp-inv',st.tipo==='invernada');
   pr('sy-campo',sis==='campo'); pr('sy-feed',sis==='feed'); pr('sy-mix',sis==='mix');
-  $('sisL').hidden=esCria; $('sisSeg').hidden=esCria;
+  // la recría es siempre a campo: Feedlot y Mix quedan solo para invernada
+  const sinSis=esCria||st.tipo!=='invernada';
+  if(!esCria&&st.tipo!=='invernada'&&(st.sistema||'campo')!=='campo'){ if(editing){ setSis('campo'); return; } st.sistema='campo'; }
+  $('sisL').hidden=sinSis; $('sisSeg').hidden=sinSis;
   $('tipoNote').textContent= esCria ? 'Cría: tenés un rodeo de vacas propio y vendés los terneros al destete y las vacas de descarte. El resultado es por año.'
     : st.tipo==='invernada' ? 'Invernada / engorde: comprás hacienda recriada o flaca y la terminás para faena, '+SISTEMAS[sis]+'.'
-    : 'Recría: comprás terneros destetados y los hacés crecer hasta novillito o vaquillona, '+SISTEMAS[sis]+'.';
+    : 'Recría: comprás terneros destetados y los hacés crecer a campo hasta novillito o vaquillona.';
   const mixto=st.cat==='mixto'&&!esCria, mPren=mixto&&st.destH==='pren';
   if(mixto&&(st.modoVenta!=='kilo'||st.conCria)){ st.modoVenta='kilo'; st.conCria=false; }
   document.querySelectorAll('[data-show],[data-sis],[data-est],[data-mix],[data-nomix],[data-mixpren],[data-mixkilo]').forEach(el=>{
@@ -2048,13 +2087,26 @@ function openZoom(id){
   const sec=$(id); if(!sec||zoomed) return;
   zoomMark=document.createComment('zoom'); sec.parentNode.insertBefore(zoomMark,sec);
   $('zoomPanel').appendChild(sec); zoomed=sec;
-  $('zoomWrap').hidden=false; document.body.classList.add('zoomed'); $('zoomClose').focus();
+  $('zoomWrap').hidden=false; document.body.classList.add('zoomed'); $('zoomClose').focus(); paintZoomNav();
 }
-function closeZoom(){
+function closeZoom(keep){
   if(!zoomed) return; zoomMark.parentNode.insertBefore(zoomed,zoomMark); zoomMark.remove();
-  const id=zoomed.id; zoomed=null; $('zoomWrap').hidden=true; document.body.classList.remove('zoomed');
+  const id=zoomed.id; zoomed=null; if(keep) return; $('zoomWrap').hidden=true; document.body.classList.remove('zoomed');
   const b=document.querySelector('.zoom-btn[data-zoom="'+id+'"]'); if(b) b.focus();
 }
+// orden de los cuadros (el de la página); solo los que se ven en este negocio
+const ZOOM_ORDER=[...document.querySelectorAll('.zoom-btn')].map(b=>b.dataset.zoom);
+const zoomVisibles=()=>ZOOM_ORDER.filter(id=>{ const s=$(id); if(!s) return false; if(s===zoomed) return true; return !s.hidden&&s.offsetParent!==null&&getComputedStyle(s).display!=='none'; });
+const zoomName=id=>{ const h=$(id)&&$(id).querySelector('.sec-head h2'); return h?h.textContent.trim():''; };
+function paintZoomNav(){ if(!zoomed) return; const v=zoomVisibles(), i=v.indexOf(zoomed.id), pv=v[i-1], nx=v[i+1];
+  $('zoomPrev').hidden=!pv; $('zoomNext').hidden=!nx;
+  if(pv){ $('zoomPrevL').textContent=zoomName(pv); $('zoomPrev').setAttribute('aria-label','Cuadro anterior: '+zoomName(pv)); }
+  if(nx){ $('zoomNextL').textContent=zoomName(nx); $('zoomNext').setAttribute('aria-label','Cuadro siguiente: '+zoomName(nx)); } }
+function zoomGo(d){ if(!zoomed) return; const v=zoomVisibles(), i=v.indexOf(zoomed.id), to=v[i+d]; if(!to) return;
+  closeZoom(true); openZoom(to); $('zoomWrap').scrollTop=0; }
+$('zoomPrev').addEventListener('click',()=>zoomGo(-1)); $('zoomNext').addEventListener('click',()=>zoomGo(1));
+document.addEventListener('keydown',e=>{ if(!zoomed) return; const t=e.target; if(t&&(t.tagName==='INPUT'||t.tagName==='SELECT'||t.tagName==='TEXTAREA')) return;
+  if(e.key==='ArrowRight') zoomGo(1); else if(e.key==='ArrowLeft') zoomGo(-1); });
 document.querySelectorAll('.zoom-btn').forEach(b=>b.addEventListener('click',()=>openZoom(b.dataset.zoom)));
 document.querySelectorAll('.board .sec-head h2').forEach(h=>h.addEventListener('click',()=>{ if(document.body.classList.contains('cuadros')){ const sec=h.closest('section'); if(sec&&sec.id!=='veredicto') openZoom(sec.id);} }));
 $('zoomClose').addEventListener('click',closeZoom);
@@ -2267,12 +2319,12 @@ function renderFlujo(R){
 
 
 // ================= aumento por estación y plan sanitario =================
-$('es-par').addEventListener('click',()=>{ if(!st.estac) return; const T=tramos(st); st.gdp=T.gC; st.estac=false; unAuto(['estac']); applyUI(); save(); });
+$('es-par').addEventListener('click',()=>{ if(!st.estac) return; const T=tramos(st); st.gdp=T.gC; st.estac=false; unAuto(['estac']); autoPrecios(); applyUI(); save(); });
 $('es-est').addEventListener('click',()=>{ if(st.estac) return; const g=isNum(st.gdp)?st.gdp:0.6, T0=tramos(st);
   st.estac=true; estForma();
   // se ajusta la forma para que el promedio del período sea el aumento que ya tenías: no cambia el peso final
   const a=tramos(st).gC; if(a>0) ['gdpVer','gdpOto','gdpInv','gdpPri'].forEach(k=>{ st[k]=Math.round(st[k]*g/a*100)/100; });
-  st.gdp=g; applyUI(); save(); });
+  st.gdp=g; autoPrecios(); applyUI(); save(); });
 const SAN_BASE=[['Aftosa',2,1400],['Clostridiales',2,1200],['Queratoconjuntivitis',1,1500],['Antiparasitario',3,2500],['Vitaminas y minerales',2,1500],['Brucelosis (hembras)',1,1800],['Veterinario',1,10000]];
 const HEMBRAS=['ternera','vaquillona','vaca','vacaPren','vacaCria'];
 function sanTotal(p){ return (p||[]).reduce((a,x)=>a+(isNum(x[1])?x[1]:0)*(isNum(x[2])?x[2]:0),0); }
