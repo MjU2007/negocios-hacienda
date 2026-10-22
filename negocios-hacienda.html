@@ -2109,7 +2109,7 @@ document.addEventListener('keydown',e=>{ if(!zoomed) return; const t=e.target; i
   if(e.key==='ArrowRight') zoomGo(1); else if(e.key==='ArrowLeft') zoomGo(-1); });
 document.querySelectorAll('.zoom-btn').forEach(b=>b.addEventListener('click',()=>openZoom(b.dataset.zoom)));
 document.querySelectorAll('.board .sec-head h2').forEach(h=>h.addEventListener('click',()=>{ if(document.body.classList.contains('cuadros')){ const sec=h.closest('section'); if(sec&&sec.id!=='veredicto') openZoom(sec.id);} }));
-$('zoomClose').addEventListener('click',closeZoom);
+$('zoomClose').addEventListener('click',()=>closeZoom());
 $('zoomWrap').addEventListener('click',e=>{ if(e.target===$('zoomWrap')) closeZoom(); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeZoom(); });
 const LAYKEY='recria-vista-v1';
