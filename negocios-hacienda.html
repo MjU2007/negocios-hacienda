@@ -295,7 +295,7 @@ body.cuadros .board .sec-head h2{cursor:zoom-in}
 .zoom-nav small{font-size:.66rem;line-height:1.15;color:var(--muted);text-align:center;padding:0 4px;max-width:72px;min-height:2.3em;display:flex;align-items:center;justify-content:center}
 .zoom-nav.prev{left:16px}.zoom-nav.next{right:16px}
 .zoom-nav:hover{background:var(--surface)}.zoom-nav:focus-visible{outline:3px solid var(--input-line)}
-.zoom-nav[hidden]{display:none}
+.zoom-nav[hidden],.zoomnavs[hidden]{display:none}
 @media (max-width:900px){.zoom-nav{top:auto;bottom:14px;transform:none;flex-direction:row;width:auto;height:auto;padding:8px 14px}.zoom-nav small{min-height:0}.zoom-nav span{font-size:1.6rem}.zoom-nav small{max-width:none;font-size:.78rem}}
 .zoompanel{position:relative;background:var(--bg);border-radius:18px;width:min(980px,100%);padding:22px 24px 28px;box-shadow:0 30px 80px -20px rgba(0,0,0,.5);animation:zin .18s ease-out}
 .zoompanel section{font-size:1.08rem}
@@ -1287,10 +1287,12 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
 
 </div>
 
-<div class="zoomwrap" id="zoomWrap" hidden role="dialog" aria-modal="true" aria-label="Cuadro ampliado">
+<div class="zoomnavs" id="zoomNavs" hidden>
   <button type="button" class="zoom-nav prev" id="zoomPrev" aria-label="Cuadro anterior"><span aria-hidden="true">‹</span><small id="zoomPrevL"></small></button>
-  <div class="zoompanel" id="zoomPanel"><button type="button" class="btn zoom-close" id="zoomClose">✕ Cerrar</button></div>
   <button type="button" class="zoom-nav next" id="zoomNext" aria-label="Cuadro siguiente"><span aria-hidden="true">›</span><small id="zoomNextL"></small></button>
+</div>
+<div class="zoomwrap" id="zoomWrap" hidden role="dialog" aria-modal="true" aria-label="Cuadro ampliado">
+  <div class="zoompanel" id="zoomPanel"><button type="button" class="btn zoom-close" id="zoomClose">✕ Cerrar</button></div>
 </div>
 
 <script>
@@ -2087,11 +2089,11 @@ function openZoom(id){
   const sec=$(id); if(!sec||zoomed) return;
   zoomMark=document.createComment('zoom'); sec.parentNode.insertBefore(zoomMark,sec);
   $('zoomPanel').appendChild(sec); zoomed=sec;
-  $('zoomWrap').hidden=false; document.body.classList.add('zoomed'); $('zoomClose').focus(); paintZoomNav();
+  $('zoomWrap').hidden=false; $('zoomNavs').hidden=false; document.body.classList.add('zoomed'); $('zoomClose').focus(); paintZoomNav();
 }
 function closeZoom(keep){
   if(!zoomed) return; zoomMark.parentNode.insertBefore(zoomed,zoomMark); zoomMark.remove();
-  const id=zoomed.id; zoomed=null; if(keep) return; $('zoomWrap').hidden=true; document.body.classList.remove('zoomed');
+  const id=zoomed.id; zoomed=null; if(keep) return; $('zoomWrap').hidden=true; $('zoomNavs').hidden=true; document.body.classList.remove('zoomed');
   const b=document.querySelector('.zoom-btn[data-zoom="'+id+'"]'); if(b) b.focus();
 }
 // orden de los cuadros (el de la página); solo los que se ven en este negocio
