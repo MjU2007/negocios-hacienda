@@ -44,6 +44,18 @@ ${RCATS.map(c=>'    '+c+':'+robj(rangos[c])).join(',\n')}
 };
 `+B;
 html=html.slice(0,i)+bloque+html.slice(j+B.length);
+// historial semanal (pestaña Precios): se agrega la semana nueva (o se reemplaza si ya estaba)
+{ const HA='/*HISTORIAL:INICIO*/', HB='/*HISTORIAL:FIN*/', hi=html.indexOf(HA), hj=html.indexOf(HB);
+  if(hi<0||hj<0) fail('no encuentro el bloque HISTORIAL en la página');
+  const hc={}; vm.runInNewContext(html.slice(hi,hj).replace(HA,'').replace('const HIST=','HIST='),hc); let hist=hc.HIST||[];
+  const m=nuevo.semana.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})\s*$/); if(!m) fail('no entiendo la fecha de la semana: '+nuevo.semana);
+  const fin=m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
+  hist=hist.filter(e=>e.semana!==nuevo.semana&&e.fin!==fin);
+  hist.push({semana:nuevo.semana,fin,magFecha:nuevo.magFecha,rangos,cg:nuevo.cg,mag:nuevo.mag});
+  hist.sort((a,b)=>a.fin<b.fin?-1:1); hist=hist.slice(-104);
+  const ent=e=>"  {semana:"+q(e.semana)+", fin:"+q(e.fin)+", magFecha:"+q(e.magFecha)+(e.est?", est:1":"")+",\n   rangos:{"+RCATS.map(c=>c+':'+robj(e.rangos[c]||{})).join(', ')+"},\n   cg:"+obj(e.cg,CGK)+", mag:"+obj(e.mag,MGK)+"}";
+  const hb=HA+"\n// Historial semanal de precios (lo completa la tarea de los viernes). est:1 = semana calculada con la variación publicada.\nconst HIST=[\n"+hist.map(ent).join(',\n')+"\n];\n"+HB;
+  html=html.slice(0,hi)+hb+html.slice(hj+HB.length); }
 const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
 try{ scripts.forEach(c=>new vm.Script(c)); }catch(e){ fail('la página quedaría con un error: '+e.message); }
 fs.writeFileSync(HTML,html);

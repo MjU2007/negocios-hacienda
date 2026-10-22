@@ -674,6 +674,44 @@ table.cmp tr.grp td{background:color-mix(in srgb,var(--hembra) 9%,var(--surface)
 .ini-ico{background:linear-gradient(135deg,color-mix(in srgb,var(--c-recria) 22%,transparent),color-mix(in srgb,var(--c-inv) 22%,transparent))!important}
 table.cmp tbody tr.grp:nth-child(n) td{background:linear-gradient(90deg,color-mix(in srgb,var(--c-inv) 18%,var(--surface)),var(--surface))!important}
 @media print{ .wrap,body{background:#fff!important} .board>section .sec-head{background:none!important;margin:0!important;padding:0 0 6px!important} }
+/* ===== precios ===== */
+.vpre[hidden]{display:none}
+#precios{display:flex;flex-direction:column;gap:18px;margin-top:8px}
+.pre-head{display:block}
+.pre-head h2{margin:0;font-size:1.6rem}
+.pre-head .note{margin:4px 0 0}
+.pre-src{font-size:.85rem}
+.pre-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pre-kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.pre-kpi .k{font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:.76rem;color:var(--muted)}
+.pre-kpi .v{font-family:var(--display);font-weight:700;font-size:1.55rem;font-variant-numeric:tabular-nums;color:var(--ink)}
+.pre-kpi .v small{font-size:.8rem;font-weight:500;color:var(--muted)}
+.pre-kpi .d{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.pre-kpi .d b{color:var(--ink);font-weight:600}
+.pre-kpi.rel{background:color-mix(in srgb,var(--tc,#2F7A3B) 8%,var(--surface));border-color:color-mix(in srgb,var(--tc,#2F7A3B) 35%,var(--line))}
+.pre-charts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.pre-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.pre-ch{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pre-ch h3{margin:0;font-size:1.05rem}
+.pre-ch select{font:inherit;padding:5px 8px;border-radius:7px;border:1px solid var(--line);background:var(--bg);color:var(--ink);max-width:100%}
+.pre-chart{position:relative;min-height:240px}
+.pre-chart svg{display:block;width:100%;height:240px;overflow:visible}
+.pre-chart .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:.8rem;padding:6px 9px;border-radius:7px;white-space:nowrap;transform:translate(-50%,-115%);box-shadow:0 6px 18px -8px rgba(0,0,0,.4)}
+.pre-chart .tip[hidden]{display:none}
+.pre-card>.note{margin:0;font-size:.85rem}
+.pre-tables{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}
+.pre-col{display:flex;flex-direction:column;gap:14px}
+.pre-col>.pre-t:last-child{flex:1}
+.pre-t{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.pre-t h3{margin:2px 0 8px;font-size:1.02rem}
+.pre-t table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.pre-t th,.pre-t td{padding:7px 4px;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent);text-align:right;font-size:.92rem}
+.pre-t th{font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:.72rem;color:var(--muted);font-weight:600}
+.pre-t th:first-child,.pre-t td:first-child{text-align:left}
+.pre-t tr:last-child td{border-bottom:0}
+.pre-t td.na{color:var(--muted)}
+@media (max-width:900px){.pre-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.pre-charts,.pre-tables,.pre-head{grid-template-columns:minmax(0,1fr)}.pre-src{text-align:left}}
+@media (max-width:560px){.pre-t{padding:10px 10px}.pre-t td:first-child{white-space:normal}.pre-t th,.pre-t td{padding:6px 3px}.viewtabs{grid-template-columns:repeat(3,minmax(0,1fr))}.pre-kpi .v{font-size:1.25rem}.pre-t th,.pre-t td{font-size:.8rem}}
 /* ===== capitalización ===== */
 .cap-body{display:grid;grid-template-columns:1fr;gap:16px}
 .cap-body[hidden]{display:none}
@@ -791,6 +829,7 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
   <div class="viewtabs" role="tablist" aria-label="Vista">
     <button type="button" role="tab" id="tab-ini" aria-selected="false">Inicio</button>
     <button type="button" role="tab" id="tab-neg" aria-selected="true">Mis negocios</button>
+    <button type="button" role="tab" id="tab-pre" aria-selected="false">Precios</button>
   </div>
   <div class="negbar vneg" role="region" aria-label="Mis negocios">
     <div class="negrow">
@@ -1240,6 +1279,19 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
 
 </div>
 
+<section id="precios" class="vpre" hidden>
+  <div class="pre-head">
+    <div><h2>Precios de la hacienda</h2><p class="note" id="preSub"></p></div>
+    <p class="note pre-src" id="preSrc"></p>
+  </div>
+  <div class="pre-kpis" id="preKpis"></div>
+  <div class="pre-charts">
+    <div class="pre-card"><div class="pre-ch"><h3>Cómo se movió un precio</h3><select id="preSer" aria-label="Precio a graficar"></select></div><div class="pre-chart" id="preChart"></div></div>
+    <div class="pre-card"><div class="pre-ch"><h3>Relación de compra y venta</h3><select id="preRel" aria-label="Relación a graficar"></select></div><div class="pre-chart" id="preRelChart"></div><p class="note" id="preRelNote"></p></div>
+  </div>
+  <p class="note" id="preHistNote"></p>
+  <div class="pre-tables" id="preTables"></div>
+</section>
 <section id="inicio" class="vini" hidden>
   <div class="ini-actions">
     <article class="ini-card ini-new">
@@ -1341,8 +1393,20 @@ const PRECIOS={
   mag:{novillito:4184, vaquillona:3930, novillo:3926, vaca:2892, toro:3399, mej:3835, vacaConserva:2563}
 };
 /*PRECIOS:FIN*/
+/*HISTORIAL:INICIO*/
+// Historial semanal de precios (lo completa la tarea de los viernes). est:1 = semana calculada con la variación publicada.
+const HIST=[
+  {semana:'9 al 15/10/2026', fin:'2026-10-15', magFecha:'16/10/2026', est:1,
+   rangos:{terneros:{'100-130':6145, '130-160':6489, '160-180':6643, '180-200':6310, '200-230':5978, '230-260':5643}, terneras:{'130-160':5974, '160-180':5739, '180-200':5632}, novillitos:{'260-280':5249, '300-330':5047, '330-360':5055, '380-400':4725}, vaquillonas:{'260-280':4950, '300-330':4804, '330-360':4826}},
+   cg:{vaqPren:2580000, vacaNuevaPren:2346000, vacaMedioPren:2251000, vacaNuevaCria:1691000}, mag:{novillito:4427, vaquillona:4194, novillo:4214, vaca:3169, toro:3562, mej:3901, vacaConserva:2674}},
+  {semana:'16 al 22/10/2026', fin:'2026-10-22', magFecha:'21/10/2026',
+   rangos:{terneros:{'100-130':8333, '130-160':7170, '160-180':6523, '180-200':6373, '200-230':6229, '230-260':5677}, terneras:{'130-160':6548, '160-180':6215, '180-200':5711}, novillitos:{'260-280':5480, '300-330':5259, '330-360':5146, '380-400':4820}, vaquillonas:{'260-280':5381, '300-330':4852, '330-360':5000}},
+   cg:{vaqPren:2567000, vacaNuevaPren:2557000, vacaMedioPren:2100000, vacaNuevaCria:1584000}, mag:{novillito:4184, vaquillona:3930, novillo:3926, vaca:2892, toro:3399, mej:3835, vacaConserva:2563}}
+];
+/*HISTORIAL:FIN*/
 // precio por kilo según el peso: se interpola entre los rangos publicados (al centro de cada rango)
-function pkg(cat,kg){ const t=PRECIOS.rangos[cat]; if(!t||!isFinite(kg)) return NaN;
+function pkg(cat,kg){ return pkgT(PRECIOS.rangos[cat],kg); }
+function pkgT(t,kg){ if(!t||!isFinite(kg)) return NaN;
   const pts=Object.entries(t).map(([r,v])=>{ const [a,b]=r.split('-').map(Number); return [(a+b)/2,v]; }).sort((x,y)=>x[0]-y[0]);
   if(!pts.length) return NaN; if(kg<=pts[0][0]) return pts[0][1]; if(kg>=pts[pts.length-1][0]) return pts[pts.length-1][1];
   for(let i=1;i<pts.length;i++){ const [x0,y0]=pts[i-1],[x1,y1]=pts[i]; if(kg<=x1) return Math.round(y0+(y1-y0)*(kg-x0)/(x1-x0)); } return NaN; }
@@ -2076,9 +2140,10 @@ function paintCmpVisual(rows,best){
 }
 function setView(v){
   $('tab-ini').setAttribute('aria-selected',v==='ini'); $('tab-neg').setAttribute('aria-selected',v==='neg');
-  document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini');
+  document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini'); document.querySelectorAll('.vpre').forEach(e=>e.hidden=v!=='pre'); $('tab-pre').setAttribute('aria-selected',v==='pre');
   curView=v; { const t=$('toast'); if(t) t.hidden=true; }
   if(v==='ini'){ flush(); renderIni(); $('negTitle').textContent='Negocios de hacienda'; }
+  else if(v==='pre'){ renderPrecios(); $('negTitle').textContent='Precios de la hacienda'; }
   else setTitle();
   paintBars();
   window.scrollTo({top:0});
@@ -2118,8 +2183,87 @@ const LAYKEY='recria-vista-v1';
 function setLay(l){ document.body.classList.toggle('cuadros',l==='cuadros'); $('lay-lista').setAttribute('aria-pressed',l==='lista'); $('lay-cuadros').setAttribute('aria-pressed',l==='cuadros'); try{localStorage.setItem(LAYKEY,l);}catch(e){} }
 $('lay-lista').addEventListener('click',()=>setLay('lista')); $('lay-cuadros').addEventListener('click',()=>setLay('cuadros'));
 { let l='cuadros'; try{ l=localStorage.getItem(LAYKEY)||'cuadros'; }catch(e){} setLay(l); }
-$('tab-neg').addEventListener('click',()=>setView('neg'));
+$('tab-neg').addEventListener('click',()=>setView('neg')); $('tab-pre').addEventListener('click',()=>setView('pre'));
 
+// ================= pestaña Precios =================
+const PRE_SER=[
+  {k:'t180',l:'Ternero 180 kg',u:'/kg',g:'Invernada',f:e=>pkgT(e.rangos.terneros,180)},
+  {k:'ta170',l:'Ternera 170 kg',u:'/kg',g:'Invernada',f:e=>pkgT(e.rangos.terneras,170)},
+  {k:'nov',l:'Novillito 300–330 kg',u:'/kg',g:'Invernada',f:e=>pkgT(e.rangos.novillitos,315)},
+  {k:'vaq',l:'Vaquillona 260–280 kg',u:'/kg',g:'Invernada',f:e=>pkgT(e.rangos.vaquillonas,270)},
+  {k:'vp',l:'Vaquillona preñada',u:'/cab',g:'Vientres',f:e=>e.cg.vaqPren},
+  {k:'vnp',l:'Vaca nueva preñada',u:'/cab',g:'Vientres',f:e=>e.cg.vacaNuevaPren},
+  {k:'vmp',l:'Vaca medio uso preñada',u:'/cab',g:'Vientres',f:e=>e.cg.vacaMedioPren},
+  {k:'vcc',l:'Vaca nueva con cría',u:'/cab',g:'Vientres',f:e=>e.cg.vacaNuevaCria},
+  {k:'mnt',l:'Novillito gordo',u:'/kg',g:'Hacienda gorda (MAG)',f:e=>e.mag.novillito},
+  {k:'mno',l:'Novillo gordo',u:'/kg',g:'Hacienda gorda (MAG)',f:e=>e.mag.novillo},
+  {k:'mvq',l:'Vaquillona gorda',u:'/kg',g:'Hacienda gorda (MAG)',f:e=>e.mag.vaquillona},
+  {k:'mva',l:'Vaca gorda',u:'/kg',g:'Hacienda gorda (MAG)',f:e=>e.mag.vaca},
+  {k:'mcon',l:'Vaca conserva (flaca)',u:'/kg',g:'Hacienda gorda (MAG)',f:e=>e.mag.vacaConserva},
+  {k:'mto',l:'Toro',u:'/kg',g:'Hacienda gorda (MAG)',f:e=>e.mag.toro},
+  {k:'mej',l:'MEJ (macho entero joven)',u:'/kg',g:'Hacienda gorda (MAG)',f:e=>e.mag.mej}
+];
+const PRE_REL=[
+  {k:'r1',l:'Ternero 180 kg ÷ novillito 300–330 kg',f:e=>pkgT(e.rangos.terneros,180)/pkgT(e.rangos.novillitos,315),fmt:v=>nf(v,2)+' veces',ref:1.15,
+   nota:v=>'El kilo de ternero vale <b>'+nf(v,2)+' veces</b> el del novillito. Cuanto más baja esta relación, mejor para comprar terneros y recriar. La línea punteada (1,15) es una referencia histórica aproximada.'},
+  {k:'r2',l:'Vaquillona preñada ÷ ternera 170 kg',f:e=>e.cg.vaqPren/pkgT(e.rangos.terneras,170),fmt:v=>nf(v,0)+' kg',ref:null,
+   nota:v=>'Una vaquillona preñada vale lo mismo que <b>'+nf(v,0)+' kg de ternera</b>. Cuanto más alto, mejor para recriar terneras y venderlas preñadas.'}
+];
+const histOrd=()=>[...HIST].sort((a,b)=>a.fin<b.fin?-1:1);
+const fecha=f=>{ const [y,m,d]=f.split('-'); return d+'/'+m; };
+function preVar(H,f,back){ // variación contra la semana anterior (back=1) o contra ~4 semanas atrás (back=4)
+  const n=H.length; if(n<2) return null; const cur=f(H[n-1]);
+  let ref=null; if(back===1) ref=H[n-2]; else { const lim=new Date(H[n-1].fin); lim.setDate(lim.getDate()-24); const old=H.filter(e=>new Date(e.fin)<=lim); ref=old.length?old[old.length-1]:null; }
+  if(!ref) return null; const o=f(ref); return isNum(cur)&&isNum(o)&&o>0?cur/o-1:null; }
+const varTxt=v=>v===null?'—':(v>0.0005?'▲ +':v<-0.0005?'▼ −':'= ')+nf(Math.abs(v)*100,1)+' %';
+function preChart(box,H,f,fmt,ref){
+  const pts=H.map(e=>({x:fecha(e.fin),y:f(e),est:!!e.est,sem:e.semana})).filter(p=>isNum(p.y));
+  if(!pts.length){ box.innerHTML='<p class="note">Todavía no hay datos.</p>'; return; }
+  const W=600,Hh=240,pl=70,pr=16,pt=16,pb=30, ys=pts.map(p=>p.y).concat(ref?[ref]:[]);
+  let lo=Math.min(...ys), hi=Math.max(...ys); const pad=(hi-lo)*0.25||Math.abs(hi)*0.04||1; lo-=pad; hi+=pad;
+  const raw=(hi-lo)/4, mag=Math.pow(10,Math.floor(Math.log10(raw))), st=[1,2,2.5,5,10].map(m=>m*mag).find(x=>x>=raw); lo=Math.floor(lo/st)*st; hi=Math.ceil(hi/st)*st;
+  const nt=Math.round((hi-lo)/st), dM=Math.max(1,Math.ceil(-Math.log10(st/1e6)-1e-9)), fax=v=>Math.abs(hi)>=1e6?'$ '+nf(v/1e6,dM)+' M':fmt(v);
+  const X=i=>pts.length===1?pl+(W-pl-pr)/2:pl+(W-pl-pr)*i/(pts.length-1), Y=v=>pt+(Hh-pt-pb)*(1-(v-lo)/(hi-lo));
+  let g='<svg viewBox="0 0 '+W+' '+Hh+'" role="img" aria-label="Gráfico de línea">';
+  for(let i=0;i<=nt;i++){ const v=lo+st*i, y=Y(v); g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+y+'" y2="'+y+'" stroke="var(--line)" stroke-width="1"/><text x="'+(pl-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+fax(v)+'</text>'; }
+  if(ref) g+='<line x1="'+pl+'" x2="'+(W-pr)+'" y1="'+Y(ref)+'" y2="'+Y(ref)+'" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 5"/>';
+  if(pts.length>1) g+='<polyline fill="none" stroke="var(--tc,#2F7A3B)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="'+pts.map((p,i)=>X(i)+','+Y(p.y)).join(' ')+'"/>';
+  pts.forEach((p,i)=>{ g+='<circle cx="'+X(i)+'" cy="'+Y(p.y)+'" r="5" fill="'+(p.est?'var(--surface)':'var(--tc,#2F7A3B)')+'" stroke="var(--tc,#2F7A3B)" stroke-width="2"/>'
+    +'<text x="'+X(i)+'" y="'+(Hh-8)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+p.x+'</text>'
+    +'<rect class="hit" data-i="'+i+'" x="'+(X(i)-24)+'" y="'+pt+'" width="48" height="'+(Hh-pt-pb)+'" fill="transparent"/>'; });
+  box.innerHTML=g+'</svg><div class="tip" hidden></div>';
+  const tip=box.querySelector('.tip'), svg=box.querySelector('svg');
+  box.querySelectorAll('.hit').forEach(r=>{ const show=()=>{ const p=pts[+r.dataset.i], bb=svg.getBoundingClientRect(), sx=bb.width/W, sy=bb.height/Hh;
+      tip.innerHTML='<b>'+fmt(p.y)+'</b><br>Semana del '+esc(p.sem)+(p.est?' (calculada)':''); tip.style.left=(X(+r.dataset.i)*sx)+'px'; tip.style.top=(Y(p.y)*sy)+'px'; tip.hidden=false; };
+    r.addEventListener('mouseenter',show); r.addEventListener('click',show); r.addEventListener('mouseleave',()=>{ tip.hidden=true; }); });
+}
+function renderPrecios(){
+  const H=histOrd(), n=H.length, cur=H[n-1];
+  $('preSub').textContent='Semana del '+PRECIOS.semana+' (Círculo Ganadero) y Mercado Agroganadero del '+PRECIOS.magFecha+'. Son los precios que usa la página para sugerir; se actualizan cada viernes.';
+  $('preSrc').innerHTML='Fuentes: <a href="'+PRECIOS.urlCG+'" target="_blank" rel="noopener">Círculo Ganadero</a> · <a href="'+PRECIOS.urlMAG+'" target="_blank" rel="noopener">Mercado Agroganadero (Ruralnet)</a>';
+  const kp=(l,v,d1,d4,cls)=>'<div class="pre-kpi'+(cls?' '+cls:'')+'"><span class="k">'+l+'</span><span class="v">'+v+'</span><span class="d">Semana: <b>'+d1+'</b> · Mes: <b>'+d4+'</b></span></div>';
+  const S=k=>PRE_SER.find(x=>x.k===k), val=(s,e)=>{ const v=s.f(e); return isNum(v)?money(v)+'<small>'+s.u+'</small>':'—'; };
+  const R1=PRE_REL[0];
+  $('preKpis').innerHTML=['t180','ta170','nov','vp','vcc','mno','mva'].map(k=>{ const s=S(k); return kp(s.l,val(s,cur),varTxt(preVar(H,s.f,1)),varTxt(preVar(H,s.f,4))); }).join('')
+    +kp('Ternero ÷ novillito',R1.fmt(R1.f(cur)),varTxt(preVar(H,R1.f,1)),varTxt(preVar(H,R1.f,4)),'rel');
+  const sel=$('preSer'); if(!sel.options.length){ let gp=''; PRE_SER.forEach(s=>{ if(s.g!==gp){ gp=s.g; const og=document.createElement('optgroup'); og.label=gp; sel.appendChild(og);} const o=document.createElement('option'); o.value=s.k; o.textContent=s.l; sel.lastChild.appendChild(o); });
+    PRE_REL.forEach(r=>{ const o=document.createElement('option'); o.value=r.k; o.textContent=r.l; $('preRel').appendChild(o); });
+    sel.addEventListener('change',renderPrecios); $('preRel').addEventListener('change',renderPrecios); }
+  const s=S(sel.value)||PRE_SER[0]; preChart($('preChart'),H,s.f,v=>money(v),null);
+  const r=PRE_REL.find(x=>x.k===$('preRel').value)||R1; preChart($('preRelChart'),H,r.f,r.fmt,r.ref); $('preRelNote').innerHTML=r.nota(r.f(cur));
+  $('preHistNote').textContent=(n<2?'El historial empieza esta semana.':'Historial de '+n+' semanas; se suma una cada viernes.')+(H.some(e=>e.est)?' El punto hueco es una semana calculada con la variación que publicó Círculo Ganadero.':'')+' La variación del mes aparece cuando haya 4 semanas de historial.';
+  // tablas
+  const prev=n>1?H[n-2]:null, cats=[['terneros','Terneros'],['terneras','Terneras'],['novillitos','Novillitos'],['vaquillonas','Vaquillonas']];
+  const vr=(a,b)=>isNum(a)&&isNum(b)&&b>0?varTxt(a/b-1):'—';
+  const tc=cats.map(([c,l])=>{ const rs=Object.keys(cur.rangos[c]).sort((a,b)=>parseInt(a)-parseInt(b));
+    return '<div class="pre-t"><h3>'+l+' <span class="note">($/kg)</span></h3><table><thead><tr><th>Kilos</th><th>Precio</th><th>Var. semanal</th></tr></thead><tbody>'
+      +rs.map(rg=>'<tr><td>'+rg.replace('-',' a ')+' kg</td><td>'+money(cur.rangos[c][rg])+'</td><td>'+(prev?vr(cur.rangos[c][rg],prev.rangos[c][rg]):'—')+'</td></tr>').join('')+'</tbody></table></div>'; });
+  const tb=(tit,ks)=>'<div class="pre-t"><h3>'+tit+'</h3><table><thead><tr><th>Categoría</th><th>Precio</th><th>Var. semanal</th></tr></thead><tbody>'
+    +ks.map(k=>{ const s=S(k); return '<tr><td>'+s.l+'</td><td>'+val(s,cur)+'</td><td>'+(prev?vr(s.f(cur),s.f(prev)):'—')+'</td></tr>'; }).join('')+'</tbody></table></div>';
+  const tv=tb('Vientres <span class="note">($ por cabeza)</span>',['vp','vnp','vmp','vcc']), tg=tb('Hacienda gorda <span class="note">(MAG, $/kg)</span>',['mnt','mno','mvq','mva','mcon','mto','mej']);
+  // machos y vientres a la izquierda; hembras y gorda a la derecha (quedan de alto parejo)
+  $('preTables').innerHTML='<div class="pre-col">'+tc[0]+tc[2]+tv+'</div><div class="pre-col">'+tc[1]+tc[3]+tg+'</div>'; try{ infoScan($('precios')); }catch(e){}
+}
 // ================= pantalla de inicio =================
 function renderIni(){
   const L=$('iniList'); if(!L) return;
@@ -2446,7 +2590,7 @@ function renderSens(){
 $('printRep').addEventListener('click',()=>{ flush(); const ph=$('printHead'); if(ph) ph.textContent='Informe: '+((cur()&&cur().name)||'Negocio')+' · generado el '+new Date().toLocaleDateString('es-AR')+' · Negocios de hacienda'; try{ window.print(); }catch(e){ status('Tu navegador no deja imprimir desde acá: usá Ctrl+P'); } });
 
 // ================= barra de negocios =================
-function setTitle(){ const t=$('negTitle'); if(t&&$('inicio').hidden) t.textContent=(cur()&&cur().name)||'Negocio sin nombre'; }
+function setTitle(){ const t=$('negTitle'); if(t&&$('inicio').hidden&&$('precios').hidden) t.textContent=(cur()&&cur().name)||'Negocio sin nombre'; }
 function renderBar(){
   negs.sort((a,b)=>(a.created||0)-(b.created||0));
   const s=$('negSel'); s.innerHTML='';
