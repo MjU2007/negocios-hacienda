@@ -1123,7 +1123,7 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
     <tr><td><span class="lbl">Toros</span><span class="hint">Referencia a campo: 1 toro cada 28 vacas</span></td><td><span class="field"><input class="in s" id="nToros" inputmode="numeric"><span class="u">toros</span></span><span class="eq" id="e-toros"></span></td></tr>
     <tr><td><span class="lbl">Vacas por hectárea</span><span class="hint">Carga del campo</span></td><td><span class="field"><input class="in " id="carga" inputmode="decimal"><span class="u">vacas/ha</span></span><span class="eq" id="e-carga"></span></td></tr>
     <tr><td><span class="lbl">Hectáreas que ocupa el rodeo</span><span class="hint">Se calcula con las vacas y la carga</span></td><td><span class="field"><input class="in " id="ha" inputmode="decimal"><span class="u">ha</span></span><span class="eq" id="e-ha"></span></td></tr>
-    <tr><td><span class="lbl">Valor de cada vaca</span><span class="hint">Es la plata que tenés en el rodeo. Vaca con garantía de preñez: $1.726.132 (Rosgan, 13/10/2026)</span></td><td><span class="field"><span class="u">$</span><input class="in " id="valVaca" inputmode="decimal"><span class="u">/vaca</span></span></td></tr>
+    <tr><td><span class="lbl">Valor de cada vaca</span><span class="hint">Es la plata que tenés en el rodeo. Sugerido: vaca de medio uso con garantía de preñez (Círculo Ganadero)</span></td><td><span class="field"><span class="u">$</span><input class="in " id="valVaca" inputmode="decimal"><span class="u">/vaca</span></span></td></tr>
     <tr><td><span class="lbl">Mortandad de vacas por año</span></td><td><span class="field"><input class="in s" id="mortV" inputmode="decimal"><span class="u">%</span></span></td></tr>
   </tbody></table></div>
   <div class="mini" id="mini-c-rodeo"></div>
@@ -1267,8 +1267,8 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
   <div class="sec-head"><h2>Fuentes de los valores de referencia</h2></div>
   <div class="src">
     <ol>
-      <li>Hacienda de invernada y vientres (terneros, terneras, novillitos, novillos, vaquillonas, vacas a levantar, vaquillonas y vacas con garantía de preñez, vacas con cría al pie): <a href="https://www.lanacion.com.ar/economia/campo/pagaron-hasta-6900-por-terneros-en-un-importante-remate-ganadero-nid14102026/" target="_blank" rel="noopener">Rosgan, remate del 13/10/2026 (La Nación)</a>.</li>
-      <li>Hacienda gorda (novillitos, novillos, vaquillonas, vacas, toros y MEJ): <a href="https://ruralnet.com.ar/mag-precios-16-octubre-2026/" target="_blank" rel="noopener">Mercado Agroganadero, 16/10/2026 (Ruralnet)</a>. Todos los precios de compra y venta son de la misma semana.</li>
+      <li id="fuCG"></li>
+      <li id="fuMAG"></li>
       <li>Toros PC en remates: <a href="https://www.defrentealcampo.com.ar/wp-content/uploads/2026/03/Informe-Mensual-Angus-Enero-2026.pdf" target="_blank" rel="noopener">Informe Mensual Angus, enero 2026</a>.</li>
       <li>Recría pastoril (180 → 300 kg, 650–700 g/día, ~$1.400/kg producido): <a href="https://www.engormix.com/ganaderia/ganancia-peso-terneros/estudio-productivo-economico-diferentes_a56320/" target="_blank" rel="noopener">Engormix, junio 2026</a>. Costo del kilo a pasto (~$2.000/kg): <a href="https://bichosdecampo.com/el-analista-ganadero-fernando-gil-explica-cuanto-cuesta-hacer-pasturas-y-verdeos-y-que-retorno-tienen-se-repaga-la-inversion-y-generan-una-ganancia-interesante/" target="_blank" rel="noopener">Bichos de Campo</a>.</li>
       <li>Recría de hembras hasta el primer entore: <a href="https://www.produccion-animal.com.ar/informacion_tecnica/cria/05-manejo_de_la_hembra_hasta_el_primer_entore.pdf" target="_blank" rel="noopener">Sitio Argentino de Producción Animal</a>. Inflación esperada: <a href="https://www.canal26.com/economia/2026/09/05/las-proyecciones-de-los-analistas-del-banco-central-para-lo-que-resta-del-2026-que-espera-el-mercado-para-la-inflacion-y-el-dolar/" target="_blank" rel="noopener">REM del BCRA</a>.</li>
@@ -1314,8 +1314,21 @@ const SISTEMAS={campo:'a campo',feed:'a corral (feedlot)',mix:'mix campo + corra
 // Valores sugeridos para un rodeo de cría (precios De Campo a Campo, sep-2026; costos estimados)
 // Tierra: ~3,5 kg de novillo por ha y por mes (campo ganadero de la Cuenca del Salado) × índice novillo arrendamiento $4.241/kg (16/10/2026)
 const ARR_REF=178000, EST_REF=6000;
-const REF_CRIA={txt:'Ternero a $5.890/kg, ternera a $5.505/kg y vaca con garantía de preñez a $1.726.132 (Rosgan, remate del 13/10/2026); vaca a faena a $3.169/kg (Mercado Agroganadero, 16/10/2026). Costos por vaca estimados para un sistema pastoril.',
-  v:{vacas:100,toros:100/28,carga:0.7,valVaca:1726132,mortV:2,destC:80,pdesC:170,machos:50,desc:18,pVd:420,pTro:5890,pTra:5505,pVdKg:3169,cv:4,gv:12000,varVenta:0,
+/*PRECIOS:INICIO*/
+// Precios de referencia para los negocios NUEVOS. Se actualizan solos cada semana (tarea programada).
+// Los negocios ya guardados no cambian: guardan sus propios precios.
+const PRECIOS={
+  semana:'16 al 22/10/2026', urlCG:'https://www.circuloganadero.com/precios',
+  magFecha:'21/10/2026', urlMAG:'https://ruralnet.com.ar/mag-7197-cabezas-novillitos-4184/',
+  cg:{ternero:6229, ternera:5711, terneroDest:6523, terneraDest:6215, novillito:5259, novilloInv:4820, vaquillona:5381,
+      vaqPren:2567000, vacaNuevaPren:2557000, vacaMedioPren:2100000, vacaNuevaCria:1584000},
+  mag:{novillito:4184, vaquillona:3930, novillo:3926, vaca:2892, toro:3399, mej:3835, vacaConserva:2563}
+};
+/*PRECIOS:FIN*/
+const CG=PRECIOS.cg, MG=PRECIOS.mag, f$=x=>'$'+Math.round(x).toLocaleString('es-AR');
+const FCG='Círculo Ganadero, semana del '+PRECIOS.semana, FMG='Mercado Agroganadero, '+PRECIOS.magFecha;
+const REF_CRIA={txt:'Ternero de destete a '+f$(CG.terneroDest)+'/kg, ternera a '+f$(CG.terneraDest)+'/kg y vaca de medio uso con garantía de preñez a '+f$(CG.vacaMedioPren)+' ('+FCG+'); vaca a faena a '+f$(MG.vaca)+'/kg ('+FMG+'). Costos por vaca estimados para un sistema pastoril.',
+  v:{vacas:100,toros:100/28,carga:0.7,valVaca:CG.vacaMedioPren,mortV:2,destC:80,pdesC:170,machos:50,desc:18,pVd:420,pTro:CG.terneroDest,pTra:CG.terneraDest,pVdKg:MG.vaca,cv:4,gv:12000,varVenta:0,
      sanV:35000,alV:150000,mobV:60000,ctoro:1500000,otrosV:20000,arrHa:ARR_REF,tasa:6}};
 // Valores sugeridos por sistema (recría / invernada)
 const REF_SIS={
@@ -1329,32 +1342,32 @@ const STRUCT=['precioPor','ventaPor','modoVenta','conCria'];
 // Valores sugeridos por categoría. Precios: De Campo a Campo (informes semanales AZ Group, sep-2026).
 // Flete estimado ~$1,2 M por jaula a ~300 km, repartido entre las cabezas que entran.
 const REF={
-  ternero:{txt:'Ternero (~215 kg) a $5.890/kg y novillito (~310 kg) a $5.216/kg (Rosgan, remate del 13/10/2026). Recría a campo de ~5 meses a 0,68 kg/día y venta del recriado.',
-    v:{cargaR:1.5,cab:80,pc:215,pCkg:5890,meses:5,gdp:0.68,mort:1.5,modoVenta:'kilo',pVkg:5216,fl:15000,san:30000,mob:30000,alKg:2000}},
-  ternera:{txt:'Ternera (~215 kg) a $5.505/kg y vaquillona con garantía de preñez a $2.262.712 (Rosgan, remate del 13/10/2026); las vacías, a faena como vaquillonas a $4.194/kg (Mercado Agroganadero, 16/10/2026). Recría hasta el entore, servicio, tacto y venta preñada: ~8 meses.',
-    v:{cargaR:1.5,cab:80,pc:215,pCkg:5505,meses:8,gdp:0.5,mort:1.5,modoVenta:'prenada',ms:3,entoreObj:280,pr:80,pPren:2262712,pVac:4194,fl:15000,san:45000,serv:60000,tacto:6000,mob:50000,alKg:2000}},
-  novillito:{txt:'Novillito (~310 kg) a $5.216/kg (Rosgan, remate del 13/10/2026) y novillito gordo a $4.427/kg (Mercado Agroganadero, 16/10/2026). Terminación a campo hasta ~420 kg.',
-    v:{cargaR:1.2,cab:45,pc:310,pCkg:5216,meses:6,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:4427,fl:27000,san:25000,mob:30000,alKg:2000}},
-  vaquillona:{txt:'Vaquillona a $4.700/kg y vaquillona con garantía de preñez a $2.262.712 (Rosgan, remate del 13/10/2026); las vacías, a faena a $4.194/kg (Mercado Agroganadero, 16/10/2026). Entore, tacto y venta preñada: ~6 meses.',
-    v:{cargaR:1.2,cab:50,pc:270,pCkg:4700,meses:6,gdp:0.35,mort:1,modoVenta:'prenada',ms:3,entoreObj:280,pr:82,pPren:2262712,pVac:4194,fl:24000,san:40000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
-  novillo:{txt:'Novillo de invernada (~410 kg) a $4.795/kg (Rosgan, remate del 13/10/2026) y novillo gordo a $4.214/kg (Mercado Agroganadero, 16/10/2026). Terminación a campo de ~5 meses.',
-    v:{cargaR:1,cab:35,pc:408,pCkg:4795,meses:5,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:4214,fl:34000,san:20000,mob:25000,alKg:2000}},
-  vaca:{txt:'Vaca regular a levantar a $2.880/kg (Rosgan, remate del 13/10/2026) y vaca a faena a $3.169/kg (Mercado Agroganadero, 16/10/2026; las buenas, $3.394). Engorde a campo de ~4 meses.',
-    v:{cargaR:0.9,cab:35,precioPor:'kg',pCkg:2880,pc:400,meses:4,gdp:0.7,mort:1,modoVenta:'kilo',pVkg:3169,fl:34000,san:15000,mob:20000,alKg:1300,alMes:0}},
-  vacaPren:{txt:'Vaca con garantía de preñez a $1.726.132/cab y ternero a $5.890/kg (Rosgan, remate del 13/10/2026); vacías a faena a $3.169/kg (Mercado Agroganadero, 16/10/2026). Pare, cría, destete, se vuelve a preñar y se vende preñada con el ternero aparte: ~10 meses.',
-    v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:1726132,pc:430,meses:10,gdp:0.03,mort:1,modoVenta:'prenada',ms:3,pr:85,pPren:1726132,pVac:3169,conCria:true,dest:90,pdes:170,pTer:5890,fl:34000,alKg:0,alMes:15000,san:35000,serv:30000,tacto:6000,mob:45000}},
-  vacaCria:{txt:'Vaca con cría al pie a $1.522.559/cab y ternero a $5.890/kg (Rosgan, remate del 13/10/2026); vaca a faena a $3.169/kg (Mercado Agroganadero, 16/10/2026). Se desteta el ternero y se venden los dos: ~5 meses.',
-    v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:1522559,pc:430,meses:5,gdp:0.03,mort:1,modoVenta:'kilo',pVkg:3169,conCria:true,dest:95,pdes:170,pTer:5890,fl:34000,alKg:0,alMes:15000,san:30000,mob:25000}},
-  torito_rep:{txt:'Toritos para reproductores: se venden a $5.668.304 por cabeza los que califican (toro PC Angus, promedio de remates 2025, Asociación Argentina de Angus); se toma que califica el 70 % y el resto va a faena como MEJ a $3.901/kg (Mercado Agroganadero, 16/10/2026). Compra al precio del ternero, $5.890/kg (Rosgan, remate del 13/10/2026); si son de cabaña, cuestan más. Incluye revisación y registros en otros gastos.',
-    v:{cargaR:1.3,cab:30,pc:215,pCkg:5890,meses:18,gdp:0.6,mort:2,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,calif:70,pDesc:3901,fl:15000,san:60000,mob:60000,otros:120000,alKg:2000}},
-  torito_fae:{txt:'Toritos a faena: ternero entero a $5.890/kg (Rosgan, remate del 13/10/2026) y venta como MEJ (machos enteros jóvenes) a $3.901/kg (Mercado Agroganadero, 16/10/2026). Recría a campo de ~12 meses. Si los castrás, evaluálo como recría de terneros.',
-    v:{cargaR:1.3,cab:40,pc:215,pCkg:5890,meses:12,gdp:0.7,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:3901,fl:15000,san:30000,mob:40000,otros:0,alKg:2000}},
-  toro_rep:{txt:'Toros para reproductores: venta a $5.668.304 por cabeza (toro PC Angus, promedio de remates 2025); se toma que califica el 95 % y el resto va a faena a $3.562/kg (Mercado Agroganadero, 16/10/2026). Compra de toros jóvenes por cabeza: estimada. Incluye revisación en otros gastos.',
-    v:{cargaR:0.8,cab:20,pc:600,precioPor:'cab',pCcab:4500000,meses:6,gdp:0.4,mort:1,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,calif:95,pDesc:3562,fl:40000,san:40000,mob:30000,otros:80000,alKg:2000}},
-  toro_fae:{txt:'Toros a faena: toro a $3.562/kg (Mercado Agroganadero, 16/10/2026). Toro comprado flaco y terminado a campo en ~3 meses; precio de compra estimado ~10 % por debajo del toro gordo.',
-    v:{cargaR:0.8,cab:30,pc:600,pCkg:3200,meses:3,gdp:0.8,mort:1,modoVenta:'kilo',ventaPor:'kg',pVkg:3562,fl:40000,san:15000,mob:20000,otros:0,alKg:2000}},
-  mixto:{txt:'Jaula mixta: terneros (~215 kg) a $5.890/kg y terneras (~215 kg) a $5.505/kg; los machos se venden como novillitos a $5.216/kg y las terneras como vaquillonas a $4.700/kg, o entoradas y preñadas a $2.262.712 (Rosgan, remate del 13/10/2026). Recría a campo de ~5 meses; si las terneras se venden preñadas, ~8 meses.',
-    v:{cargaR:1.5,cab:48,cabM:25,cabH:23,pcM:215,pcH:215,pc:215,pCkgM:5890,pCkgH:5505,pCkg:5890,precioPor:'kg',meses:5,gdp:0.68,gdpH:0.5,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:5216,pVkgH:4700,destH:'kilo',mesesH:8,ms:3,entoreObj:280,pr:80,pPren:2262712,pVac:4194,fl:15000,san:30000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
+  ternero:{txt:'Ternero de 200–230 kg a '+f$(CG.ternero)+'/kg y novillito de 300–330 kg a '+f$(CG.novillito)+'/kg ('+FCG+'). Recría a campo de ~5 meses a 0,68 kg/día y venta del recriado.',
+    v:{cargaR:1.5,cab:80,pc:215,pCkg:CG.ternero,meses:5,gdp:0.68,mort:1.5,modoVenta:'kilo',pVkg:CG.novillito,fl:15000,san:30000,mob:30000,alKg:2000}},
+  ternera:{txt:'Ternera de 180–200 kg a '+f$(CG.ternera)+'/kg y vaquillona con garantía de preñez a '+f$(CG.vaqPren)+' ('+FCG+'); las vacías, a faena como vaquillonas a '+f$(MG.vaquillona)+'/kg ('+FMG+'). Recría hasta el entore, servicio, tacto y venta preñada: ~9 meses.',
+    v:{cargaR:1.5,cab:80,pc:190,pCkg:CG.ternera,meses:9,gdp:0.5,mort:1.5,modoVenta:'prenada',ms:3,entoreObj:280,pr:80,pPren:CG.vaqPren,pVac:MG.vaquillona,fl:15000,san:45000,serv:60000,tacto:6000,mob:50000,alKg:2000}},
+  novillito:{txt:'Novillito de 300–330 kg a '+f$(CG.novillito)+'/kg ('+FCG+') y novillito gordo a '+f$(MG.novillito)+'/kg ('+FMG+'). Terminación a campo hasta ~420 kg.',
+    v:{cargaR:1.2,cab:45,pc:310,pCkg:CG.novillito,meses:6,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:MG.novillito,fl:27000,san:25000,mob:30000,alKg:2000}},
+  vaquillona:{txt:'Vaquillona de 260–280 kg a '+f$(CG.vaquillona)+'/kg y vaquillona con garantía de preñez a '+f$(CG.vaqPren)+' ('+FCG+'); las vacías, a faena a '+f$(MG.vaquillona)+'/kg ('+FMG+'). Entore, tacto y venta preñada: ~6 meses.',
+    v:{cargaR:1.2,cab:50,pc:270,pCkg:CG.vaquillona,meses:6,gdp:0.35,mort:1,modoVenta:'prenada',ms:3,entoreObj:280,pr:82,pPren:CG.vaqPren,pVac:MG.vaquillona,fl:24000,san:40000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
+  novillo:{txt:'Novillo de invernada (novillitos de 380–400 kg) a '+f$(CG.novilloInv)+'/kg ('+FCG+') y novillo gordo a '+f$(MG.novillo)+'/kg ('+FMG+'). Terminación a campo de ~5 meses.',
+    v:{cargaR:1,cab:35,pc:390,pCkg:CG.novilloInv,meses:5,gdp:0.6,mort:1,modoVenta:'kilo',pVkg:MG.novillo,fl:34000,san:20000,mob:25000,alKg:2000}},
+  vaca:{txt:'Vaca flaca para engordar a '+f$(MG.vacaConserva)+'/kg (vaca conserva buena) y vaca gorda a '+f$(MG.vaca)+'/kg ('+FMG+'). Engorde a campo de ~4 meses.',
+    v:{cargaR:0.9,cab:35,precioPor:'kg',pCkg:MG.vacaConserva,pc:400,meses:4,gdp:0.7,mort:1,modoVenta:'kilo',pVkg:MG.vaca,fl:34000,san:15000,mob:20000,alKg:1300,alMes:0}},
+  vacaPren:{txt:'Vaca nueva con garantía de preñez a '+f$(CG.vacaNuevaPren)+'/cab; al año se vende como vaca de medio uso preñada a '+f$(CG.vacaMedioPren)+'; ternero a '+f$(CG.terneroDest)+'/kg ('+FCG+'); vacías a faena a '+f$(MG.vaca)+'/kg ('+FMG+'). Pare, cría, destete y se vuelve a preñar: ~10 meses.',
+    v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:CG.vacaNuevaPren,pc:430,meses:10,gdp:0.03,mort:1,modoVenta:'prenada',ms:3,pr:85,pPren:CG.vacaMedioPren,pVac:MG.vaca,conCria:true,dest:90,pdes:170,pTer:CG.terneroDest,fl:34000,alKg:0,alMes:15000,san:35000,serv:30000,tacto:6000,mob:45000}},
+  vacaCria:{txt:'Vaca nueva con cría al pie a '+f$(CG.vacaNuevaCria)+'/cab y ternero a '+f$(CG.terneroDest)+'/kg ('+FCG+'); vaca a faena a '+f$(MG.vaca)+'/kg ('+FMG+'). Se desteta el ternero y se venden los dos: ~5 meses.',
+    v:{cargaR:0.7,cab:35,precioPor:'cab',pCcab:CG.vacaNuevaCria,pc:430,meses:5,gdp:0.03,mort:1,modoVenta:'kilo',pVkg:MG.vaca,conCria:true,dest:95,pdes:170,pTer:CG.terneroDest,fl:34000,alKg:0,alMes:15000,san:30000,mob:25000}},
+  torito_rep:{txt:'Toritos para reproductores: se venden a $5.668.304 por cabeza los que califican (toro PC Angus, promedio de remates 2025, Asociación Argentina de Angus); se toma que califica el 70 % y el resto va a faena como MEJ a '+f$(MG.mej)+'/kg ('+FMG+'). Compra al precio del ternero, '+f$(CG.ternero)+'/kg ('+FCG+'); si son de cabaña, cuestan más. Incluye revisación y registros en otros gastos.',
+    v:{cargaR:1.3,cab:30,pc:215,pCkg:CG.ternero,meses:18,gdp:0.6,mort:2,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,calif:70,pDesc:MG.mej,fl:15000,san:60000,mob:60000,otros:120000,alKg:2000}},
+  torito_fae:{txt:'Toritos a faena: ternero entero a '+f$(CG.ternero)+'/kg ('+FCG+') y venta como MEJ (machos enteros jóvenes) a '+f$(MG.mej)+'/kg ('+FMG+'). Recría a campo de ~12 meses. Si los castrás, evaluálo como recría de terneros.',
+    v:{cargaR:1.3,cab:40,pc:215,pCkg:CG.ternero,meses:12,gdp:0.7,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:MG.mej,fl:15000,san:30000,mob:40000,otros:0,alKg:2000}},
+  toro_rep:{txt:'Toros para reproductores: venta a $5.668.304 por cabeza (toro PC Angus, promedio de remates 2025); se toma que califica el 95 % y el resto va a faena a '+f$(MG.toro)+'/kg ('+FMG+'). Compra de toros jóvenes por cabeza: estimada. Incluye revisación en otros gastos.',
+    v:{cargaR:0.8,cab:20,pc:600,precioPor:'cab',pCcab:4500000,meses:6,gdp:0.4,mort:1,modoVenta:'kilo',ventaPor:'cab',pVcab:5668304,calif:95,pDesc:MG.toro,fl:40000,san:40000,mob:30000,otros:80000,alKg:2000}},
+  toro_fae:{txt:'Toros a faena: toro a '+f$(MG.toro)+'/kg ('+FMG+'). Toro comprado flaco y terminado a campo en ~3 meses; precio de compra estimado ~10 % por debajo del toro gordo.',
+    v:{cargaR:0.8,cab:30,pc:600,pCkg:Math.round(MG.toro*0.9),meses:3,gdp:0.8,mort:1,modoVenta:'kilo',ventaPor:'kg',pVkg:MG.toro,fl:40000,san:15000,mob:20000,otros:0,alKg:2000}},
+  mixto:{txt:'Jaula mixta: terneros de 200–230 kg a '+f$(CG.ternero)+'/kg y terneras de 180–200 kg a '+f$(CG.ternera)+'/kg; los machos se venden como novillitos a '+f$(CG.novillito)+'/kg y las terneras como vaquillonas a '+f$(CG.vaquillona)+'/kg, o entoradas y preñadas a '+f$(CG.vaqPren)+' ('+FCG+'). Recría a campo de ~5 meses; si las terneras se venden preñadas, ~9 meses.',
+    v:{cargaR:1.5,cab:48,cabM:25,cabH:23,pcM:215,pcH:190,pc:215,pCkgM:CG.ternero,pCkgH:CG.ternera,pCkg:CG.ternero,precioPor:'kg',meses:5,gdp:0.68,gdpH:0.5,mort:1.5,modoVenta:'kilo',ventaPor:'kg',pVkg:CG.novillito,pVkgH:CG.vaquillona,destH:'kilo',mesesH:9,ms:3,entoreObj:280,pr:80,pPren:CG.vaqPren,pVac:MG.vaquillona,fl:15000,san:30000,serv:60000,tacto:6000,mob:30000,alKg:2000}},
   otro:{txt:'Sin precios de referencia para esta categoría: cargá los tuyos. Los costos tienen valores sugeridos generales.',v:{}}
 };
 const KEYDEF={...EMPTY};
@@ -1759,7 +1772,7 @@ selC.addEventListener('change',()=>{
 $('conCria').addEventListener('change',e=>{st.conCria=e.target.checked; applyUI(); save();});
 const seg=(a,b,key,va,vb)=>{$(a).addEventListener('click',()=>{st[key]=va; applyUI(); save();}); $(b).addEventListener('click',()=>{st[key]=vb; applyUI(); save();});};
 seg('f-gdp','f-peso','fijo','gdp','peso'); seg('v-cab','v-jaula','vista','cab','jaula'); seg('mv-kilo','mv-prenada','modoVenta','kilo','prenada');
-$('mv-vcc').addEventListener('click',()=>{ st.modoVenta='vcc'; const a=new Set(st.auto||[]); if(!isNum(st.pVcc)){st.pVcc=1522559;a.add('pVcc');} if(!isNum(st.pcria)){st.pcria=90;a.add('pcria');} if(!isNum(st.pVac)){st.pVac=3169;a.add('pVac');} st.auto=[...a]; applyUI(); save(); });
+$('mv-vcc').addEventListener('click',()=>{ st.modoVenta='vcc'; const a=new Set(st.auto||[]); if(!isNum(st.pVcc)){st.pVcc=CG.vacaNuevaCria;a.add('pVcc');} if(!isNum(st.pcria)){st.pcria=90;a.add('pcria');} if(!isNum(st.pVac)){st.pVac=MG.vaca;a.add('pVac');} st.auto=[...a]; applyUI(); save(); });
 // completa datos vacíos o sugeridos; no toca lo que cargaste vos
 function fillAuto(v){ const a=autoSet(); for(const [k,val] of Object.entries(v)){ if(!isNum(st[k])||a.has(k)){ st[k]=val; a.add(k);} } st.auto=[...a]; }
 function setTipo(t){
@@ -2076,6 +2089,9 @@ document.querySelectorAll('#inicio [data-new]').forEach(b=>b.addEventListener('c
     $('negName').focus(); $('negName').select(); }); }));
 
 setView('ini');
+// fuentes de los precios sugeridos (cambian solas con la actualización semanal)
+$('fuCG').innerHTML='Hacienda de invernada y vientres (terneros, terneras, novillitos, vaquillonas, vaquillonas y vacas con garantía de preñez, vacas con cría): <a href="'+PRECIOS.urlCG+'" target="_blank" rel="noopener">'+esc(FCG)+'</a>, promedio de los remates de la semana por rango de peso.';
+$('fuMAG').innerHTML='Hacienda gorda (novillitos, novillos, vaquillonas, vacas, toros y MEJ) y vaca flaca (conserva buena): <a href="'+PRECIOS.urlMAG+'" target="_blank" rel="noopener">'+esc(FMG)+' (Ruralnet)</a>. Los precios sugeridos se actualizan solos cada semana; los negocios ya guardados conservan sus precios.';
 
 
 
