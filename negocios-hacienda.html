@@ -1287,6 +1287,12 @@ html body .hero .tv-tipo{font-family:"Outfit",system-ui,sans-serif!important;fon
 html body.tipo-cria .hero .tv-tipo{color:#F3B998!important}
 html body.tipo-inv .hero .tv-tipo{color:#EDCB74!important}
 html body .hero .tv-txt{font-size:.95rem!important;color:#B9CFD6!important}
+
+/* ampliar también en modo lista (y en el celular) */
+html body .board .sec-head .zoom-btn{display:inline-flex!important;width:32px;height:32px;padding:0!important;font-size:0!important;line-height:0;align-items:center;justify-content:center;margin-left:auto;flex:none}
+html body .board .sec-head .zoom-btn::before{content:"⤢";font-size:1rem;line-height:1}
+@media print{html body .board .sec-head .zoom-btn{display:none!important}}
+html body .zoompanel .sec-head h2:has(.paso) .sec-ic{display:none}
 </style>
 
 <div class="wrap">
@@ -2728,7 +2734,7 @@ function closeZoom(keep){
 // orden de los cuadros (el de la página); solo los que se ven en este negocio
 const ZOOM_ORDER=[...document.querySelectorAll('.zoom-btn')].map(b=>b.dataset.zoom);
 const zoomVisibles=()=>ZOOM_ORDER.filter(id=>{ const s=$(id); if(!s) return false; if(s===zoomed) return true; return !s.hidden&&s.offsetParent!==null&&getComputedStyle(s).display!=='none'; });
-const zoomName=id=>{ const h=$(id)&&$(id).querySelector('.sec-head h2'); return h?h.textContent.trim():''; };
+const zoomName=id=>{ const h=$(id)&&$(id).querySelector('.sec-head h2'); if(!h) return ''; const c=h.cloneNode(true); c.querySelectorAll('.paso').forEach(x=>x.remove()); const p=h.querySelector('.paso'); return (p?p.textContent+'. ':'')+c.textContent.trim(); };
 function paintZoomNav(){ if(!zoomed) return; const v=zoomVisibles(), i=v.indexOf(zoomed.id), pv=v[i-1], nx=v[i+1];
   $('zoomPrev').hidden=!pv; $('zoomNext').hidden=!nx;
   if(pv){ $('zoomPrevL').textContent=zoomName(pv); $('zoomPrev').setAttribute('aria-label','Cuadro anterior: '+zoomName(pv)); }
