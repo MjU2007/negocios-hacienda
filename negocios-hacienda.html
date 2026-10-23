@@ -1056,6 +1056,30 @@ body[data-view="pre"] .hero .lead{display:none}
   .tb-buscar{order:4;flex:1 1 100%;max-width:none;margin:0 0 12px}
   .topbar .viewtabs{order:3}
 }
+
+/* ===================== BARRA, FOTO Y PIE DE BORDE A BORDE (sin margen de fondo) ===================== */
+:root{--wmax:880px;--gmin:16px}
+@media (min-width:700px){:root{--gmin:32px}}
+@media (min-width:1100px){body.cuadros{--wmax:1440px}}
+html,body{overflow-x:clip}
+body{margin:0!important}
+.wrap,body.cuadros .wrap{max-width:none!important;margin:0!important;padding:0 0 0!important;border:0!important}
+/* el contenido queda centrado con su ancho de siempre */
+.wrap>*:not(header):not(#fuentes):not(.editfloat):not(.salir):not(.toast):not(.zoomnavs):not(.zoomwrap),
+header>*:not(.topbar):not(.hero):not(#printHead){margin-left:max(var(--gmin),calc((100% - var(--wmax))/2))!important;margin-right:max(var(--gmin),calc((100% - var(--wmax))/2))!important}
+/* barra y foto ocupan todo el ancho; su contenido se alinea con el de abajo */
+.topbar,.hero{padding-left:max(var(--gmin),calc((100% - var(--wmax))/2))!important;padding-right:max(var(--gmin),calc((100% - var(--wmax))/2))!important;border-left:0!important;border-right:0!important}
+.topbar{border-top:0!important}
+.hero{padding-top:44px!important}
+.ticker{margin-left:calc(-1 * max(var(--gmin),calc((100% - var(--wmax))/2)));margin-right:calc(-1 * max(var(--gmin),calc((100% - var(--wmax))/2)))}
+.tk-track{padding-left:max(0px,calc((100vw - var(--wmax))/2 - 22px))}
+/* pie oscuro de borde a borde, pegado al final */
+#fuentes{margin:0!important;padding-left:max(var(--gmin),calc((100% - var(--wmax))/2))!important;padding-right:max(var(--gmin),calc((100% - var(--wmax))/2))!important;padding-top:36px!important;padding-bottom:40px!important}
+body:has(#editFloat:not([hidden])) .wrap{padding-bottom:0!important}
+body:has(#editFloat:not([hidden])) #fuentes{padding-bottom:110px!important}
+@media print{.wrap>*,header>*{margin-left:0!important;margin-right:0!important}.hero,#fuentes{padding-left:0!important;padding-right:0!important}}
+@media (max-width:1500px){.secnav a{padding:13px 9px!important}.secnav{padding:0 8px!important}}
+@media (max-width:1340px){.secnav a{padding:13px 7px!important;font-size:.9rem;gap:6px!important}.secnav .lay button{padding:4px 8px!important;font-size:.88rem}}
 </style>
 
 <div class="wrap">
