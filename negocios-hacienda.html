@@ -816,9 +816,6 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
 .kpis .kpi.main{background:var(--tc,#2F7A3B)!important;border-color:var(--tc,#2F7A3B)!important;color:#fff}
 .kpis .kpi.main .k,.kpis .kpi.main .sub,.kpis .kpi.main .info-b{color:rgba(255,255,255,.88)!important;border-color:rgba(255,255,255,.6)!important}
 .kpis .kpi.main .big,.kpis .kpi.main .big.pos,.kpis .kpi.main .big.neg{color:#fff!important}
-:root:not([data-theme="light"]) .kpis .kpi.main{color:#0E140F}
-  :root:not([data-theme="light"]) .kpis .kpi.main .big,:root:not([data-theme="light"]) .kpis .kpi.main .big.pos,:root:not([data-theme="light"]) .kpis .kpi.main .big.neg{color:#0E140F!important}
-  :root:not([data-theme="light"]) .kpis .kpi.main .k,:root:not([data-theme="light"]) .kpis .kpi.main .sub{color:rgba(14,20,15,.8)!important}
 /* encabezado de cada cuadro: número de paso en un bloque del color del negocio */
 .board .sec-head{display:flex;align-items:center;gap:12px}
 .board .sec-head h2{display:flex;align-items:center;gap:12px;color:var(--ink)!important}
@@ -1156,6 +1153,57 @@ body[data-view="neg"] .hero{background:linear-gradient(90deg,rgba(10,20,13,.92) 
 @media print{html body[data-view] .hero,html body .hero{background:none!important;color:#000!important;padding:0!important;min-height:0!important}html body .hero h1{color:#000!important;text-shadow:none!important}
   html body .board>section:not(#veredicto)>.sec-head,html body.cuadros .board>section:not(#veredicto)>.sec-head{background:none!important;border-bottom:2px solid #000!important}
   html body .board .sec-head h2{color:#000!important}.paso{color:#000!important;border-color:#000!important;background:none!important}.leyenda,.ticker{display:none!important}}
+
+/* ===================== MATICES: no todo el mismo negro ===================== */
+:root,:root:not([data-theme="light"]){
+  --bg:#151D17;          /* fondo de la página */
+  --surface:#1D2720;     /* cuadros */
+  --chip:#26332A;        /* recuadros internos */
+  --line:#33423A;
+  --tb:#0B130E;          /* barra de arriba, cinta y pie: lo más oscuro */
+  --tb2:#243229;         /* encabezados de cuadros y barra de pasos: un tono medio */
+  --verde-hondo:#1F3B28; /* bloque de la ganancia */
+}
+html body .secnav{background:var(--tb2)!important;box-shadow:0 1px 0 rgba(255,255,255,.04)}
+html body .board>section:not(#veredicto)>.sec-head,html body.cuadros .board>section:not(#veredicto)>.sec-head,html body .zoompanel section>.sec-head{background:var(--tb2)!important}
+html body .board>section:not(#veredicto){background:var(--surface)!important;border-color:var(--line)!important}
+html body #veredicto{background:linear-gradient(180deg,#1E2C23,#1A241D)!important;border:1px solid var(--line)!important;border-top:3px solid var(--acc)!important}
+html body .kpis .kpi.main:nth-child(n){background:var(--verde-hondo)!important;border-color:#2E5539!important;color:var(--tb-ink)!important}
+html body .kpis .kpi.main .k,html body .kpis .kpi.main .sub{color:#A9C3AF!important}
+html body .kpis .kpi.main .big{color:#fff!important}
+html body .kpis .kpi.main .big.pos{color:#8BE3A5!important}
+html body .kpis .kpi.main .big.neg{color:#FFA49A!important}
+html body .kpis .kpi:nth-child(n):not(.main){background:#202B23!important}
+html body .mini{background:var(--chip)!important;border-color:var(--line)!important}
+html body .refbar{background:#1F2A22!important}
+html body .pre-kpi{background:var(--surface)!important}
+html body .pre-kpi.rel{background:var(--verde-hondo)!important}
+html body .ini-card,html body .ini-neg,html body .steps li,html body .pre-card,html body .pre-t{background:var(--surface)!important}
+html body .ini-tipos>*{background:var(--chip)!important}
+html body .pre-t table thead th{background:var(--tb2)!important}
+html body #fuentes{background:var(--tb)!important}
+html body .editfloat{background:var(--tb2)!important;border-color:#3A4B40!important}
+/* ===================== PANEL DEL NEGOCIO MÁS SUELTO ===================== */
+.hero .negbar{gap:14px!important}
+.hero .negbar .tiporow{flex-direction:column;align-items:flex-start!important;gap:6px!important}
+.hero .negbar .tiporow .eyebrow{font-size:.78rem;letter-spacing:.08em}
+.hero .negbar .seg{border:0!important;background:transparent!important;gap:22px;display:inline-flex}
+.hero .negbar .seg button{padding:4px 0 6px!important;font-size:1.12rem!important;font-weight:600;color:rgba(233,239,230,.62)!important;background:transparent!important;border-bottom:3px solid transparent!important}
+.hero .negbar .seg button:hover{color:#fff!important}
+.hero .negbar .seg button[aria-pressed="true"],:root:not([data-theme="light"]) .hero .negbar .seg button[aria-pressed="true"]{background:transparent!important;color:#fff!important;border-bottom-color:var(--tc)!important}
+body.lectura .hero .negbar .seg button[data-ro][aria-pressed="false"]{opacity:1}
+.hero .negbar #tipoNote{max-width:44ch;font-size:.95rem!important;color:#C9D4CB!important}
+.hero .neg-acc{border-top:0!important;padding-top:4px!important;align-items:center;gap:18px!important}
+.hero .neg-acc .btn:not(.pri){border:0!important;padding:6px 0!important;background:transparent!important;color:var(--tb-ink)!important;text-decoration:underline;text-decoration-color:rgba(255,255,255,.35);text-underline-offset:4px}
+.hero .neg-acc .btn:not(.pri):hover{text-decoration-color:var(--acc)}
+.hero .neg-acc .mas{margin-left:0!important}
+.hero .neg-acc .mas>summary.btn{text-decoration:none!important}
+.hero .neg-acc .mas[open]>summary{background:transparent!important;color:var(--acc)!important}
+.hero #negStatus{margin-top:-6px!important}
+html body .hero .negbar #tp-cria[aria-pressed="true"],html body .hero .negbar #tp-recria[aria-pressed="true"],html body .hero .negbar #tp-inv[aria-pressed="true"]{background:transparent!important;color:#fff!important}
+html body .hero .negbar #tp-cria[aria-pressed="true"]{border-bottom-color:var(--c-cria)!important}
+html body .hero .negbar #tp-recria[aria-pressed="true"]{border-bottom-color:var(--c-recria)!important}
+html body .hero .negbar #tp-inv[aria-pressed="true"]{border-bottom-color:var(--c-inv)!important}
 </style>
 
 <div class="wrap">
