@@ -2238,6 +2238,9 @@ function preChart(box,H,f,fmt,ref){
     r.addEventListener('mouseenter',show); r.addEventListener('click',show); r.addEventListener('mouseleave',()=>{ tip.hidden=true; }); });
 }
 function renderPrecios(){
+  try{ renderPrecios0(); }catch(e){ console.error(e); const el=$('preSub'); if(el) el.innerHTML='<b>No se pudieron mostrar los precios.</b> Mandale una captura de este mensaje a Claude: <code>'+esc(String(e&&e.message||e))+' · '+esc(String((e&&e.stack||'').split('\n').slice(0,2).join(' | ')).slice(0,240))+'</code>'; }
+}
+function renderPrecios0(){
   const H=histOrd(), n=H.length, cur=H[n-1];
   $('preSub').textContent='Semana del '+PRECIOS.semana+' (Círculo Ganadero) y Mercado Agroganadero del '+PRECIOS.magFecha+'. Son los precios que usa la página para sugerir; se actualizan cada viernes.';
   $('preSrc').innerHTML='Fuentes: <a href="'+PRECIOS.urlCG+'" target="_blank" rel="noopener">Círculo Ganadero</a> · <a href="'+PRECIOS.urlMAG+'" target="_blank" rel="noopener">Mercado Agroganadero (Ruralnet)</a>';
