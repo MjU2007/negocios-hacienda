@@ -1267,6 +1267,26 @@ html body .hero .neg-acc .btn[hidden]{display:none!important}
 /* el menú "Más opciones" abierto queda por encima de la barra de pasos */
 .hero-row:has(.mas[open]){z-index:47}
 @media (max-width:820px){html body .hero .neg-acc{position:relative}html body .hero .neg-acc .mas{position:static}html body .hero .mas-menu{left:0!important;right:0!important;min-width:0!important;width:auto!important;white-space:normal}}
+
+/* ===================== PRECIOS: ACCESOS DIRECTOS ===================== */
+.prenav{position:sticky;top:var(--tbh);z-index:5;display:flex;gap:0;overflow-x:auto;background:#28382D;padding:0 8px;margin-bottom:6px;scrollbar-width:none}
+.prenav::-webkit-scrollbar{display:none}
+.prenav a{flex:none;padding:13px 14px;color:var(--tb-mut);text-decoration:none;font-weight:600;border-bottom:3px solid transparent;white-space:nowrap}
+.prenav a.act{color:#fff;border-bottom-color:var(--acc)}
+@media (hover:hover){.prenav a:hover{color:#fff}}
+#preKpis,#preCharts,.pre-t{scroll-margin-top:calc(var(--tbh) + 64px)}
+@media print{.prenav{display:none}}
+/* ===================== TEXTOS DE LA FOTO: MÁS FINOS, MÁS CHICOS Y CON COLOR ===================== */
+html body .hero h1{font-weight:500!important;font-size:clamp(1.9rem,3.3vw,2.7rem)!important;letter-spacing:-.005em!important;color:#FFFFFF!important}
+html body[data-view="ini"] .hero h1{font-size:clamp(2.3rem,4.4vw,3.5rem)!important;font-weight:500!important}
+html body .hero .lead{font-size:1rem!important;font-weight:400;color:#C9DBC3!important;line-height:1.55}
+html body .hero .legend,html body .hero .legend span{color:#E8D4A6!important;font-size:.88rem}
+html body .hero .volver{color:var(--acc)!important;font-weight:500}
+html body .hero .eyebrow{color:#9FC7D9!important}
+html body .hero .tv-tipo{font-family:"Outfit",system-ui,sans-serif!important;font-weight:500!important;font-size:1.45rem!important;line-height:1.1;color:#9BDCA8!important}
+html body.tipo-cria .hero .tv-tipo{color:#F3B998!important}
+html body.tipo-inv .hero .tv-tipo{color:#EDCB74!important}
+html body .hero .tv-txt{font-size:.95rem!important;color:#B9CFD6!important}
 </style>
 
 <div class="wrap">
@@ -1793,12 +1813,15 @@ html body .hero .neg-acc .btn[hidden]{display:none!important}
 </div>
 
 <section id="precios" class="vpre" hidden>
+  <nav class="prenav" aria-label="Ir directo a">
+    <a href="#preKpis">Resumen</a><a href="#preCharts">Gráficos</a><a href="#pt-terneros">Terneros</a><a href="#pt-terneras">Terneras</a><a href="#pt-novillitos">Novillitos</a><a href="#pt-vaquillonas">Vaquillonas</a><a href="#pt-vientres">Vientres</a><a href="#pt-gorda">Hacienda gorda</a>
+  </nav>
   <div class="pre-head">
     <div><h2>Precios de esta semana</h2><p class="note" id="preSub"></p></div>
     <p class="note pre-src" id="preSrc"></p>
   </div>
   <div class="pre-kpis" id="preKpis"></div>
-  <div class="pre-charts">
+  <div class="pre-charts" id="preCharts">
     <div class="pre-card"><div class="pre-ch"><h3>Cómo se movió un precio</h3><select id="preSer" aria-label="Precio a graficar"></select></div><div class="pre-chart" id="preChart"></div></div>
     <div class="pre-card"><div class="pre-ch"><h3>Relación de compra y venta</h3><select id="preRel" aria-label="Relación a graficar"></select></div><div class="pre-chart" id="preRelChart"></div><p class="note" id="preRelNote"></p></div>
   </div>
@@ -2684,7 +2707,7 @@ function setView(v){
   document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini'); document.querySelectorAll('.vpre').forEach(e=>e.hidden=v!=='pre'); $('tab-pre').setAttribute('aria-selected',v==='pre');
   curView=v; document.body.dataset.view=v; { const t=$('toast'); if(t) t.hidden=true; }
   if(v==='ini'){ flush(); renderIni(); $('negTitle').textContent='Hacé los números antes de comprar'; }
-  else if(v==='pre'){ renderPrecios(); $('negTitle').textContent='Precios de la hacienda'; }
+  else if(v==='pre'){ renderPrecios(); setTimeout(marcarPrenav,0); $('negTitle').textContent='Precios de la hacienda'; }
   else { setTitle(); numerarPasos(); }
   paintBars();
   window.scrollTo({top:0});
@@ -2800,11 +2823,11 @@ function renderPrecios0(){
   const prev=n>1?H[n-2]:null, cats=[['terneros','Terneros'],['terneras','Terneras'],['novillitos','Novillitos'],['vaquillonas','Vaquillonas']];
   const vr=(a,b)=>isNum(a)&&isNum(b)&&b>0?varTxt(a/b-1):'—';
   const tc=cats.map(([c,l])=>{ const rs=Object.keys(cur.rangos[c]).sort((a,b)=>parseInt(a)-parseInt(b));
-    return '<div class="pre-t"><h3>'+l+' <span class="note">($/kg)</span></h3><table><thead><tr><th>Kilos</th><th>Precio</th><th>Var. semanal</th></tr></thead><tbody>'
+    return '<div class="pre-t" id="pt-'+c+'"><h3>'+l+' <span class="note">($/kg)</span></h3><table><thead><tr><th>Kilos</th><th>Precio</th><th>Var. semanal</th></tr></thead><tbody>'
       +rs.map(rg=>'<tr><td>'+rg.replace('-',' a ')+' kg</td><td>'+money(cur.rangos[c][rg])+'</td><td>'+(prev?vr(cur.rangos[c][rg],prev.rangos[c][rg]):'—')+'</td></tr>').join('')+'</tbody></table></div>'; });
-  const tb=(tit,ks)=>'<div class="pre-t"><h3>'+tit+'</h3><table><thead><tr><th>Categoría</th><th>Precio</th><th>Var. semanal</th></tr></thead><tbody>'
+  const tb=(tit,ks,id)=>'<div class="pre-t" id="'+id+'"><h3>'+tit+'</h3><table><thead><tr><th>Categoría</th><th>Precio</th><th>Var. semanal</th></tr></thead><tbody>'
     +ks.map(k=>{ const s=S(k); return '<tr><td>'+s.l+'</td><td>'+val(s,cur)+'</td><td>'+(prev?vr(s.f(cur),s.f(prev)):'—')+'</td></tr>'; }).join('')+'</tbody></table></div>';
-  const tv=tb('Vientres <span class="note">($ por cabeza)</span>',['vp','vnp','vmp','vcc']), tg=tb('Hacienda gorda <span class="note">(MAG, $/kg)</span>',['mnt','mno','mvq','mva','mcon','mto','mej']);
+  const tv=tb('Vientres <span class="note">($ por cabeza)</span>',['vp','vnp','vmp','vcc'],'pt-vientres'), tg=tb('Hacienda gorda <span class="note">(MAG, $/kg)</span>',['mnt','mno','mvq','mva','mcon','mto','mej'],'pt-gorda');
   // machos y vientres a la izquierda; hembras y gorda a la derecha (quedan de alto parejo)
   $('preTables').innerHTML='<div class="pre-col">'+tc[0]+tc[2]+tv+'</div><div class="pre-col">'+tc[1]+tc[3]+tg+'</div>'; try{ infoScan($('precios')); }catch(e){}
 }
@@ -2834,6 +2857,20 @@ $('negMas').addEventListener('click',e=>{ if(e.target.closest('.mas-menu button'
 document.addEventListener('click',e=>{ const m=$('negMas'); if(m.open&&!m.contains(e.target)) m.open=false; });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('negMas').open){ $('negMas').open=false; $('negMas').querySelector('summary').focus(); } });
 $('tbSem').addEventListener('click',()=>setView('pre'));
+// precios: marcar en la barra la parte que se está viendo
+function marcarPrenav(){
+  if(document.body.dataset.view!=='pre') return; const nav=document.querySelector('.prenav'); if(!nav) return;
+  const lim=nav.getBoundingClientRect().bottom+20; let cur=null, best=-1e9;
+  const fondo=window.scrollY+window.innerHeight>=document.documentElement.scrollHeight-4;
+  if(marcarPrenav.click&&(Date.now()-marcarPrenav.t<1500||fondo)) cur=nav.querySelector('a[href="#'+marcarPrenav.click+'"]');
+  if(!cur) nav.querySelectorAll('a').forEach(a=>{ const t=document.getElementById(a.getAttribute('href').slice(1)); if(!t) return; const y=t.getBoundingClientRect().top; if(y<=lim&&y>best){ best=y; cur=a; } });
+  if(!cur) cur=nav.querySelector('a');
+  nav.querySelectorAll('a').forEach(a=>a.classList.toggle('act',a===cur));
+  const r=cur.getBoundingClientRect(), nr=nav.getBoundingClientRect(); if(r.left<nr.left||r.right>nr.right) nav.scrollLeft+=r.left-nr.left-16;
+}
+document.querySelector('.prenav').addEventListener('click',e=>{ const a=e.target.closest('a'); if(!a) return; marcarPrenav.click=a.getAttribute('href').slice(1); marcarPrenav.t=Date.now(); setTimeout(marcarPrenav,30); });
+window.addEventListener('wheel',()=>{ marcarPrenav.click=null; },{passive:true}); window.addEventListener('touchmove',()=>{ marcarPrenav.click=null; },{passive:true});
+window.addEventListener('scroll',()=>{ cancelAnimationFrame(marcarPrenav.f); marcarPrenav.f=requestAnimationFrame(marcarPrenav); },{passive:true});
 // ---------- buscador de negocios ----------
 const sinTilde=t=>String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 let buscaSel=-1, buscaIds=[];
