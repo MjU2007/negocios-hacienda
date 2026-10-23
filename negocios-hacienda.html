@@ -1293,6 +1293,34 @@ html body .board .sec-head .zoom-btn{display:inline-flex!important;width:32px;he
 html body .board .sec-head .zoom-btn::before{content:"⤢";font-size:1rem;line-height:1}
 @media print{html body .board .sec-head .zoom-btn{display:none!important}}
 html body .zoompanel .sec-head h2:has(.paso) .sec-ic{display:none}
+
+/* ===================== PRECIOS: FILTRO POR CATEGORÍA ===================== */
+.prenav button{flex:none;padding:13px 14px;color:var(--tb-mut);background:transparent;border:0;border-bottom:3px solid transparent;font:inherit;font-weight:600;white-space:nowrap;cursor:pointer}
+.prenav button[aria-selected="true"]{color:#fff;border-bottom-color:var(--acc)}
+@media (hover:hover){.prenav button:hover{color:#fff}}
+#preKpis[hidden]{display:none!important}
+.pre-tables{margin-top:4px}
+/* una sola categoría: solo su tabla, a todo el ancho */
+#precios:not([data-f="todo"]) .pre-tables{display:block}
+#precios:not([data-f="todo"]) .pre-col{display:contents}
+#precios[data-f="terneros"] .pre-t:not(#pt-terneros),#precios[data-f="terneras"] .pre-t:not(#pt-terneras),#precios[data-f="novillitos"] .pre-t:not(#pt-novillitos),
+#precios[data-f="vaquillonas"] .pre-t:not(#pt-vaquillonas),#precios[data-f="vientres"] .pre-t:not(#pt-vientres),#precios[data-f="gorda"] .pre-t:not(#pt-gorda){display:none!important}
+#precios[data-f="graficos"] .pre-tables{display:none!important}
+#precios:not([data-f="todo"]):not([data-f="graficos"]) .pre-t h3{font-size:1.25rem}
+#precios:not([data-f="todo"]):not([data-f="graficos"]) .pre-t td{font-size:1.05rem;padding-top:11px;padding-bottom:11px}
+
+/* una categoría: su tabla a la izquierda y cómo se movió su precio a la derecha */
+#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"]){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:14px;align-items:stretch}
+#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"])>*{grid-column:1 / -1}
+#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"])>.pre-tables{grid-column:1}
+#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"])>.pre-charts{display:contents}
+#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"])>.pre-charts>.pre-card:first-child{grid-column:2;align-self:stretch}
+#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"])>.pre-charts>.pre-card:nth-child(2),#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"])>#preHistNote{display:none!important}
+#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"]) .pre-t{height:100%;box-sizing:border-box}
+#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"])>.pre-tables{margin-top:0}
+#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"])>.pre-charts>.pre-card:first-child{margin-top:0}
+@media (max-width:900px){#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"]) .pre-t{height:auto}}
+@media (max-width:900px){#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"]){grid-template-columns:minmax(0,1fr)}#precios[data-f]:not([data-f="todo"]):not([data-f="graficos"])>.pre-charts>.pre-card:first-child{grid-column:1;margin-top:14px}}
 </style>
 
 <div class="wrap">
@@ -1819,20 +1847,20 @@ html body .zoompanel .sec-head h2:has(.paso) .sec-ic{display:none}
 </div>
 
 <section id="precios" class="vpre" hidden>
-  <nav class="prenav" aria-label="Ir directo a">
-    <a href="#preKpis">Resumen</a><a href="#preCharts">Gráficos</a><a href="#pt-terneros">Terneros</a><a href="#pt-terneras">Terneras</a><a href="#pt-novillitos">Novillitos</a><a href="#pt-vaquillonas">Vaquillonas</a><a href="#pt-vientres">Vientres</a><a href="#pt-gorda">Hacienda gorda</a>
+  <nav class="prenav" role="tablist" aria-label="Qué precios ver">
+    <button type="button" role="tab" data-f="todo" aria-selected="true">Todo</button><button type="button" role="tab" data-f="terneros" aria-selected="false">Terneros</button><button type="button" role="tab" data-f="terneras" aria-selected="false">Terneras</button><button type="button" role="tab" data-f="novillitos" aria-selected="false">Novillitos</button><button type="button" role="tab" data-f="vaquillonas" aria-selected="false">Vaquillonas</button><button type="button" role="tab" data-f="vientres" aria-selected="false">Vientres</button><button type="button" role="tab" data-f="gorda" aria-selected="false">Hacienda gorda</button><button type="button" role="tab" data-f="graficos" aria-selected="false">Gráficos</button>
   </nav>
   <div class="pre-head">
     <div><h2>Precios de esta semana</h2><p class="note" id="preSub"></p></div>
     <p class="note pre-src" id="preSrc"></p>
   </div>
-  <div class="pre-kpis" id="preKpis"></div>
+  <div class="pre-kpis" id="preKpis" hidden></div>
+  <div class="pre-tables" id="preTables"></div>
   <div class="pre-charts" id="preCharts">
     <div class="pre-card"><div class="pre-ch"><h3>Cómo se movió un precio</h3><select id="preSer" aria-label="Precio a graficar"></select></div><div class="pre-chart" id="preChart"></div></div>
     <div class="pre-card"><div class="pre-ch"><h3>Relación de compra y venta</h3><select id="preRel" aria-label="Relación a graficar"></select></div><div class="pre-chart" id="preRelChart"></div><p class="note" id="preRelNote"></p></div>
   </div>
   <p class="note" id="preHistNote"></p>
-  <div class="pre-tables" id="preTables"></div>
 </section>
 <section id="inicio" class="vini" hidden>
   <div class="ini-actions">
@@ -2713,7 +2741,7 @@ function setView(v){
   document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini'); document.querySelectorAll('.vpre').forEach(e=>e.hidden=v!=='pre'); $('tab-pre').setAttribute('aria-selected',v==='pre');
   curView=v; document.body.dataset.view=v; { const t=$('toast'); if(t) t.hidden=true; }
   if(v==='ini'){ flush(); renderIni(); $('negTitle').textContent='Hacé los números antes de comprar'; }
-  else if(v==='pre'){ renderPrecios(); setTimeout(marcarPrenav,0); $('negTitle').textContent='Precios de la hacienda'; }
+  else if(v==='pre'){ renderPrecios(); $('negTitle').textContent='Precios de la hacienda'; }
   else { setTitle(); numerarPasos(); }
   paintBars();
   window.scrollTo({top:0});
@@ -2863,20 +2891,17 @@ $('negMas').addEventListener('click',e=>{ if(e.target.closest('.mas-menu button'
 document.addEventListener('click',e=>{ const m=$('negMas'); if(m.open&&!m.contains(e.target)) m.open=false; });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('negMas').open){ $('negMas').open=false; $('negMas').querySelector('summary').focus(); } });
 $('tbSem').addEventListener('click',()=>setView('pre'));
-// precios: marcar en la barra la parte que se está viendo
-function marcarPrenav(){
-  if(document.body.dataset.view!=='pre') return; const nav=document.querySelector('.prenav'); if(!nav) return;
-  const lim=nav.getBoundingClientRect().bottom+20; let cur=null, best=-1e9;
-  const fondo=window.scrollY+window.innerHeight>=document.documentElement.scrollHeight-4;
-  if(marcarPrenav.click&&(Date.now()-marcarPrenav.t<1500||fondo)) cur=nav.querySelector('a[href="#'+marcarPrenav.click+'"]');
-  if(!cur) nav.querySelectorAll('a').forEach(a=>{ const t=document.getElementById(a.getAttribute('href').slice(1)); if(!t) return; const y=t.getBoundingClientRect().top; if(y<=lim&&y>best){ best=y; cur=a; } });
-  if(!cur) cur=nav.querySelector('a');
-  nav.querySelectorAll('a').forEach(a=>a.classList.toggle('act',a===cur));
-  const r=cur.getBoundingClientRect(), nr=nav.getBoundingClientRect(); if(r.left<nr.left||r.right>nr.right) nav.scrollLeft+=r.left-nr.left-16;
-}
-document.querySelector('.prenav').addEventListener('click',e=>{ const a=e.target.closest('a'); if(!a) return; marcarPrenav.click=a.getAttribute('href').slice(1); marcarPrenav.t=Date.now(); setTimeout(marcarPrenav,30); });
-window.addEventListener('wheel',()=>{ marcarPrenav.click=null; },{passive:true}); window.addEventListener('touchmove',()=>{ marcarPrenav.click=null; },{passive:true});
-window.addEventListener('scroll',()=>{ cancelAnimationFrame(marcarPrenav.f); marcarPrenav.f=requestAnimationFrame(marcarPrenav); },{passive:true});
+// precios: la barra filtra qué se ve (una categoría, todo o los gráficos)
+let preFiltro='todo';
+const PRE_FSER={terneros:'t180',terneras:'ta170',novillitos:'nov',vaquillonas:'vaq',vientres:'vp',gorda:'mno'};
+function setPreFiltro(f){ preFiltro=f; const pr=$('precios'); pr.dataset.f=f;
+  if(PRE_FSER[f]&&$('preSer').options.length){ $('preSer').value=PRE_FSER[f]; try{ renderPrecios(); }catch(e){} }
+  document.querySelectorAll('.prenav [data-f]').forEach(b=>b.setAttribute('aria-selected',b.dataset.f===f));
+  const nav=document.querySelector('.prenav'), b=nav.querySelector('[data-f="'+f+'"]'); if(b){ const r=b.getBoundingClientRect(), nr=nav.getBoundingClientRect(); if(r.left<nr.left||r.right>nr.right) nav.scrollLeft+=r.left-nr.left-16; }
+  const top=pr.getBoundingClientRect().top+window.scrollY-parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tbh')||0)-8;
+  if(window.scrollY>top) window.scrollTo({top}); }
+document.querySelector('.prenav').addEventListener('click',e=>{ const b=e.target.closest('[data-f]'); if(b) setPreFiltro(b.dataset.f); });
+setPreFiltro('todo');
 // ---------- buscador de negocios ----------
 const sinTilde=t=>String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 let buscaSel=-1, buscaIds=[];
