@@ -1065,7 +1065,7 @@ html,body{overflow-x:clip}
 body{margin:0!important}
 .wrap,body.cuadros .wrap{max-width:none!important;margin:0!important;padding:0 0 0!important;border:0!important}
 /* el contenido queda centrado con su ancho de siempre */
-.wrap>*:not(header):not(#fuentes):not(.editfloat):not(.salir):not(.toast):not(.zoomnavs):not(.zoomwrap),
+.wrap>*:not(header):not(.topbar):not(#fuentes):not(.editfloat):not(.salir):not(.toast):not(.zoomnavs):not(.zoomwrap),
 header>*:not(.topbar):not(.hero):not(#printHead){margin-left:max(var(--gmin),calc((100% - var(--wmax))/2))!important;margin-right:max(var(--gmin),calc((100% - var(--wmax))/2))!important}
 /* barra y foto ocupan todo el ancho; su contenido se alinea con el de abajo */
 .topbar,.hero{padding-left:max(var(--gmin),calc((100% - var(--wmax))/2))!important;padding-right:max(var(--gmin),calc((100% - var(--wmax))/2))!important;border-left:0!important;border-right:0!important}
@@ -1082,38 +1082,102 @@ body:has(#editFloat:not([hidden])) #fuentes{padding-bottom:110px!important}
 @media (max-width:1340px){.secnav a{padding:13px 7px!important;font-size:.9rem;gap:6px!important}.secnav .lay button{padding:4px 8px!important;font-size:.88rem}}
 .tb-brand{font-family:"Outfit",system-ui,sans-serif!important;font-weight:600!important;font-size:1.3rem!important;letter-spacing:-.005em!important}
 .tb-brand span{line-height:1}
+
+/* ===================== BARRA SUPERIOR FIJA ===================== */
+:root{--tbh:60px}
+.topbar{position:sticky;top:0;z-index:48;margin-bottom:-40px!important;margin-left:0!important;margin-right:0!important}
+.secnav{top:var(--tbh)!important}
+section,#veredicto{scroll-margin-top:calc(var(--tbh) + 64px)!important}
+.tb-brand{font-weight:400!important;letter-spacing:0!important}
+.tb-lupa-btn{display:none}
+.volver{align-self:flex-start;background:transparent;border:0;padding:0;font:inherit;font-size:.92rem;font-weight:600;color:var(--acc);cursor:pointer;margin-bottom:-14px}
+.volver:hover{text-decoration:underline}
+.volver[hidden]{display:none!important}
+@media (max-width:820px){
+  .topbar{display:grid!important;grid-template-columns:1fr auto;gap:0 8px!important;min-height:0!important}
+  .tb-brand{min-height:50px;font-size:1.12rem!important}
+  .tb-brand{grid-row:1;grid-column:1}.tb-lupa-btn{grid-row:1;grid-column:2}.topbar .viewtabs{grid-row:2}.tb-buscar{grid-row:3}
+  .tb-lupa-btn{display:inline-flex;align-items:center;justify-content:center;align-self:center;width:40px;height:40px;background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--tb-ink);cursor:pointer}
+  .tb-lupa-btn svg{width:18px;height:18px}
+  .tb-lupa-btn[aria-expanded="true"]{border-color:var(--acc);color:var(--acc)}
+  .topbar .viewtabs{grid-column:1 / -1;order:0!important;justify-content:flex-start!important;gap:26px!important}
+  .topbar .viewtabs button{flex:0 0 auto!important;min-height:42px!important}
+  .tb-buscar{display:none;grid-column:1 / -1;margin:0 0 10px!important}
+  .topbar.busca-abierta .tb-buscar{display:block}
+  .tb-sem{display:none}
+}
+@media print{.topbar{position:static}.volver{display:none!important}}
+/* ===================== PANEL DEL NEGOCIO DENTRO DE LA FOTO ===================== */
+.hero{overflow:visible!important}
+.hero-row{position:relative;z-index:2;display:flex;align-items:flex-end;gap:28px 48px}
+.hero-row>.hero-text{flex:1 1 0;min-width:0}
+.hero .negbar{flex:0 0 480px;align-self:flex-end;margin:0 0 26px!important;display:flex!important;flex-direction:column;gap:12px!important;
+  background:rgba(10,20,13,.86)!important;border:1px solid rgba(255,255,255,.14)!important;border-top:3px solid var(--acc)!important;border-left:1px solid rgba(255,255,255,.14)!important;
+  padding:18px 20px 16px!important;color:var(--tb-ink);box-shadow:0 20px 50px -24px rgba(0,0,0,.7)!important}
+.hero .negbar[hidden]{display:none!important}
+.neg-pick[hidden]{display:none!important}
+.hero .negbar .eyebrow{color:var(--acc)!important}
+.hero .negbar .tiporow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.hero .negbar .seg{border-color:rgba(255,255,255,.45)!important;background:transparent}
+.hero .negbar .seg button{color:var(--tb-ink)}
+.hero .negbar .seg button[aria-pressed="true"]{background:var(--tc)!important;color:#fff!important}
+.hero .negbar #tipoNote{color:var(--tb-mut)!important;margin:0;font-size:.9rem;line-height:1.45}
+.hero .neg-name{display:flex;flex-direction:column;gap:6px}
+.hero .neg-name .name-in{background:var(--input)!important;color:#17201A!important;border:1px solid var(--input-line)!important;padding:8px 10px;font:inherit;font-weight:600;width:100%;height:auto!important;min-height:0!important;flex:none!important;max-width:none!important}
+body.lectura .hero .neg-name{display:none}
+.hero .neg-acc{display:flex;flex-wrap:wrap;gap:8px;padding-top:12px;border-top:1px solid rgba(255,255,255,.14)}
+.hero .neg-acc .btn{color:var(--tb-ink);border-color:rgba(255,255,255,.45)}
+.hero .neg-acc .btn:hover{background:rgba(255,255,255,.08);border-color:#fff}
+.hero .neg-acc .btn.pri{color:#1B1A10!important}
+.hero .neg-acc .mas{margin-left:auto}
+.hero #negStatus{color:var(--tb-mut)!important;font-size:.8rem;margin:-4px 0 0}
+.hero #negStatus:empty{display:none}
+.hero .mas-menu{right:0;left:auto}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero .negbar .seg button[aria-pressed="true"]{color:#0E140F!important}}
+/* cuadros de confirmar borrado y de pasar negocio: debajo de la foto */
+.negextra{display:flex;flex-direction:column;gap:12px}
+.negextra[hidden]{display:none!important}
+.negextra>.negconfirm,.negextra>.sharebox{margin:16px 0 0!important;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--acc);padding:14px 18px}
+.negextra>[hidden]{display:none!important}
+@media (max-width:1100px){
+  .hero-row{flex-direction:column;align-items:stretch}
+  .hero .negbar{flex:0 0 auto;width:100%;max-width:560px;margin:0 0 22px!important}
+}
+@media print{.hero .negbar{display:none!important}}
 </style>
 
 <div class="wrap">
+<nav class="topbar" aria-label="Secciones">
+  <a class="tb-brand" href="#" id="tbHome"><svg class="tb-logo" viewBox="0 0 64 64" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 19 C12 15 5 17 3 22 C8 26 14 26 19 24"/>
+      <path d="M45 19 C52 15 59 17 61 22 C56 26 50 26 45 24"/>
+      <path d="M20 14 C26 9 38 9 44 14 C47 20 47 30 45 38 C44 45 42 49 40 52 L24 52 C22 49 20 45 19 38 C17 30 17 20 20 14 Z"/>
+      <path d="M27 11 C29 15 31 16 32 13 C33 16 35 15 37 11"/>
+      <path d="M22 50 C22 56 26 60 32 60 C38 60 42 56 42 50"/>
+    </g>
+    <circle cx="25.5" cy="28" r="2.4" fill="currentColor"/><circle cx="38.5" cy="28" r="2.4" fill="currentColor"/>
+    <ellipse cx="28" cy="55" rx="1.8" ry="2.4" fill="currentColor"/><ellipse cx="36" cy="55" rx="1.8" ry="2.4" fill="currentColor"/>
+  </svg><span>Negocios de hacienda</span></a>
+  <div class="viewtabs" role="tablist" aria-label="Vista">
+  <button type="button" role="tab" id="tab-ini" aria-selected="false">Inicio</button>
+  <button type="button" role="tab" id="tab-neg" aria-selected="false" hidden>Mis negocios</button>
+  <button type="button" role="tab" id="tab-pre" aria-selected="false">Precios</button>
+  </div>
+  <button type="button" class="tb-lupa-btn" id="lupaBtn" aria-label="Buscar negocio" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button>
+  <div class="tb-buscar" role="search">
+    <svg class="tb-lupa" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+    <label class="sr" for="busca">Buscar negocio</label>
+    <input id="busca" type="search" placeholder="Buscar negocio" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="buscaRes" aria-expanded="false">
+    <div class="busca-res" id="buscaRes" role="listbox" aria-label="Negocios encontrados" hidden></div>
+  </div>
+  <button type="button" class="tb-sem" id="tbSem" title="Ver todos los precios"></button>
+</nav>
 
 <header>
   <p id="printHead"></p>
-  <nav class="topbar" aria-label="Secciones">
-    <a class="tb-brand" href="#" id="tbHome"><svg class="tb-logo" viewBox="0 0 64 64" aria-hidden="true">
-      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 19 C12 15 5 17 3 22 C8 26 14 26 19 24"/>
-        <path d="M45 19 C52 15 59 17 61 22 C56 26 50 26 45 24"/>
-        <path d="M20 14 C26 9 38 9 44 14 C47 20 47 30 45 38 C44 45 42 49 40 52 L24 52 C22 49 20 45 19 38 C17 30 17 20 20 14 Z"/>
-        <path d="M27 11 C29 15 31 16 32 13 C33 16 35 15 37 11"/>
-        <path d="M22 50 C22 56 26 60 32 60 C38 60 42 56 42 50"/>
-      </g>
-      <circle cx="25.5" cy="28" r="2.4" fill="currentColor"/><circle cx="38.5" cy="28" r="2.4" fill="currentColor"/>
-      <ellipse cx="28" cy="55" rx="1.8" ry="2.4" fill="currentColor"/><ellipse cx="36" cy="55" rx="1.8" ry="2.4" fill="currentColor"/>
-    </svg><span>Negocios de hacienda</span></a>
-    <div class="viewtabs" role="tablist" aria-label="Vista">
-    <button type="button" role="tab" id="tab-ini" aria-selected="false">Inicio</button>
-    <button type="button" role="tab" id="tab-neg" aria-selected="true">Mis negocios</button>
-    <button type="button" role="tab" id="tab-pre" aria-selected="false">Precios</button>
-    </div>
-    <div class="tb-buscar" role="search">
-      <svg class="tb-lupa" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
-      <label class="sr" for="busca">Buscar negocio</label>
-      <input id="busca" type="search" placeholder="Buscar negocio" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="buscaRes" aria-expanded="false">
-      <div class="busca-res" id="buscaRes" role="listbox" aria-label="Negocios encontrados" hidden></div>
-    </div>
-    <button type="button" class="tb-sem" id="tbSem" title="Ver todos los precios"></button>
-  </nav>
   <div class="hero">
+    <div class="hero-row">
     <div class="hero-text">
   <div class="brand">
     <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
@@ -1129,6 +1193,7 @@ body:has(#editFloat:not([hidden])) #fuentes{padding-bottom:110px!important}
     </svg>
     <div class="eyebrow">Evaluación de negocios ganaderos: cría, recría e invernada</div>
   </div>
+  <button type="button" class="volver vneg" id="volverIni">← Volver a Inicio</button>
   <h1 id="negTitle">Mi negocio</h1>
   <p class="lead">Simulá un negocio antes de hacerlo: hacienda, tiempo, precios y costos. Obtenés la ganancia, la rentabilidad mensual, puntos de equilibrio y sensibilidad, con precios de referencia de mercado.</p>
   <div class="hero-cta vini" hidden>
@@ -1140,17 +1205,22 @@ body:has(#editFloat:not([hidden])) #fuentes{padding-bottom:110px!important}
     <span><i class="sw in auto"></i>Borde punteado: valor sugerido, cambialo si querés</span>
   </div>
     </div>
-    <div class="ticker" id="ticker" role="region" aria-label="Precios de la semana"><div class="tk-track" id="tkTrack"></div></div>
-  </div>
-  <div class="negbar vneg" role="region" aria-label="Mis negocios">
-    <div class="negtop">
-      <div class="neg-pick">
-        <label for="negSel" class="eyebrow">Negocio</label>
-        <select id="negSel"></select>
-        <label class="sr" for="negName">Nombre del negocio</label>
+    <aside class="negbar vneg" role="region" aria-label="Este negocio">
+      <div class="neg-pick" hidden>
+        <label for="negSel" class="sr">Negocio</label>
+        <select id="negSel" tabindex="-1"></select>
+      </div>
+      <div class="neg-name">
+        <label for="negName" class="eyebrow">Nombre del negocio</label>
         <input id="negName" class="name-in" maxlength="60" placeholder="Nombre del negocio">
       </div>
-      <span class="note" id="negStatus" aria-live="polite"></span>
+      <div class="negrow tiporow">
+        <span class="eyebrow">Tipo de negocio</span>
+        <div class="seg" role="group" aria-label="Tipo de negocio"><button type="button" id="tp-cria" aria-pressed="false">Cría</button><button type="button" id="tp-recria" aria-pressed="true">Recría</button><button type="button" id="tp-inv" aria-pressed="false">Invernada / engorde</button></div>
+        <span class="eyebrow sis-l" id="sisL">Sistema</span>
+        <div class="seg" role="group" aria-label="Sistema" id="sisSeg"><button type="button" id="sy-campo" aria-pressed="true">A campo</button><button type="button" id="sy-feed" aria-pressed="false">Feedlot</button><button type="button" id="sy-mix" aria-pressed="false">Mix</button></div>
+      </div>
+      <p class="note" id="tipoNote"></p>
       <div class="neg-acc">
         <button class="btn sm pri" type="button" id="negNew">+ Nuevo negocio</button>
         <button class="btn sm" type="button" id="negDup">Duplicar este</button>
@@ -1164,16 +1234,12 @@ body:has(#editFloat:not([hidden])) #fuentes{padding-bottom:110px!important}
           </div>
         </details>
       </div>
+      <span class="note" id="negStatus" aria-live="polite"></span>
+    </aside>
     </div>
-    <div class="negbody">
-    <div class="negrow tiporow">
-      <span class="eyebrow">Tipo de negocio</span>
-      <div class="seg" role="group" aria-label="Tipo de negocio"><button type="button" id="tp-cria" aria-pressed="false">Cría</button><button type="button" id="tp-recria" aria-pressed="true">Recría</button><button type="button" id="tp-inv" aria-pressed="false">Invernada / engorde</button></div>
-      <span class="eyebrow sis-l" id="sisL">Sistema</span>
-      <div class="seg" role="group" aria-label="Sistema" id="sisSeg"><button type="button" id="sy-campo" aria-pressed="true">A campo</button><button type="button" id="sy-feed" aria-pressed="false">Feedlot</button><button type="button" id="sy-mix" aria-pressed="false">Mix</button></div>
-    </div>
-    <p class="note" id="tipoNote"></p>
-    </div>
+    <div class="ticker" id="ticker" role="region" aria-label="Precios de la semana"><div class="tk-track" id="tkTrack"></div></div>
+  </div>
+  <div class="negextra vneg">
     <div class="negconfirm" id="negConfirm" hidden>
       <span>¿Borrar “<b id="negDelName"></b>”? No se puede deshacer.</span>
       <button class="btn sm danger" type="button" id="negDelYes">Sí, borrar</button>
@@ -2476,7 +2542,7 @@ function paintCmpVisual(rows,best){
   G.innerHTML=chart('Rentabilidad por mes',R=>R.rm,v=>pct(v,2))+chart('Ganancia',R=>R.gr,v=>mill(v));
 }
 function setView(v){
-  $('tab-ini').setAttribute('aria-selected',v==='ini'); $('tab-neg').setAttribute('aria-selected',v==='neg');
+  $('tab-ini').setAttribute('aria-selected',v==='ini'||v==='neg'); $('tab-neg').setAttribute('aria-selected',v==='neg');
   document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini'); document.querySelectorAll('.vpre').forEach(e=>e.hidden=v!=='pre'); $('tab-pre').setAttribute('aria-selected',v==='pre');
   curView=v; document.body.dataset.view=v; { const t=$('toast'); if(t) t.hidden=true; }
   if(v==='ini'){ flush(); renderIni(); $('negTitle').textContent='Hacé los números antes de comprar'; }
@@ -2621,6 +2687,11 @@ function renderIni(){
 $('tab-ini').addEventListener('click',()=>setView('ini'));
 // ---------- barra superior y cinta de precios ----------
 $('tbHome').addEventListener('click',e=>{ e.preventDefault(); setView('ini'); });
+$('volverIni').addEventListener('click',()=>setView('ini'));
+$('lupaBtn').addEventListener('click',()=>{ const tb=document.querySelector('.topbar'); const ab=!tb.classList.contains('busca-abierta'); tb.classList.toggle('busca-abierta',ab); $('lupaBtn').setAttribute('aria-expanded',ab); if(ab) $('busca').focus(); });
+$('busca').addEventListener('blur',()=>setTimeout(()=>{ if(!$('busca').value){ document.querySelector('.topbar').classList.remove('busca-abierta'); $('lupaBtn').setAttribute('aria-expanded','false'); } },150));
+// alto de la barra fija, para que la barra de pasos y los saltos queden justo debajo
+(function(){ const tb=document.querySelector('.topbar'); const set=()=>document.documentElement.style.setProperty('--tbh',tb.offsetHeight+'px'); set(); if(window.ResizeObserver) new ResizeObserver(set).observe(tb); window.addEventListener('resize',set); })();
 $('negMas').addEventListener('click',e=>{ if(e.target.closest('.mas-menu button')) $('negMas').open=false; });
 document.addEventListener('click',e=>{ const m=$('negMas'); if(m.open&&!m.contains(e.target)) m.open=false; });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('negMas').open){ $('negMas').open=false; $('negMas').querySelector('summary').focus(); } });
