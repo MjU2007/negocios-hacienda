@@ -1204,6 +1204,46 @@ html body .hero .negbar #tp-cria[aria-pressed="true"],html body .hero .negbar #t
 html body .hero .negbar #tp-cria[aria-pressed="true"]{border-bottom-color:var(--c-cria)!important}
 html body .hero .negbar #tp-recria[aria-pressed="true"]{border-bottom-color:var(--c-recria)!important}
 html body .hero .negbar #tp-inv[aria-pressed="true"]{border-bottom-color:var(--c-inv)!important}
+
+/* ===================== MÁS MATICES ===================== */
+:root,:root:not([data-theme="light"]){
+  --tb:#0C140F;          /* barras y pie */
+  --bg:#1A251D;          /* fondo: verde monte */
+  --surface:#233027;     /* cuadros */
+  --chip:#2E3D32;        /* recuadros internos */
+  --line:#3A4B3F;
+  --tb2:#2F4436;         /* encabezados de lo que cargás: verde */
+  --tb3:#3D3522;         /* encabezados de resultados: tierra/ocre */
+  --verde-hondo:#1E4A2D;
+}
+html body .secnav{background:#28382D!important}
+/* encabezados: verde en los pasos que cargás, tierra en los resultados */
+html body .board>section.es-res:not(#veredicto)>.sec-head,html body.cuadros .board>section.es-res:not(#veredicto)>.sec-head,html body .zoompanel section.es-res>.sec-head{background:var(--tb3)!important}
+html body .board>section.es-res:not(#veredicto){background:#28291F!important;border-color:#45432C!important}
+html body .board>section.es-res:not(#veredicto) .mini{background:#33321F!important}
+/* resumen con tinte ocre */
+html body #veredicto{background:linear-gradient(135deg,#2E2B1C 0%,#243026 55%,#1F3326 100%)!important}
+html body .kpis .kpi:nth-child(n):not(.main){background:rgba(12,20,15,.35)!important;border-color:#45503F!important}
+/* aviso de sugeridos con tinte ocre */
+html body .refbar{background:#2C2A1C!important;border-color:#4A4428!important}
+/* inicio: tarjetas con el tinte de su tipo */
+html body .ini-tipos>*:nth-child(1){background:color-mix(in srgb,var(--c-cria) 16%,var(--surface))!important}
+html body .ini-tipos>*:nth-child(2){background:color-mix(in srgb,var(--c-recria) 14%,var(--surface))!important}
+html body .ini-tipos>*:nth-child(3){background:color-mix(in srgb,var(--c-inv) 14%,var(--surface))!important}
+html body .ini-neg.t-cria{background:color-mix(in srgb,var(--c-cria) 8%,var(--surface))!important}
+html body .ini-neg.t-recria{background:color-mix(in srgb,var(--c-recria) 8%,var(--surface))!important}
+html body .ini-neg.t-inv{background:color-mix(in srgb,var(--c-inv) 8%,var(--surface))!important}
+html body .steps li{background:#2A3529!important}
+/* precios */
+html body .pre-kpi:nth-child(odd){background:#24322A!important}
+html body .pre-kpi:nth-child(even){background:#28352B!important}
+html body .pre-kpi.rel{background:var(--verde-hondo)!important}
+html body .pre-t table thead th{background:#2F4436!important}
+html body .pre-t tbody tr:nth-child(even) td{background:rgba(255,255,255,.025)}
+/* tablas de los cuadros: filas de grupo en tono tierra */
+html body table.cmp tbody tr.grp td,html body .board tr.grp td{background:#2F3424!important}
+html body .board table.one tbody tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+html body .editfloat{background:#2F4436!important;border-color:#456150!important}
 </style>
 
 <div class="wrap">
@@ -2399,7 +2439,7 @@ function numerarPasos(){
     const vis=!sec.hidden&&getComputedStyle(sec).display!=='none'; const h=sec.querySelector('.sec-head h2'); if(!h) return;
     let sp=h.querySelector('.paso'); if(!vis){ return; } k++; num[sec.id]=k;
     if(!sp){ sp=document.createElement('span'); sp.className='paso'; sp.setAttribute('aria-hidden','true'); h.insertBefore(sp,h.firstChild); }
-    sp.textContent=k; sp.classList.toggle('sal',!ENTRADAS.includes(sec.id)); });
+    sp.textContent=k; sp.classList.toggle('sal',!ENTRADAS.includes(sec.id)); sec.classList.toggle('es-res',!ENTRADAS.includes(sec.id)); });
   document.querySelectorAll('.secnav a').forEach(a=>{ const id=(a.getAttribute('href')||'').slice(1); let pn=a.querySelector('.pn');
     if(!num[id]){ if(pn) pn.remove(); return; }
     if(!pn){ pn=document.createElement('span'); pn.className='pn'; a.insertBefore(pn,a.firstChild); } pn.textContent=num[id]; pn.classList.toggle('sal',!ENTRADAS.includes(id)); });
