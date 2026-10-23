@@ -795,6 +795,73 @@ input.in.bad,.field:has(input.bad){outline:2px solid var(--neg)!important;outlin
 }
 @media (max-width:760px){.kpi.main{grid-column:auto}}
 @media (max-width:560px){.editfloat{left:12px;right:12px;transform:none;bottom:10px}.editfloat .em{max-width:none;flex:1}.btn.edit,.btn.save{min-width:0;padding:8px 14px}}
+/* ===================== TEMA "LOTE" (esquinas rectas, ordenado por pasos) ===================== */
+/* tonos de potrero (claro); el modo oscuro conserva sus colores */
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#E6EAE1;--surface:#FFFFFF;--line:#C9D1C3;--chip:#EEF1EA;--ink:#17201A;--muted:#55635A}}
+:root[data-theme="light"]{--bg:#E6EAE1;--surface:#FFFFFF;--line:#C9D1C3;--chip:#EEF1EA;--ink:#17201A;--muted:#55635A}
+/* todo con esquinas rectas */
+*,*::before,*::after{border-radius:0!important}
+/* superficies planas: sin degradados ni sombras blandas */
+.wrap{background:var(--bg)!important;box-shadow:none!important;border:1px solid var(--line)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .wrap{background:var(--bg)!important}}
+.board>section:not(#veredicto),.ini-card,.ini-neg,.negbar,.refbar,.pre-kpi,.pre-card,.pre-t,.steps li,.pick{background:var(--surface)!important;border:1px solid var(--line)!important;box-shadow:none!important}
+.negbar,.refbar{border-left:4px solid var(--tc)!important}
+.mini{background:var(--chip)!important;border:1px solid var(--line)!important;box-shadow:none!important}
+.mini .bar-r i,.bar{box-shadow:none!important}
+/* pestañas: fichas rectas, la activa en el color del tipo de negocio */
+.viewtabs{padding:0!important;gap:0!important;border:1px solid var(--line)!important;background:var(--surface)!important}
+.viewtabs button{padding:12px 14px!important;border-right:1px solid var(--line)!important}
+.viewtabs button:last-child{border-right:0!important}
+.viewtabs button[aria-selected="true"]{background:var(--tc,#2F7A3B)!important;color:#fff!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .viewtabs button[aria-selected="true"]{color:#0E140F!important}}
+/* resumen: el número principal es el protagonista */
+.kpis .kpi{background:var(--surface)!important;border:1px solid var(--line)!important;border-top:3px solid var(--line)!important;box-shadow:none!important}
+.kpis .kpi.main{background:var(--tc,#2F7A3B)!important;border-color:var(--tc,#2F7A3B)!important;color:#fff}
+.kpis .kpi.main .k,.kpis .kpi.main .sub,.kpis .kpi.main .info-b{color:rgba(255,255,255,.88)!important;border-color:rgba(255,255,255,.6)!important}
+.kpis .kpi.main .big,.kpis .kpi.main .big.pos,.kpis .kpi.main .big.neg{color:#fff!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kpis .kpi.main{color:#0E140F}
+  :root:not([data-theme="light"]) .kpis .kpi.main .big,:root:not([data-theme="light"]) .kpis .kpi.main .big.pos,:root:not([data-theme="light"]) .kpis .kpi.main .big.neg{color:#0E140F!important}
+  :root:not([data-theme="light"]) .kpis .kpi.main .k,:root:not([data-theme="light"]) .kpis .kpi.main .sub{color:rgba(14,20,15,.8)!important}}
+/* encabezado de cada cuadro: número de paso en un bloque del color del negocio */
+.board .sec-head{display:flex;align-items:center;gap:12px}
+.board .sec-head h2{display:flex;align-items:center;gap:12px;color:var(--ink)!important}
+.paso{display:inline-flex;align-items:center;justify-content:center;flex:none;width:2.1em;height:2.1em;font-family:var(--display);font-weight:700;font-size:1.05rem;line-height:1;border:2px solid var(--tc);color:var(--tc);background:transparent}
+.paso.sal{background:var(--tc);color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .paso.sal{color:#0E140F}}
+.board .sec-head h2:has(.paso) .sec-ic{display:none}
+@media (min-width:1100px){
+  body.cuadros .board>section:not(#veredicto) .sec-head{background:var(--surface)!important;margin:-18px -20px 6px!important;padding:14px 20px!important;border-bottom:2px solid var(--tc)!important}
+  body.cuadros .board>section:not(#veredicto){border-top:1px solid var(--line)!important}
+}
+.board>section .sec-head{border-bottom-color:var(--tc)}
+/* menú de pasos: chips rectos con su número */
+.secnav{gap:0!important}
+.secnav a{border:1px solid var(--line)!important;border-left-width:0!important;background:var(--surface)!important;padding:7px 12px!important;display:inline-flex;align-items:center;gap:7px}
+.secnav .lay+a{border-left-width:1px!important}
+.secnav a .pn{font-family:var(--display);font-weight:700;font-size:.85rem;min-width:1.4em;height:1.4em;display:inline-flex;align-items:center;justify-content:center;border:1.5px solid var(--tc);color:var(--tc)}
+.secnav a .pn.sal{background:var(--tc);color:#fff;border-color:var(--tc)}
+.secnav a:hover{background:var(--chip)!important}
+.secnav .lay{margin-right:10px!important}
+/* inicio */
+.ini-ico{background:var(--chip)!important}
+.ini-neg{border-top:4px solid var(--tc)!important}
+.ini-neg.t-cria{border-top-color:var(--c-cria)!important}.ini-neg.t-recria{border-top-color:var(--c-recria)!important}.ini-neg.t-inv{border-top-color:var(--c-inv)!important}
+.steps b{background:var(--ink)!important;color:var(--surface)!important}
+/* precios */
+.pre-kpi.rel{background:var(--chip)!important;border-left:4px solid var(--tc)!important}
+/* botones y campos rectos y nítidos */
+.btn{border-width:1.5px}
+.zoompanel{box-shadow:0 0 0 1px var(--line),0 30px 80px -30px rgba(0,0,0,.5)!important}
+.editfloat{box-shadow:0 0 0 1px var(--line),0 14px 40px -14px rgba(0,0,0,.35)!important}
+.info-b{border-width:1.5px}
+/* ganan a la capa cálida anterior */
+.kpis .kpi:nth-child(n):not(.main){background:var(--surface)!important;border:1px solid var(--line)!important}
+.kpis .kpi.main:nth-child(n){background:var(--tc,#2F7A3B)!important}
+table.cmp tbody tr.grp:nth-child(n) td{background:var(--chip)!important}
+.leyenda{font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;margin:14px 2px -6px}.leyenda[hidden]{display:none!important}
+.leyenda i{display:inline-block;width:.9em;height:.9em;border:1.5px solid var(--tc);vertical-align:-1px;margin-right:5px}
+.leyenda i.sal{background:var(--tc)}
+
 </style>
 
 <div class="wrap">
@@ -1941,9 +2008,26 @@ function applyUI(){
   const r=refFor(st);
   $('refTxt').textContent= !st.cat?'Elegí una categoría: se completan solos el precio de mercado, los pesos, los meses y los costos típicos. Después cambiás lo que quieras.': r? (Object.keys(r.v).length?'Sugeridos para esta categoría: ':'')+r.txt : '';
   $('refBtn').disabled=!r||!Object.keys(r.v).length; $('refConfirm').hidden=true;
-  calc(); paintEdit();
+  calc(); paintEdit(); numerarPasos();
 }
 
+// pasos: los cuadros visibles se numeran en orden (1 a 4 se cargan; del 5 en adelante es el resultado)
+const ENTRADAS=['hacienda','kilos','venta','costos','c-rodeo','c-prod','c-venta','c-costos'];
+function numerarPasos(){
+  let k=0; const num={};
+  if($('board').hidden) return;
+  document.querySelectorAll('.board > section').forEach(sec=>{ if(sec.id==='veredicto') return;
+    const vis=!sec.hidden&&getComputedStyle(sec).display!=='none'; const h=sec.querySelector('.sec-head h2'); if(!h) return;
+    let sp=h.querySelector('.paso'); if(!vis){ return; } k++; num[sec.id]=k;
+    if(!sp){ sp=document.createElement('span'); sp.className='paso'; sp.setAttribute('aria-hidden','true'); h.insertBefore(sp,h.firstChild); }
+    sp.textContent=k; sp.classList.toggle('sal',!ENTRADAS.includes(sec.id)); });
+  document.querySelectorAll('.secnav a').forEach(a=>{ const id=(a.getAttribute('href')||'').slice(1); let pn=a.querySelector('.pn');
+    if(!num[id]){ if(pn) pn.remove(); return; }
+    if(!pn){ pn=document.createElement('span'); pn.className='pn'; a.insertBefore(pn,a.firstChild); } pn.textContent=num[id]; pn.classList.toggle('sal',!ENTRADAS.includes(id)); });
+  let ultEntrada=0; for(const id in num) if(ENTRADAS.includes(id)) ultEntrada=Math.max(ultEntrada,num[id]);
+  const old=document.querySelector('.leyenda'); if(old) old.remove();
+  const nav=document.querySelector('.secnav'); if(nav&&!document.querySelector('.leyenda')){ const l=document.createElement('span'); l.className='leyenda vneg'; l.innerHTML='<span>Seguí los pasos en orden:</span><span><i></i>1 a '+ultEntrada+': cargás los datos</span><span><i class="sal"></i>'+(ultEntrada+1)+' en adelante: la página te da el resultado</span>'; nav.after(l); }
+}
 // ================= pintar =================
 function setT(id,txt,sign){const el=$(id); if(!el)return; el.textContent=txt; if(sign!==undefined){el.classList.toggle('pos',isNum(sign)&&sign>0);el.classList.toggle('neg',isNum(sign)&&sign<0);}}
 function calc(except){
@@ -2144,7 +2228,7 @@ function setView(v){
   curView=v; { const t=$('toast'); if(t) t.hidden=true; }
   if(v==='ini'){ flush(); renderIni(); $('negTitle').textContent='Negocios de hacienda'; }
   else if(v==='pre'){ renderPrecios(); $('negTitle').textContent='Precios de la hacienda'; }
-  else setTitle();
+  else { setTitle(); numerarPasos(); }
   paintBars();
   window.scrollTo({top:0});
 }
