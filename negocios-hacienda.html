@@ -862,12 +862,85 @@ table.cmp tbody tr.grp:nth-child(n) td{background:var(--chip)!important}
 .leyenda i{display:inline-block;width:.9em;height:.9em;border:1.5px solid var(--tc);vertical-align:-1px;margin-right:5px}
 .leyenda i.sal{background:var(--tc)}
 
+
+/* ===================== INICIO TIPO PORTAL: barra superior, foto grande y cinta de precios ===================== */
+:root{--tb:#13261B;--tb-ink:#E9EFE6;--tb-mut:#9FB3A4;--acc:#E0A43A}
+header{display:flex;flex-direction:column;gap:0!important}
+.topbar{display:flex;align-items:stretch;gap:28px;background:var(--tb);color:var(--tb-ink);padding:0 22px;min-height:60px;border:1px solid var(--tb)}
+.tb-brand{display:flex;align-items:center;gap:10px;color:var(--tb-ink);text-decoration:none;font-family:var(--display);font-weight:700;font-size:1.25rem;letter-spacing:.01em;white-space:nowrap}
+.tb-logo{width:30px;height:30px;color:var(--acc);flex:none}
+.topbar .viewtabs{display:flex;border:0!important;background:transparent!important;margin:0!important;gap:22px!important;padding:0!important}
+.topbar .viewtabs button{background:transparent!important;border:0!important;border-bottom:3px solid transparent!important;color:var(--tb-mut)!important;padding:0 2px!important;font-size:1rem;font-weight:600;min-height:60px;cursor:pointer;white-space:nowrap}
+.topbar .viewtabs button:hover{color:var(--tb-ink)!important}
+:root .topbar .viewtabs button[aria-selected="true"],:root:not([data-theme="light"]) .topbar .viewtabs button[aria-selected="true"]{color:#fff!important;background:transparent!important}
+.topbar .viewtabs button[aria-selected="true"]{color:#fff!important;border-bottom-color:var(--acc)!important;background:transparent!important}
+.tb-sem{margin-left:auto;align-self:center;background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--tb-mut);font:inherit;font-size:.85rem;padding:6px 12px;cursor:pointer}
+.tb-sem b{color:var(--tb-ink);font-weight:600}
+.tb-sem:hover{border-color:var(--acc);color:var(--tb-ink)}
+.hero{border:0!important;border-left:1px solid var(--tb)!important;border-right:1px solid var(--tb)!important;padding:34px 34px 0!important;display:flex;flex-direction:column;justify-content:space-between;gap:26px;min-height:300px!important;
+  background:linear-gradient(90deg,rgba(10,20,13,.92) 0%,rgba(10,20,13,.72) 40%,rgba(10,20,13,.1) 78%),var(--photo-hero) center 40%/cover no-repeat!important}
+.hero .brand{display:none}
+.hero .eyebrow{color:var(--acc)!important;letter-spacing:.06em}
+.hero h1{font-size:clamp(2.2rem,4.6vw,3.6rem)!important;line-height:1.02;max-width:22ch}
+.hero .lead{max-width:56ch}
+body[data-view="ini"] .hero{min-height:440px!important}
+body[data-view="ini"] .hero h1{font-size:clamp(2.6rem,5.6vw,4.4rem)!important;max-width:14ch}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+.hero-cta[hidden]{display:none!important}
+.hero-cta button{font:inherit;font-weight:700;font-size:1rem;padding:13px 22px;cursor:pointer;border:2px solid var(--acc)}
+.cta-1{background:var(--acc);color:#1B1A10}
+.cta-1:hover{background:#ECB656;border-color:#ECB656}
+.cta-2{background:rgba(10,20,13,.35);color:#fff;border-color:rgba(255,255,255,.75)!important}
+.cta-2:hover{border-color:#fff!important;background:rgba(10,20,13,.6)}
+.legend[hidden]{display:none!important}
+.ticker{position:relative;z-index:1;margin:0 -34px;background:rgba(10,20,13,.9);border-top:1px solid rgba(255,255,255,.12);overflow:hidden;cursor:pointer}
+.tk-track{display:flex;width:max-content;animation:tk 70s linear infinite}
+.ticker:hover .tk-track,.ticker:focus-within .tk-track{animation-play-state:paused}
+@keyframes tk{to{transform:translateX(-50%)}}
+.tk-i{display:inline-flex;align-items:baseline;gap:8px;padding:13px 22px;white-space:nowrap;color:var(--tb-mut);font-size:.92rem;border-right:1px solid rgba(255,255,255,.08)}
+.tk-i b{color:#fff;font-size:1.05rem;font-weight:700}
+.tk-i small{color:var(--tb-mut)}
+.tk-i .up{color:#7FD99A}.tk-i .dn{color:#FF9A8F}.tk-i .eq{color:var(--tb-mut)}
+@media (prefers-reduced-motion:reduce){.tk-track{animation:none}.ticker{overflow-x:auto}}
+.viewtabs+*{margin-top:0}
+header>.negbar{margin-top:18px}
+@media (max-width:820px){
+  .topbar{flex-wrap:wrap;gap:0 18px;padding:0 16px}
+  .tb-brand{min-height:52px}
+  .topbar .viewtabs{order:3;width:100%;justify-content:space-between;gap:0!important;border-top:1px solid rgba(255,255,255,.1)!important}
+  .topbar .viewtabs button{min-height:48px;flex:1}
+  .tb-sem{font-size:.78rem;padding:5px 8px}
+  .hero{padding:24px 18px 0!important}
+  .ticker{margin:0 -18px}
+  body[data-view="ini"] .hero{min-height:400px!important}
+}
+@media (max-width:480px){.tb-sem{display:none}}
+@media print{.topbar,.ticker,.hero-cta{display:none!important}.hero{background:none!important;min-height:0!important;padding:0!important}.hero .brand{display:flex}}
 </style>
 
 <div class="wrap">
 
 <header>
   <p id="printHead"></p>
+  <nav class="topbar" aria-label="Secciones">
+    <a class="tb-brand" href="#" id="tbHome"><svg class="tb-logo" viewBox="0 0 64 64" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 19 C12 15 5 17 3 22 C8 26 14 26 19 24"/>
+        <path d="M45 19 C52 15 59 17 61 22 C56 26 50 26 45 24"/>
+        <path d="M20 14 C26 9 38 9 44 14 C47 20 47 30 45 38 C44 45 42 49 40 52 L24 52 C22 49 20 45 19 38 C17 30 17 20 20 14 Z"/>
+        <path d="M27 11 C29 15 31 16 32 13 C33 16 35 15 37 11"/>
+        <path d="M22 50 C22 56 26 60 32 60 C38 60 42 56 42 50"/>
+      </g>
+      <circle cx="25.5" cy="28" r="2.4" fill="currentColor"/><circle cx="38.5" cy="28" r="2.4" fill="currentColor"/>
+      <ellipse cx="28" cy="55" rx="1.8" ry="2.4" fill="currentColor"/><ellipse cx="36" cy="55" rx="1.8" ry="2.4" fill="currentColor"/>
+    </svg><span>Negocios de hacienda</span></a>
+    <div class="viewtabs" role="tablist" aria-label="Vista">
+    <button type="button" role="tab" id="tab-ini" aria-selected="false">Inicio</button>
+    <button type="button" role="tab" id="tab-neg" aria-selected="true">Mis negocios</button>
+    <button type="button" role="tab" id="tab-pre" aria-selected="false">Precios</button>
+    </div>
+    <button type="button" class="tb-sem" id="tbSem" title="Ver todos los precios"></button>
+  </nav>
   <div class="hero">
     <div class="hero-text">
   <div class="brand">
@@ -882,21 +955,20 @@ table.cmp tbody tr.grp:nth-child(n) td{background:var(--chip)!important}
       <circle cx="25.5" cy="28" r="2.4" fill="currentColor"/><circle cx="38.5" cy="28" r="2.4" fill="currentColor"/>
       <ellipse cx="28" cy="55" rx="1.8" ry="2.4" fill="currentColor"/><ellipse cx="36" cy="55" rx="1.8" ry="2.4" fill="currentColor"/>
     </svg>
-    <div class="eyebrow">Evaluación de negocios ganaderos · Cría · Recría · Invernada</div>
+    <div class="eyebrow">Evaluación de negocios ganaderos: cría, recría e invernada</div>
   </div>
   <h1 id="negTitle">Mi negocio</h1>
   <p class="lead">Simulá un negocio antes de hacerlo: hacienda, tiempo, precios y costos. Obtenés la ganancia, la rentabilidad mensual, puntos de equilibrio y sensibilidad, con precios de referencia de mercado.</p>
-  <div class="legend">
+  <div class="hero-cta vini" hidden>
+    <button type="button" class="cta-1" id="ctaNuevo">Armar un negocio nuevo</button>
+    <button type="button" class="cta-2" id="ctaPrecios">Ver los precios de la semana</button>
+  </div>
+  <div class="legend vneg">
     <span><i class="sw in"></i>Celda amarilla: la podés cambiar después de tocar EDITAR</span>
     <span><i class="sw in auto"></i>Borde punteado: valor sugerido, cambialo si querés</span>
   </div>
     </div>
-
-  </div>
-  <div class="viewtabs" role="tablist" aria-label="Vista">
-    <button type="button" role="tab" id="tab-ini" aria-selected="false">Inicio</button>
-    <button type="button" role="tab" id="tab-neg" aria-selected="true">Mis negocios</button>
-    <button type="button" role="tab" id="tab-pre" aria-selected="false">Precios</button>
+    <div class="ticker" id="ticker" role="region" aria-label="Precios de la semana"><div class="tk-track" id="tkTrack"></div></div>
   </div>
   <div class="negbar vneg" role="region" aria-label="Mis negocios">
     <div class="negrow">
@@ -2225,8 +2297,8 @@ function paintCmpVisual(rows,best){
 function setView(v){
   $('tab-ini').setAttribute('aria-selected',v==='ini'); $('tab-neg').setAttribute('aria-selected',v==='neg');
   document.querySelectorAll('.vneg').forEach(e=>e.hidden=v!=='neg'); document.querySelectorAll('.vini').forEach(e=>e.hidden=v!=='ini'); document.querySelectorAll('.vpre').forEach(e=>e.hidden=v!=='pre'); $('tab-pre').setAttribute('aria-selected',v==='pre');
-  curView=v; { const t=$('toast'); if(t) t.hidden=true; }
-  if(v==='ini'){ flush(); renderIni(); $('negTitle').textContent='Negocios de hacienda'; }
+  curView=v; document.body.dataset.view=v; { const t=$('toast'); if(t) t.hidden=true; }
+  if(v==='ini'){ flush(); renderIni(); $('negTitle').textContent='Hacé los números antes de comprar'; }
   else if(v==='pre'){ renderPrecios(); $('negTitle').textContent='Precios de la hacienda'; }
   else { setTitle(); numerarPasos(); }
   paintBars();
@@ -2366,6 +2438,27 @@ function renderIni(){
   L.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>{ switchTo(b.dataset.open); setView('neg'); }));
 }
 $('tab-ini').addEventListener('click',()=>setView('ini'));
+// ---------- barra superior y cinta de precios ----------
+$('tbHome').addEventListener('click',e=>{ e.preventDefault(); setView('ini'); });
+$('tbSem').addEventListener('click',()=>setView('pre'));
+$('ctaPrecios').addEventListener('click',()=>setView('pre'));
+$('ctaNuevo').addEventListener('click',()=>{ const c=document.querySelector('#inicio .ini-new'); if(c){ c.scrollIntoView({behavior:'smooth',block:'start'}); const b=c.querySelector('[data-new]'); if(b) setTimeout(()=>b.focus({preventScroll:true}),400); } });
+$('ticker').addEventListener('click',()=>setView('pre'));
+function renderTicker(){
+  try{
+    const H=histOrd(), n=H.length, cur=H[n-1], prev=n>1?H[n-2]:null; if(!cur) return;
+    const vv=(a,b)=>{ if(!isNum(a)||!isNum(b)||b<=0) return '<span class="eq">sin dato previo</span>'; const v=a/b-1; const c=v>0.0005?'up':v<-0.0005?'dn':'eq'; return '<span class="'+c+'">'+(c==='up'?'▲ +':c==='dn'?'▼ −':'= ')+nf(Math.abs(v)*100,1)+' %</span>'; };
+    const it=[];
+    [['terneros','Terneros'],['terneras','Terneras'],['novillitos','Novillitos'],['vaquillonas','Vaquillonas']].forEach(([c,l])=>{
+      Object.keys(cur.rangos[c]||{}).sort((a,b)=>parseInt(a)-parseInt(b)).forEach(rg=>{ const v=cur.rangos[c][rg];
+        it.push('<span class="tk-i">'+l+' '+rg.replace('-','–')+' kg <b>'+money(v)+'</b><small>/kg</small> '+vv(v,prev&&prev.rangos[c]?prev.rangos[c][rg]:null)+'</span>'); }); });
+    ['vp','vcc','mno','mva'].forEach(k=>{ const s=PRE_SER.find(x=>x.k===k); if(!s) return; const v=s.f(cur); if(!isNum(v)) return;
+      it.push('<span class="tk-i">'+s.l+' <b>'+money(v)+'</b><small>'+s.u+'</small> '+vv(v,prev?s.f(prev):null)+'</span>'); });
+    const h=it.join(''); $('tkTrack').innerHTML=h+'<span aria-hidden="true" style="display:contents">'+h+'</span>';
+    $('tbSem').innerHTML='Precios: semana del <b>'+esc(PRECIOS.semana)+'</b>';
+  }catch(e){ console.error(e); }
+}
+renderTicker();
 document.querySelectorAll('#inicio [data-go]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.go)));
 document.querySelectorAll('#inicio [data-new]').forEach(b=>b.addEventListener('click',()=>{
   const t=b.dataset.new; setView('neg');
