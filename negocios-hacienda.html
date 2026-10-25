@@ -2382,7 +2382,7 @@ function fmtIn(id){ if((L[id].dep||[]).some(k=>!isNum(st[k]))) return ''; const 
 function refresh(except){
   const a=autoSet();
   for(const id in L){const el=$(id); if(!el)continue; el.classList.toggle('auto',(KEYS[id]||[id]).some(k=>a.has(k))&&el.value!==''); if(el===except)continue; el.value=fmtIn(id); el.classList.toggle('auto',(KEYS[id]||[id]).some(k=>a.has(k))&&el.value!=='');}
-  $('mesCompra').value=st.mesCompra; fillAnios(); $('anioCompra').value=anioDe(st); $('cat').value=st.cat||''; $('conCria').checked=!!st.conCria;
+  $('mesCompra').value=st.mesCompra; fillAnios(); $('anioCompra').value=anioDe(st); fillCats(); $('cat').value=st.cat||''; $('conCria').checked=!!st.conCria;
 }
 // rangos posibles: [mínimo, máximo, unidad]
 const LIMS={mort:[0,50,'%'],mortV:[0,50,'%'],pr:[0,100,'%'],pcria:[0,100,'%'],dest:[0,100,'%'],destC:[0,100,'%'],machos:[0,100,'%'],desc:[0,60,'%'],calif:[0,100,'%'],
@@ -2425,8 +2425,25 @@ selM.addEventListener('change',()=>{st.mesCompra=+selM.value; autoPrecios(); cal
 function fillAnios(){ const sel=$('anioCompra'), y=anioDe(st), lo=Math.min(YEAR0-1,y), hi=Math.max(YEAR0+4,y);
   if(sel.dataset.r===lo+'-'+hi) return; sel.dataset.r=lo+'-'+hi; sel.innerHTML=''; for(let a=lo;a<=hi;a++){ const o=document.createElement('option'); o.value=a; o.textContent=a; sel.appendChild(o);} }
 $('anioCompra').addEventListener('change',()=>{ st.anioCompra=+$('anioCompra').value; calc(); save(); });
-const selC=$('cat'); CATS.forEach(([k,l])=>{const o=document.createElement('option');o.value=k;o.textContent=l;selC.appendChild(o);});
+const selC=$('cat');
+// categorías que corresponden a cada tipo de negocio (lo que comprás)
+const CATS_TIPO={
+  recria:[['Para recriar',['ternero','ternera','mixto','torito']]],
+  invernada:[['Para terminar a faena',['ternero','ternera','novillito','vaquillona','novillo','vaca','toro']],['Vientres',['vacaPren','vacaCria']],['Otra',['otro']]]
+};
+const CAT_LBL_TIPO={invernada:{ternero:'Terneros (engorde corto)',ternera:'Terneras (engorde corto)',vaca:'Vacas de descarte',toro:'Toros de descarte'},recria:{torito:'Toritos (para reproductor)'}};
+function fillCats(){
+  const tipo=st.tipo==='invernada'?'invernada':'recria', grupos=CATS_TIPO[tipo], cur=st.cat||'';
+  if(selC.dataset.tipo===tipo&&selC.dataset.cur===cur) return;
+  selC.innerHTML='<option value="">Elegí una categoría…</option>';
+  const nom=k=>(CAT_LBL_TIPO[tipo]&&CAT_LBL_TIPO[tipo][k])||(CATS.find(x=>x[0]===k)||[])[1]||k;
+  const todos=[]; grupos.forEach(([g,ks])=>{ const og=document.createElement('optgroup'); og.label=g; ks.forEach(k=>{ todos.push(k); const o=document.createElement('option'); o.value=k; o.textContent=nom(k); og.appendChild(o); }); selC.appendChild(og); });
+  // un negocio viejo con una categoría de otro tipo no pierde su dato
+  if(cur&&!todos.includes(cur)){ const o=document.createElement('option'); o.value=cur; o.textContent=nom(cur)+' (de otro tipo de negocio)'; selC.appendChild(o); }
+  selC.value=cur; selC.dataset.tipo=tipo; selC.dataset.cur=cur;
+}
 selC.addEventListener('change',()=>{
+  if(TOR.includes(selC.value)) st.destTor= st.tipo==='invernada'?'fae' : (TOR.includes(st.cat)?(st.destTor||'rep'):'rep');
   st.cat=selC.value||null;
   const r=refFor(st); if(!r){ applyUI(); save(); return; }
   const a=autoSet(), v={...BASE,...r.v};
@@ -2455,6 +2472,7 @@ $('mv-vcc').addEventListener('click',()=>{ st.modoVenta='vcc'; const a=new Set(s
 function fillAuto(v){ const a=autoSet(); for(const [k,val] of Object.entries(v)){ if(!isNum(st[k])||a.has(k)){ st[k]=val; a.add(k);} } st.auto=[...a]; }
 function setTipo(t){
   st.tipo=t;
+  if(t!=='cria'&&st.cat){ const ok=CATS_TIPO[t==='invernada'?'invernada':'recria'].some(([,ks])=>ks.includes(st.cat)); if(!ok){ st.cat=null; toast('Elegí la categoría: la anterior no corresponde a '+(t==='invernada'?'invernada':'recría')); } }
   if(t==='cria') fillAuto(REF_CRIA.v);
   else { if(!st.sistema) st.sistema='campo'; if(st.sistema!=='campo') fillAuto((REF_SIS[st.sistema]||{})[t]||{}); }
   applyUI(); save();
@@ -2503,7 +2521,7 @@ function applyUI(){
   $('l-pVkg').textContent=mixto?'Precio del novillito por kilo':'Precio de venta por kilo';
   $('l-meses').textContent=mPren?'Meses de los terneros':'Meses en total';
   pr('es-par',!st.estac); pr('es-est',!!st.estac);
-  $('destRow').hidden=!TOR.includes(st.cat)||st.tipo==='cria'; pr('dt-rep',(st.destTor||'rep')==='rep'); pr('dt-fae',st.destTor==='fae');
+  if(st.tipo==='invernada'&&TOR.includes(st.cat)&&st.destTor!=='fae'){ st.destTor='fae'; } $('destRow').hidden=!TOR.includes(st.cat)||st.tipo==='cria'||st.tipo==='invernada'; pr('dt-rep',(st.destTor||'rep')==='rep'); pr('dt-fae',st.destTor==='fae');
   { const rep=TOR.includes(st.cat)&&(st.destTor||'rep')==='rep'&&!esCria&&(st.modoVenta||'kilo')==='kilo'; $('califRow').hidden=!rep; $('pDescRow').hidden=!rep; }
   { const bq=sisBloq(st); ['sy-feed','sy-mix'].forEach(id=>{ $(id).disabled=!!bq; $(id).title=bq?'No aplica para '+bq:''; });
     if(bq&&sis!=='campo'&&editing){ setSis('campo'); toast('Feedlot y Mix no aplican para '+bq+': el negocio pasó a campo'); return; }
