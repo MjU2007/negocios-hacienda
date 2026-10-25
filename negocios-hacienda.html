@@ -1661,7 +1661,7 @@ html body .bar.v{color:#1B1A10!important}
           <td><span class="field"><span class="u">$</span><input class="in" id="pRac" inputmode="decimal"><span class="u">/kg</span></span><span class="eq" id="e-pRac"></span></td></tr>
       <tr data-sis="feed mix"><td><span class="lbl">Gastos de corral por cabeza y por día</span><span class="hint">Personal, sanidad, mixer, estructura. Si es hotelería, lo que te cobran aparte del alimento</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="diaF" inputmode="decimal"><span class="u">/día</span></span></td></tr>
-      <tr data-sis="campo mix"><td><span class="lbl">Suplemento invernal</span><span class="hint">Grano, silo o rollo para cubrir el bache de invierno</span></td>
+      <tr data-sis="campo mix"><td><span class="lbl">Suplemento invernal</span><span class="hint">Solo si das algo aparte del pasto (grano, expeller, rollo). Si lo cargás, subí también el aumento de invierno en “Aumento diario → Por estación”, porque si no la página cuenta el gasto pero no los kilos que gana</span></td>
           <td><span class="field"><input class="in s" id="supKg" inputmode="decimal"><span class="u">kg/día</span></span></td></tr>
       <tr data-sis="campo mix"><td><span class="lbl">Días de suplemento</span></td>
           <td><span class="field"><input class="in s" id="supDias" inputmode="decimal"><span class="u">días</span></span></td></tr>
@@ -3210,7 +3210,7 @@ const GLOS=[
  ['Comisión de compra','Lo que cobra la consignataria o el rematador sobre el valor de la compra.'],
  ['Comisión de venta','Lo que cobra la consignataria o el rematador sobre el valor de la venta.'],
  ['Guías, DTE','Documentos y tasas para mover la hacienda (DTE de SENASA, guías municipales) y otros gastos por cabeza al vender.'],
- ['Suplemento invernal','Comida extra (grano, silo, rollo) para cubrir el invierno, cuando el pasto casi no crece.'],
+ ['Suplemento invernal','Comida extra que das en invierno, cuando el pasto casi no crece. En campo natural suele ser proteína (expeller de girasol o soja, 0,3–0,5 % del peso por día) y algo de maíz; en verdeos, rollo o grano. Con suplemento un ternero pasa de ganar 100–250 g/día a 400–600 g/día en invierno: cargá ese aumento en Por estación.'],
  ['Kilos producidos','Kilos que gana cada animal desde que se compra hasta que se vende.'],
  ['Precio de venta mínimo para no perder','Precio al que tendrías que vender para que la ganancia dé cero.'],
  ['Precio de compra máximo','Lo máximo que podrías pagar por cabeza para que la ganancia dé cero.'],
