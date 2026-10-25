@@ -1552,7 +1552,7 @@ html body .bar.v{color:#1B1A10!important}
     <div class="cal-grid" id="calGrid"></div>
   </div>
   <div class="tbar">
-    <p class="note">Si cambiás el peso final se recalcula el aumento diario, y al revés. Si cambiás los meses, queda fijo el último de los dos que tocaste.</p>
+    <p class="note">Si cambiás el peso final se recalcula el aumento diario, y al revés. Si cambiás los meses, se mantiene el aumento diario y cambia el peso final.</p>
     <div class="ctrl" hidden><span class="note">Al cambiar los meses, mantener fijo:</span>
       <div class="seg" role="group" aria-label="Qué queda fijo al cambiar los meses"><button type="button" id="f-gdp" aria-pressed="true">Aumento diario</button><button type="button" id="f-peso" aria-pressed="false">Peso final</button></div></div>
   </div>
@@ -2373,7 +2373,7 @@ const pfVale=()=>st.meses>0&&isNum(st.pc)&&isNum(pfOf());
 for(const k of ['meses','pc']){ const d=k==='meses'?1:0;
   L[k]={g:()=>st[k],d,clear:()=>{ if(pfVale()) pfKeep=pfOf(); st[k]=null; },
     s:v=>{ const pf=pfVale()?pfOf():pfKeep; st[k]=v; if(pfVale()) pfKeep=null;
-      if(st.fijo==='peso'&&st.meses>0&&isNum(pf)){ L.pf.s(pf); pfKeep=null; } }}; }
+      if(k==='pc'&&st.fijo==='peso'&&st.meses>0&&isNum(pf)){ L.pf.s(pf); pfKeep=null; } }}; }
 L.pcM={g:()=>st.pcM,d:0,s:v=>{ L.pc.s(v); st.pcM=v; },clear:()=>{ L.pc.clear(); st.pcM=null; }};
 // peso final ↔ aumento diario
 L.pf={g:pfOf,dep:['pc','meses'],s:v=>{ const T=tramos(st);
@@ -2430,7 +2430,7 @@ document.querySelectorAll('input.in').forEach(el=>{
     const v=parse(el.value); if(isNaN(v)) return;
     const lim=LIMS[el.id]; if((v<0&&el.id!=='varVenta')||(lim&&(v>lim[1]||v<lim[0]))){ el.classList.add('bad'); toast(lim?'Tiene que estar entre '+nf(lim[0],0)+' y '+nf(lim[1],0)+(lim[2]?' '+lim[2]:''):'No puede ser negativo'); return; }
     el.classList.remove('bad');
-    if(el.id==='pf'&&st.fijo!=='peso'){ st.fijo='peso'; pintaFijo(); }
+    if(el.id==='pf'&&st.fijo!=='gdp'){ st.fijo='gdp'; pintaFijo(); }
     else if(['gdp','gdpVer','gdpOto','gdpInv','gdpPri','gdpF'].includes(el.id)&&st.fijo!=='gdp'){ st.fijo='gdp'; pintaFijo(); }
     L[el.id].s(v); unAuto(Object.keys(st).filter(k=>st[k]!==before[k]).concat(KEYS[el.id]||[el.id])); if(PESOS.includes(el.id)) autoPrecios(); for(const k in st){ if(typeof st[k]==='number'&&!isFinite(st[k])) st[k]=null; } calc(el); save();});
   el.addEventListener('blur',()=>{ el.classList.remove('bad'); el.value=fmtIn(el.id); });
@@ -2540,7 +2540,7 @@ function applyUI(){
   $('l-meses').textContent=mPren?'Meses de los terneros':'Meses en total';
   pr('es-par',!st.estac); pr('es-est',!!st.estac);
   if(st.tipo==='invernada'&&TOR.includes(st.cat)&&st.destTor!=='fae'){ st.destTor='fae'; } $('destRow').hidden=!TOR.includes(st.cat)||st.tipo==='cria'||st.tipo==='invernada'; pr('dt-rep',(st.destTor||'rep')==='rep'); pr('dt-gen',st.destTor==='gen'); pr('dt-fae',st.destTor==='fae');
-  { const rep=TOR.includes(st.cat)&&['rep','gen'].includes(st.destTor||'rep')&&!esCria&&(st.modoVenta||'kilo')==='kilo'; $('califRow').hidden=!rep; $('pDescRow').hidden=!rep; }
+  { const rep=TOR.includes(st.cat)&&['rep','gen'].includes(st.destTor||'rep')&&!esCria&&(st.modoVenta||'kilo')==='kilo'; $('califRow').hidden=!rep; $('pDescRow').hidden=!rep; if(rep&&st.ventaPor==='cab') $('pVkg').closest('tr').hidden=true; }
   { const bq=sisBloq(st); ['sy-feed','sy-mix'].forEach(id=>{ $(id).disabled=!!bq; $(id).title=bq?'No aplica para '+bq:''; });
     if(bq&&sis!=='campo'&&editing){ setSis('campo'); toast('Feedlot y Mix no aplican para '+bq+': el negocio pasó a campo'); return; }
     if(bq&&sis!=='campo') $('tipoNote').textContent+= sis==='campo' ? '' : ' ⚠ Este negocio está en '+SISTEMAS[sis]+', que no aplica para '+bq+': tocá EDITAR y pasalo a campo.'; }
