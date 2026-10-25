@@ -1324,6 +1324,7 @@ html body .zoompanel .sec-head h2:has(.paso) .sec-ic{display:none}
 html body .hero .neg-name .name-in,html body .name-in{color:var(--input-ink)!important;background:var(--input)!important;border-color:var(--input-line)!important}
 html body .hero .neg-name .name-in::placeholder{color:rgba(243,220,154,.5)}
 html body .bar.v{color:#1B1A10!important}
+.tbar .ctrl[hidden]{display:none!important}
 </style>
 
 <div class="wrap">
@@ -1536,8 +1537,8 @@ html body .bar.v{color:#1B1A10!important}
     <div class="cal-grid" id="calGrid"></div>
   </div>
   <div class="tbar">
-    <p class="note">Si cambiás el peso final se recalcula el aumento diario, y al revés.</p>
-    <div class="ctrl"><span class="note">Al cambiar los meses, mantener fijo:</span>
+    <p class="note">Si cambiás el peso final se recalcula el aumento diario, y al revés. Si cambiás los meses, queda fijo el último de los dos que tocaste.</p>
+    <div class="ctrl" hidden><span class="note">Al cambiar los meses, mantener fijo:</span>
       <div class="seg" role="group" aria-label="Qué queda fijo al cambiar los meses"><button type="button" id="f-gdp" aria-pressed="true">Aumento diario</button><button type="button" id="f-peso" aria-pressed="false">Peso final</button></div></div>
   </div>
   <div class="tbl-wrap">
