@@ -2431,7 +2431,7 @@ const CATS_TIPO={
   recria:[['Para recriar',['ternero','ternera','mixto','torito']]],
   invernada:[['Para terminar a faena',['ternero','ternera','novillito','vaquillona','novillo','vaca','toro']],['Vientres',['vacaPren','vacaCria']],['Otra',['otro']]]
 };
-const CAT_LBL_TIPO={invernada:{ternero:'Terneros (engorde corto)',ternera:'Terneras (engorde corto)',vaca:'Vacas de descarte',toro:'Toros de descarte'},recria:{torito:'Toritos (para reproductor)'}};
+const CAT_LBL_TIPO={invernada:{ternero:'Terneros (engorde corto)',ternera:'Terneras (engorde corto)',vaca:'Vacas de descarte',toro:'Toros de descarte'},recria:{torito:'Terneros machos para hacer toros'}};
 function fillCats(){
   const tipo=st.tipo==='invernada'?'invernada':'recria', grupos=CATS_TIPO[tipo], cur=st.cat||'';
   if(selC.dataset.tipo===tipo&&selC.dataset.cur===cur) return;
