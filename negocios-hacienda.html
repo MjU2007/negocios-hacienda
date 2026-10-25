@@ -1338,6 +1338,8 @@ html body .bar.v{color:#1B1A10!important}
   html body select#cat{width:100%}
   html body #destRow .seg{display:flex!important;width:100%}html body #destRow .seg button{flex:1;text-align:center}
 }
+/* los recuadros de resumen (Resumen de la compra, Producción, Ingresos) con su tamaño justo, sin estirarse */
+@media (min-width:1100px){html body.cuadros .board>section .mini{flex:0 0 auto!important;justify-content:flex-start!important;margin-top:4px}}
 </style>
 
 <div class="wrap">
@@ -2523,7 +2525,8 @@ function applyUI(){
     : st.tipo==='invernada' ? 'Invernada / engorde: comprás hacienda recriada o flaca y la terminás para faena, '+SISTEMAS[sis]+'.'
     : 'Recría: comprás terneros destetados y los hacés crecer a campo hasta novillito o vaquillona.';
   const mixto=st.cat==='mixto'&&!esCria, mPren=mixto&&st.destH==='pren';
-  if(mixto&&(st.modoVenta!=='kilo'||st.conCria)){ st.modoVenta='kilo'; st.conCria=false; }
+  const machos=['ternero','torito','novillito','novillo','toro'].includes(st.cat);
+  if((mixto||machos)&&(st.modoVenta!=='kilo'||st.conCria)){ st.modoVenta='kilo'; st.conCria=false; }
   document.querySelectorAll('[data-show],[data-sis],[data-est],[data-mix],[data-nomix],[data-mixpren],[data-mixkilo]').forEach(el=>{
     const w=el.dataset.show, m=st.modoVenta||'kilo', modes=mixto?(mPren?['kilo','prenada']:['kilo']):[m];
     const hShow= !w?false: w==='cria'?(!st.conCria||m==='vcc'||mixto): w==='nocc'?m==='vcc': !w.split(' ').some(x=>modes.includes(x));
@@ -2531,7 +2534,7 @@ function applyUI(){
     const hEst= el.dataset.est==='on'? !st.estac : false;
     const hMix=(el.dataset.mix&&!mixto)||(el.dataset.nomix&&mixto)||(el.dataset.mixpren&&!mPren)||(el.dataset.mixkilo&&!(mixto&&!mPren));
     el.hidden=hShow||hSis||hEst||hMix;});
-  { const tb=$('mvSeg').closest('.tbar'); if(tb) tb.style.display=mixto?'none':''; } pr('dh-kilo',!mPren); pr('dh-pren',mPren);
+  { const tb=$('mvSeg').closest('.tbar'); if(tb) tb.style.display=(mixto||machos)?'none':''; } { const cr=$('conCria').closest('tr'); if(cr&&machos) cr.hidden=true; } pr('dh-kilo',!mPren); pr('dh-pren',mPren);
   $('l-pf').textContent=mixto?'Peso final de los terneros':'Peso final por cabeza';
   $('l-pVkg').textContent=mixto?'Precio del novillito por kilo':'Precio de venta por kilo';
   $('l-meses').textContent=mPren?'Meses de los terneros':'Meses en total';
@@ -2589,7 +2592,7 @@ function calc(except){
     const n=isNum(st.cab)?st.cab:0, sup=(st.supKg||0)*(st.supDias||0)*(st.supPrecio||0);
     setT('e-sup',sup>0?'= '+money(sup)+' por cabeza · '+mill(sup*n)+' en total':'');
     setT('e-dC',st.dC>0&&isNum(st.pc)?'Se pagan '+nf(st.pc*(1-st.dC/100),0)+' kg por cabeza':'');
-    setT('e-calif',R.rep&&isNum(R.viv)?nf(R.viv*R.q,0)+' como reproductores y '+nf(R.viv*(1-R.q),0)+' a faena':'');
+    { const tv=Math.round(R.viv||0), rp=Math.round((R.viv||0)*R.q); setT('e-calif',R.rep&&isNum(R.viv)?nf(rp,0)+' como reproductores y '+nf(tv-rp,0)+' a faena':''); }
     setT('e-dV',st.dV>0&&R.pf>0?'Se cobran '+nf(R.pf*(1-st.dV/100),0)+' kg por cabeza':'');
     setT('e-est',estOn(st)&&R.meses>0?'Promedio del período: '+nf(R.T.gC,2)+' kg/día':'');
   }
