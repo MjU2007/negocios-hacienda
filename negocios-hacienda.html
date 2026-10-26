@@ -1371,6 +1371,21 @@ html body.lectura :is(.board,.zoompanel) label.chk:has(> input[data-ro]:checked)
 .pre-t .pre-row.sel td:first-child{box-shadow:inset 3px 0 0 var(--acc)}
 .pre-t .pre-row:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
 .pre-t .pre-row td:first-child{padding-left:12px!important}
+
+/* ===================== ACLARACIONES AL PIE DE CADA CUADRO ===================== */
+html body :is(.board,.zoompanel) td .eq:not(:has(.pill)){display:none!important}
+.notas-pie{margin-top:6px;padding:12px 16px 10px;background:rgba(12,20,15,.28);border:1px solid var(--line)}
+.notas-pie h4{margin:0 0 6px;font-family:var(--display);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.notas-pie dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+.notas-pie dl>div{display:flex;justify-content:space-between;gap:16px;padding:6px 0;border-top:1px solid rgba(255,255,255,.05);font-size:.88rem}
+.notas-pie dl>div:first-child{border-top:0}
+.notas-pie dt{color:var(--muted)}
+.notas-pie dd{margin:0;color:var(--ink);font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+@media print{.notas-pie{background:none}}
+html body.lectura :is(.board,.zoompanel) td:has(> .field input[data-ro]),html body.lectura :is(.board,.zoompanel) td:has(> .field input[data-ro]) *{background-color:transparent!important;box-shadow:none!important}
+html body.lectura :is(.board,.zoompanel) table td.calc{background-color:transparent!important}
+html body :is(.board,.zoompanel) table.one tbody tr:nth-child(even):not(.sub):not(.grp) td{background:transparent}
+html body :is(.board,.zoompanel) table tr.sub td{background:rgba(255,255,255,.045)!important}
 </style>
 
 <div class="wrap">
@@ -2589,6 +2604,35 @@ function applyUI(){
   calc(); paintEdit(); numerarPasos(); pintarTipoHero();
 }
 
+// las aclaraciones chicas de debajo de cada valor (= total en la jaula, se pagan X kg…) se juntan al pie de su cuadro
+// convierte "dato + aclaración" en un renglón que se lea solo
+function notaClara(lab,t){ let m; lab=lab.replace(/ por hectárea y por año$/,'').replace(/ por hectárea$/,'');
+  if(m=t.match(/^([\d.,]+) cabezas en la jaula$/)) return ['Cabezas en la jaula',m[1]+' cab'];
+  if(m=t.match(/^Promedio de la jaula: (.+) por cabeza$/)) return ['Precio promedio por cabeza',m[1]];
+  if(m=t.match(/^Se pagan (.+) por cabeza$/)) return ['Kilos que se pagan por cabeza',m[1]];
+  if(m=t.match(/^([\d.,]+ ha)$/)) return ['Hectáreas que ocupa',m[1]];
+  if(m=t.match(/^(.+) en total \((.+)\)$/)) return [lab+' · total ('+m[2]+')',m[1]];
+  if(m=t.match(/^(.+) en total$/)) return [lab+' · total',m[1]];
+  if(m=t.match(/^(.+) por ([\d.,]+ meses.*)$/)) return [lab+' · total ('+m[2]+')',m[1]];
+  if(m=t.match(/^(.+) por cabeza$/)) return [lab+' · por cabeza',m[1]];
+  if(m=t.match(/^(.+) en la jaula$/)) return [lab+' · toda la jaula',m[1]];
+  return [lab,t]; }
+function notasAlPie(){
+  document.querySelectorAll('.board > section, .zoompanel > section').forEach(sec=>{
+    if(sec.id==='veredicto') return;
+    const items=[];
+    sec.querySelectorAll('td .eq').forEach(eq=>{ if(eq.querySelector('.pill')) return; const t=eq.textContent.trim(); if(!t) return; const tr=eq.closest('tr'); if(!tr||tr.hidden||!tr.getClientRects().length) return;
+      const l=tr.querySelector('.lbl'); let lab=''; if(l){ const c=l.cloneNode(true); c.querySelectorAll('button,.info-b').forEach(x=>x.remove()); lab=c.textContent.trim(); } items.push(notaClara(lab,t.replace(/^=\s*/,''))); });
+    let box=sec.querySelector(':scope > .notas-pie');
+    if(!items.length){ if(box) box.remove(); return; }
+    if(!box){ box=document.createElement('div'); box.className='notas-pie'; sec.appendChild(box); }
+    const html='<h4>Detalle</h4><dl>'+items.map(([a,b])=>'<div><dt>'+esc(a)+'</dt><dd>'+esc(b)+'</dd></div>').join('')+'</dl>';
+    if(box.innerHTML!==html) box.innerHTML=html;
+  });
+}
+(function(){ let f=0; const run=()=>{ cancelAnimationFrame(f); f=requestAnimationFrame(notasAlPie); };
+  new MutationObserver(ms=>{ if(ms.some(m=>{ const t=m.target.nodeType===1?m.target:m.target.parentElement; return t&&!t.closest('.notas-pie')&&t.closest('section'); })) run(); })
+    .observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['hidden']}); })();
 // pasos: los cuadros visibles se numeran en orden (1 a 4 se cargan; del 5 en adelante es el resultado)
 // en la foto: el tipo de negocio como título y una frase, sin etiquetas (en modo lectura)
 function pintarTipoHero(){
