@@ -1386,6 +1386,11 @@ html body.lectura :is(.board,.zoompanel) td:has(> .field input[data-ro]),html bo
 html body.lectura :is(.board,.zoompanel) table td.calc{background-color:transparent!important}
 html body :is(.board,.zoompanel) table.one tbody tr:nth-child(even):not(.sub):not(.grp) td{background:transparent}
 html body :is(.board,.zoompanel) table tr.sub td{background:rgba(255,255,255,.045)!important}
+
+/* aclaraciones de cada dato: dentro de su ⓘ, no debajo del nombre */
+html body :is(.board,.zoompanel) td .hint{display:none!important}
+#infoPop .ip-hint{display:block;margin-top:6px;padding-top:6px;border-top:1px solid color-mix(in srgb,var(--bg) 25%,transparent);opacity:.9}
+#infoPop b + .ip-hint{margin-top:0;padding-top:0;border-top:0}
 </style>
 
 <div class="wrap">
@@ -3356,6 +3361,12 @@ function infoScan(root){
     const g=glosFor(el.textContent); if(!g) return;
     const b=document.createElement('button'); b.type='button'; b.className='info-b'; b.textContent='i'; b.setAttribute('aria-label','Qué es: '+g[0]); b.setAttribute('aria-expanded','false');
     b.dataset.t=g[0]; b.dataset.d=g[1]; el.appendChild(b); });
+  // filas con aclaración pero sin ⓘ: se les agrega uno para que la aclaración no se pierda
+  (root||document).querySelectorAll('.board td .lbl, .zoompanel td .lbl').forEach(el=>{
+    if(el.querySelector('.info-b')) return; const tr=el.closest('tr'), h=tr&&tr.querySelector('td .hint'); if(!h||!h.textContent.trim()) return;
+    const c=el.cloneNode(true); c.querySelectorAll('button').forEach(x=>x.remove()); const t=c.textContent.trim();
+    const b=document.createElement('button'); b.type='button'; b.className='info-b'; b.textContent='i'; b.setAttribute('aria-label','Más información: '+t); b.setAttribute('aria-expanded','false');
+    b.dataset.t=t; b.dataset.d=''; el.appendChild(b); });
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest('.info-b');
@@ -3363,7 +3374,9 @@ document.addEventListener('click',e=>{
   e.preventDefault(); e.stopPropagation();
   if(infoBtn===b){ infoClose(); return; }
   infoClose(); infoBtn=b; b.setAttribute('aria-expanded','true');
-  infoPop.innerHTML='<b>'+esc(b.dataset.t)+'</b>'+esc(b.dataset.d); infoPop.hidden=false;
+  { const tr=b.closest('tr'), h=tr&&tr.querySelector('td .hint'), ht=h?h.textContent.trim():'', d=b.dataset.d||'';
+    infoPop.innerHTML='<b>'+esc(b.dataset.t)+'</b>'+esc(d)+(ht&&!d.includes(ht)?'<span class="ip-hint">'+esc(ht)+'</span>':''); }
+  infoPop.hidden=false;
   const r=b.getBoundingClientRect(), w=Math.min(300,window.innerWidth-24);
   let x=r.left+window.scrollX-12; x=Math.max(12+window.scrollX,Math.min(x,window.scrollX+window.innerWidth-w-12));
   infoPop.style.width=w+'px'; infoPop.style.left=x+'px'; infoPop.style.top=(r.bottom+window.scrollY+8)+'px';
