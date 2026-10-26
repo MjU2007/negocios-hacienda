@@ -895,7 +895,8 @@ body[data-view="ini"] .hero h1{font-size:clamp(2.6rem,5.6vw,4.4rem)!important;ma
 .tk-i b{color:#fff;font-size:1.05rem;font-weight:700}
 .tk-i small{color:var(--tb-mut)}
 .tk-i .up{color:#7FD99A}.tk-i .dn{color:#FF9A8F}.tk-i .eq{color:var(--tb-mut)}
-@media (prefers-reduced-motion:reduce){.tk-track{animation:none}.ticker{overflow-x:auto}}
+/* la cinta se mueve siempre (pedido explícito); con animaciones reducidas va más lenta */
+@media (prefers-reduced-motion:reduce){.tk-track{animation-duration:110s}}
 .viewtabs+*{margin-top:0}
 header>.negbar{margin-top:18px}
 @media (max-width:820px){
@@ -1340,6 +1341,36 @@ html body .bar.v{color:#1B1A10!important}
 }
 /* los recuadros de resumen (Resumen de la compra, Producción, Ingresos) con su tamaño justo, sin estirarse */
 @media (min-width:1100px){html body.cuadros .board>section .mini{flex:0 0 auto!important;justify-content:flex-start!important;margin-top:4px}}
+
+/* ===================== MODO LECTURA: LOS VALORES SE VEN COMO TEXTO, SIN RECUADROS ===================== */
+html body.lectura :is(.board,.zoompanel) .field:has(input[data-ro]){border:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;width:auto!important;height:auto!important;justify-content:flex-end;gap:3px!important;margin-left:auto}
+html body.lectura :is(.board,.zoompanel) input.in[data-ro]{border:0!important;background:transparent!important;box-shadow:none!important;outline:0!important;padding:0!important;width:auto!important;min-width:0!important;
+  color:var(--ink)!important;-webkit-text-fill-color:var(--ink);font-style:normal!important;font-weight:600!important;opacity:1!important;text-align:right;cursor:default}
+html body.lectura :is(.board,.zoompanel) .field:has(input[data-ro]) .u{color:var(--muted)!important;font-weight:400}
+html body.lectura :is(.board,.zoompanel) select[data-ro]{appearance:none;-webkit-appearance:none;border:0!important;background:transparent!important;background-image:none!important;padding:0 0 0 6px!important;
+  color:var(--ink)!important;opacity:1!important;font-weight:600!important;text-align:right;text-align-last:right;width:auto!important;cursor:default}
+html body.lectura :is(.board,.zoompanel) td:has(> select[data-ro]){white-space:nowrap}
+/* opciones: se ve solo la elegida, escrita */
+html body.lectura :is(.board,.zoompanel) .seg:has(> button[data-ro]){border:0!important;background:transparent!important;gap:0}
+html body.lectura :is(.board,.zoompanel) .seg > button[data-ro][aria-pressed="false"]{display:none!important}
+html body.lectura :is(.board,.zoompanel) .seg > button[data-ro][aria-pressed="true"]{background:transparent!important;color:var(--ink)!important;border:0!important;padding:0!important;font-weight:600;font-size:inherit!important;opacity:1!important;cursor:default}
+html body.lectura :is(.board,.zoompanel) .tbar:has(.seg > button[data-ro]) .seg{margin-left:auto}
+html body.lectura :is(.board,.zoompanel) .field:has(input[data-ro]) > input.in{flex:0 0 auto!important;max-width:none!important;field-sizing:content}
+html body.lectura :is(.board,.zoompanel) .field:has(input[data-ro]) > .u{width:auto!important;min-width:0!important;flex:0 0 auto!important;padding:0!important;text-align:left}
+html body.lectura :is(.board,.zoompanel) .mesanio{justify-content:flex-end;gap:5px}
+html body.lectura :is(.board,.zoompanel) .mesanio select[data-ro]{flex:0 0 auto!important;min-width:0!important;padding:0!important}
+/* casillas de sí/no: si no está marcada no se muestra; si está marcada se lee como texto */
+html body.lectura :is(.board,.zoompanel) tr:has(label.chk > input[data-ro]:not(:checked)){display:none!important}
+html body.lectura :is(.board,.zoompanel) label.chk > input[data-ro]:checked{display:none}
+html body.lectura :is(.board,.zoompanel) label.chk:has(> input[data-ro]:checked)::before{content:"✓ ";color:var(--pos)}
+
+/* precios: cada fila se puede tocar para ver su gráfico */
+.pre-t .pre-row{cursor:pointer}
+@media (hover:hover){.pre-t .pre-row:hover td{background:rgba(224,164,58,.08)!important}}
+.pre-t .pre-row.sel td{background:rgba(224,164,58,.16)!important;color:#fff}
+.pre-t .pre-row.sel td:first-child{box-shadow:inset 3px 0 0 var(--acc)}
+.pre-t .pre-row:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
+.pre-t .pre-row td:first-child{padding-left:12px!important}
 </style>
 
 <div class="wrap">
@@ -2303,6 +2334,8 @@ const LOCK='#negName,#tp-cria,#tp-recria,#tp-inv,#sy-campo,#sy-feed,#sy-mix,.ref
 function paintEdit(){
   document.body.classList.toggle('lectura',!editing); document.body.classList.toggle('editando',editing);
   if(!editing) document.querySelectorAll(LOCK).forEach(el=>{ if(!el.disabled){ el.disabled=true; el.dataset.ro='1'; } });
+  // en lectura cada número ocupa solo su ancho, para que quede pegado a su unidad como un texto
+  document.querySelectorAll('.board input.in, .zoompanel input.in').forEach(el=>{ if(!editing&&el.dataset.ro){ el.size=Math.max(1,(el.value||el.placeholder||'—').length); } else el.removeAttribute('size'); });
 }
 function paintBars(){
   const n=cur(), fl=$('editFloat'); if(!fl) return;
@@ -2888,10 +2921,16 @@ function renderPrecios0(){
   const R1=PRE_REL[0];
   $('preKpis').innerHTML=['t180','ta170','nov','vp','vcc','mno','mva'].map(k=>{ const s=S(k); return kp(s.l,val(s,cur),varTxt(preVar(H,s.f,1)),varTxt(preVar(H,s.f,4))); }).join('')
     +kp('Ternero ÷ novillito',R1.fmt(R1.f(cur)),varTxt(preVar(H,R1.f,1)),varTxt(preVar(H,R1.f,4)),'rel');
-  const sel=$('preSer'); if(!sel.options.length){ let gp=''; PRE_SER.forEach(s=>{ if(s.g!==gp){ gp=s.g; const og=document.createElement('optgroup'); og.label=gp; sel.appendChild(og);} const o=document.createElement('option'); o.value=s.k; o.textContent=s.l; sel.lastChild.appendChild(o); });
+  const CATS_PRE=[['terneros','Terneros'],['terneras','Terneras'],['novillitos','Novillitos'],['vaquillonas','Vaquillonas']];
+  const sel=$('preSer'); if(!sel.options.length){
+    // una opción por cada rango de kilos (lo mismo que las filas de las tablas) + vientres y gorda
+    CATS_PRE.forEach(([c,l])=>{ const og=document.createElement('optgroup'); og.label=l; Object.keys(cur.rangos[c]||{}).sort((a,b)=>parseInt(a)-parseInt(b)).forEach(rg=>{ const o=document.createElement('option'); o.value='r:'+c+':'+rg; o.textContent=l+' '+rg.replace('-','–')+' kg'; og.appendChild(o); }); sel.appendChild(og); });
+    let gp=''; PRE_SER.filter(x=>x.g!=='Invernada').forEach(s=>{ if(s.g!==gp){ gp=s.g; const og=document.createElement('optgroup'); og.label=gp; sel.appendChild(og);} const o=document.createElement('option'); o.value=s.k; o.textContent=s.l; sel.lastChild.appendChild(o); });
     PRE_REL.forEach(r=>{ const o=document.createElement('option'); o.value=r.k; o.textContent=r.l; $('preRel').appendChild(o); });
     sel.addEventListener('change',renderPrecios); $('preRel').addEventListener('change',renderPrecios); }
-  const s=S(sel.value)||PRE_SER[0]; preChart($('preChart'),H,s.f,v=>money(v),null);
+  if(!sel.value||![...sel.options].some(o=>o.value===sel.value)) sel.value=sel.options[0].value;
+  const serie=k=>{ if(k.startsWith('r:')){ const [,c,rg]=k.split(':'); return {k,f:e=>((e.rangos||{})[c]||{})[rg],u:'/kg'}; } return S(k); };
+  const s=serie(sel.value)||PRE_SER[0]; preChart($('preChart'),H,s.f,v=>money(v),null);
   const r=PRE_REL.find(x=>x.k===$('preRel').value)||R1; preChart($('preRelChart'),H,r.f,r.fmt,r.ref); $('preRelNote').innerHTML=r.nota(r.f(cur));
   $('preHistNote').textContent=(n<2?'El historial empieza esta semana.':'Historial de '+n+' semanas; se suma una cada viernes.')+(H.some(e=>e.est)?' El punto hueco es una semana calculada con la variación que publicó Círculo Ganadero.':'')+' La variación del mes aparece cuando haya 4 semanas de historial.';
   // tablas
@@ -2899,12 +2938,15 @@ function renderPrecios0(){
   const vr=(a,b)=>isNum(a)&&isNum(b)&&b>0?varTxt(a/b-1):'—';
   const tc=cats.map(([c,l])=>{ const rs=Object.keys(cur.rangos[c]).sort((a,b)=>parseInt(a)-parseInt(b));
     return '<div class="pre-t" id="pt-'+c+'"><h3>'+l+' <span class="note">($/kg)</span></h3><table><thead><tr><th>Kilos</th><th>Precio</th><th>Var. semanal</th></tr></thead><tbody>'
-      +rs.map(rg=>'<tr><td>'+rg.replace('-',' a ')+' kg</td><td>'+money(cur.rangos[c][rg])+'</td><td>'+(prev?vr(cur.rangos[c][rg],prev.rangos[c][rg]):'—')+'</td></tr>').join('')+'</tbody></table></div>'; });
+      +rs.map(rg=>'<tr class="pre-row" tabindex="0" data-k="r:'+c+':'+rg+'" title="Ver cómo se movió este precio"><td>'+rg.replace('-',' a ')+' kg</td><td>'+money(cur.rangos[c][rg])+'</td><td>'+(prev?vr(cur.rangos[c][rg],prev.rangos[c][rg]):'—')+'</td></tr>').join('')+'</tbody></table></div>'; });
   const tb=(tit,ks,id)=>'<div class="pre-t" id="'+id+'"><h3>'+tit+'</h3><table><thead><tr><th>Categoría</th><th>Precio</th><th>Var. semanal</th></tr></thead><tbody>'
-    +ks.map(k=>{ const s=S(k); return '<tr><td>'+s.l+'</td><td>'+val(s,cur)+'</td><td>'+(prev?vr(s.f(cur),s.f(prev)):'—')+'</td></tr>'; }).join('')+'</tbody></table></div>';
+    +ks.map(k=>{ const s=S(k); return '<tr class="pre-row" tabindex="0" data-k="'+k+'" title="Ver cómo se movió este precio"><td>'+s.l+'</td><td>'+val(s,cur)+'</td><td>'+(prev?vr(s.f(cur),s.f(prev)):'—')+'</td></tr>'; }).join('')+'</tbody></table></div>';
   const tv=tb('Vientres <span class="note">($ por cabeza)</span>',['vp','vnp','vmp','vcc'],'pt-vientres'), tg=tb('Hacienda gorda <span class="note">(MAG, $/kg)</span>',['mnt','mno','mvq','mva','mcon','mto','mej'],'pt-gorda');
   // machos y vientres a la izquierda; hembras y gorda a la derecha (quedan de alto parejo)
-  $('preTables').innerHTML='<div class="pre-col">'+tc[0]+tc[2]+tv+'</div><div class="pre-col">'+tc[1]+tc[3]+tg+'</div>'; try{ infoScan($('precios')); }catch(e){}
+  $('preTables').innerHTML='<div class="pre-col">'+tc[0]+tc[2]+tv+'</div><div class="pre-col">'+tc[1]+tc[3]+tg+'</div>';
+  $('preTables').querySelectorAll('.pre-row').forEach(tr=>{ tr.classList.toggle('sel',tr.dataset.k===sel.value); tr.setAttribute('aria-selected',tr.dataset.k===sel.value);
+    const go=()=>{ sel.value=tr.dataset.k; renderPrecios(); if(window.innerWidth<=900){ const c=document.querySelector('.pre-charts .pre-card'); if(c) c.scrollIntoView({behavior:'smooth',block:'center'}); } };
+    tr.addEventListener('click',go); tr.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } }); }); try{ infoScan($('precios')); }catch(e){}
 }
 // ================= pantalla de inicio =================
 function renderIni(){
@@ -2934,9 +2976,10 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('negMas').open){
 $('tbSem').addEventListener('click',()=>setView('pre'));
 // precios: la barra filtra qué se ve (una categoría, todo o los gráficos)
 let preFiltro='todo';
-const PRE_FSER={terneros:'t180',terneras:'ta170',novillitos:'nov',vaquillonas:'vaq',vientres:'vp',gorda:'mno'};
+const PRE_FSER={terneros:'r:terneros:160-180',terneras:'r:terneras:160-180',novillitos:'r:novillitos:300-330',vaquillonas:'r:vaquillonas:260-280',vientres:'vp',gorda:'mno'};
 function setPreFiltro(f){ preFiltro=f; const pr=$('precios'); pr.dataset.f=f;
-  if(PRE_FSER[f]&&$('preSer').options.length){ $('preSer').value=PRE_FSER[f]; try{ renderPrecios(); }catch(e){} }
+  if(PRE_FSER[f]&&$('preSer').options.length){ const sl=$('preSer'), want=PRE_FSER[f], cat=want.startsWith('r:')?want.split(':')[1]:null;
+    const opc=[...sl.options].map(o=>o.value); sl.value=opc.includes(want)?want:(opc.find(v=>cat&&v.startsWith('r:'+cat+':'))||sl.value); try{ renderPrecios(); }catch(e){} }
   document.querySelectorAll('.prenav [data-f]').forEach(b=>b.setAttribute('aria-selected',b.dataset.f===f));
   const nav=document.querySelector('.prenav'), b=nav.querySelector('[data-f="'+f+'"]'); if(b){ const r=b.getBoundingClientRect(), nr=nav.getBoundingClientRect(); if(r.left<nr.left||r.right>nr.right) nav.scrollLeft+=r.left-nr.left-16; }
   const top=pr.getBoundingClientRect().top+window.scrollY-parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tbh')||0)-8;
