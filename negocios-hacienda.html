@@ -3244,6 +3244,17 @@ function irA(id,foco){ const go=()=>{ const el=$(id); if(!el) return; const y=el
 $('ctaNuevo').addEventListener('click',()=>irA('armarNuevo','[data-new]'));
 $('ctaMis').addEventListener('click',()=>irA('misNeg','[data-open]'));
 $('tab-mis').addEventListener('click',()=>irA('misNeg','[data-open]'));
+// íconos propios: si en GitHub existe iconos/cria.svg (o recria.svg, invernada.svg), se usa ese dibujo
+(function(){ const BASE_IC='https://raw.githubusercontent.com/MjU2007/negocios-hacienda/main/iconos/';
+  const limpio=txt=>{ try{ const d=new DOMParser().parseFromString(txt,'image/svg+xml'); const sv=d.querySelector('svg'); if(!sv||d.querySelector('parsererror')) return null;
+      sv.querySelectorAll('script,foreignObject,iframe,object,embed').forEach(x=>x.remove());
+      sv.querySelectorAll('*').forEach(el=>[...el.attributes].forEach(at=>{ if(/^on/i.test(at.name)||/javascript:/i.test(at.value)) el.removeAttribute(at.name); }));
+      [...sv.attributes].forEach(at=>{ if(/^on/i.test(at.name)) sv.removeAttribute(at.name); });
+      if(!sv.getAttribute('viewBox')&&sv.getAttribute('width')&&sv.getAttribute('height')) sv.setAttribute('viewBox','0 0 '+parseFloat(sv.getAttribute('width'))+' '+parseFloat(sv.getAttribute('height')));
+      sv.removeAttribute('width'); sv.removeAttribute('height'); sv.setAttribute('aria-hidden','true'); return sv.outerHTML; }catch(e){ return null; } };
+  ['cria','recria','invernada'].forEach(t=>{ const slot=document.querySelector('#inicio .mi-ic[data-ic="'+t+'"]'); if(!slot||slot.querySelector('svg')) return;
+    fetch(BASE_IC+t+'.svg?v='+Math.floor(Date.now()/60000)).then(r=>r.ok?r.text():null).then(txt=>{ const h=txt&&limpio(txt); if(!h) return; slot.insertAdjacentHTML('beforeend',h); try{ renderIni(); }catch(e){} }).catch(()=>{}); });
+})();
 // en Inicio, se marca "Mis negocios" cuando la lista está a la vista
 window.addEventListener('scroll',()=>{ if(curView!=='ini') return; const m=$('misNeg'); if(!m) return; const r=m.getBoundingClientRect(), en=r.top<window.innerHeight*0.55&&r.bottom>120;
   $('tab-mis').setAttribute('aria-selected',en); $('tab-ini').setAttribute('aria-selected',!en); },{passive:true});
