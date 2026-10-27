@@ -1481,6 +1481,17 @@ html body #inicio .ini-neg .nums{border-top:0;padding-top:2px}
 html body #inicio .tipo-ic,html body #inicio .neg-ic{display:none!important}
 html body #inicio .ini-tipo{padding-right:120px!important;padding-bottom:16px!important;min-height:0}
 html body #inicio .ini-neg .upd{padding-right:0}
+
+/* ===================== ÍCONO PROPIO DE CADA TIPO (se pega el SVG en el HTML) ===================== */
+html body #inicio .mi-ic{display:none}
+html body #inicio .mi-ic:has(svg){display:block;position:absolute;right:96px;top:50%;transform:translateY(-50%);width:84px;height:56px;color:#fff}
+html body #inicio .ini-tipo:has(.mi-ic svg){padding-right:190px!important}
+html body #inicio :is(.mi-ic,.neg-ic) svg{width:100%;height:100%;display:block;fill:currentColor}
+html body #inicio :is(.mi-ic,.neg-ic) svg [fill]:not([fill="none"]){fill:currentColor}
+html body #inicio :is(.mi-ic,.neg-ic) svg [stroke]:not([stroke="none"]){stroke:currentColor}
+html body #inicio .ini-neg .neg-ic{display:block!important;position:absolute;right:16px;top:14px;bottom:auto;width:64px;height:42px;opacity:.95}
+html body #inicio .ini-neg:has(.neg-ic) h3{padding-right:76px}
+@media (max-width:1250px){html body #inicio .mi-ic:has(svg){top:auto;bottom:10px;right:16px;transform:none;width:70px;height:46px}html body #inicio .ini-tipo:has(.mi-ic svg){padding-right:18px!important;padding-bottom:62px!important}}
 </style>
 
 <div class="wrap">
@@ -2078,9 +2089,15 @@ html body #inicio .ini-neg .upd{padding-right:0}
       <h2>Armar un negocio nuevo</h2>
       <p>Elegí qué tipo de negocio querés evaluar. Se cargan precios de mercado y costos sugeridos para que ajustes con los datos de tu campo.</p>
       <div class="ini-tipos">
-        <button type="button" class="ini-tipo" data-new="cria"><svg class="tipo-ic" viewBox="0 0 120 72" aria-hidden="true"><use href="#ic-cria"/></svg><b>Cría</b><small>Rodeo de vacas, venta de terneros</small></button>
-        <button type="button" class="ini-tipo" data-new="recria"><svg class="tipo-ic" viewBox="0 0 120 72" aria-hidden="true"><use href="#ic-recria"/></svg><b>Recría</b><small>Terneros o terneras hasta novillito o vaquillona</small></button>
-        <button type="button" class="ini-tipo" data-new="invernada"><svg class="tipo-ic" viewBox="0 0 120 72" aria-hidden="true"><use href="#ic-inv"/></svg><b>Invernada</b><small>Terminación para faena</small></button>
+        <button type="button" class="ini-tipo" data-new="cria"><span class="mi-ic" data-ic="cria" aria-hidden="true"><!-- ICONO CRÍA: pegá acá abajo el código del SVG -->
+
+</span><b>Cría</b><small>Rodeo de vacas, venta de terneros</small></button>
+        <button type="button" class="ini-tipo" data-new="recria"><span class="mi-ic" data-ic="recria" aria-hidden="true"><!-- ICONO RECRÍA: pegá acá abajo el código del SVG -->
+
+</span><b>Recría</b><small>Terneros o terneras hasta novillito o vaquillona</small></button>
+        <button type="button" class="ini-tipo" data-new="invernada"><span class="mi-ic" data-ic="invernada" aria-hidden="true"><!-- ICONO INVERNADA: pegá acá abajo el código del SVG -->
+
+</span><b>Invernada</b><small>Terminación para faena</small></button>
       </div>
     </article>
   </div>
@@ -3148,7 +3165,7 @@ function renderIni(){
       +'<div class="nums"><div><span>Ganancia</span><b class="'+c(R.gr)+'">'+(R.ok?mill(R.gr):'—')+'</b></div>'
       +'<div><span>Rentab. por mes</span><b class="'+c(R.rm)+'">'+(R.ok?pct(R.rm,2):'—')+'</b></div></div>'
       +'<small class="upd">'+(R.ok?(s.tipo==='cria'?nf(R.n,0)+' vacas · por año':nf(R.n,0)+' cabezas · '+nf(R.meses,1)+' meses'):'Faltan datos')+'</small>'
-      +'<svg class="neg-ic" viewBox="0 0 64 40" aria-hidden="true"><use href="#ic-'+(s.tipo==='cria'?'cria':s.tipo==='invernada'?'inv':'recria')+'"/></svg></button>'; }).join('');
+      +(()=>{ const m=document.querySelector('#inicio .mi-ic[data-ic="'+(s.tipo||'recria')+'"]'); return m&&m.querySelector('svg')?'<span class="neg-ic" aria-hidden="true">'+m.innerHTML+'</span>':''; })()+'</button>'; }).join('');
   L.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>{ switchTo(b.dataset.open); setView('neg'); }));
 }
 $('tab-ini').addEventListener('click',()=>setView('ini'));
