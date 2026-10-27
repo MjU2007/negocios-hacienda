@@ -1434,6 +1434,7 @@ html body .tk-track{padding-left:0}
 @media (min-width:821px){html body .secnav{flex-wrap:wrap!important;overflow:visible!important;row-gap:0}html body .secnav a{padding:11px 10px!important}}
 html body section,html body #veredicto{scroll-margin-top:calc(var(--tbh) + var(--navh,52px) + 14px)!important}
 @media (max-width:1100px){html body .hero .negbar{flex:0 0 auto!important;flex-basis:auto!important}}
+html body tr.arr-row.arr-off{display:none!important}
 </style>
 
 <div class="wrap">
@@ -1794,7 +1795,8 @@ html body section,html body #veredicto{scroll-margin-top:calc(var(--tbh) + var(-
       <tr class="sub"><td colspan="2">Tierra y estructura</td></tr>
       <tr data-sis="campo mix"><td><span class="lbl">Cabezas por hectárea</span><span class="hint">Cuántas hectáreas ocupa la hacienda mientras está a campo</span></td>
           <td><span class="field"><input class="in s" id="cargaR" inputmode="decimal"><span class="u">cab/ha</span></span><span class="eq" id="e-cargaR"></span></td></tr>
-      <tr data-sis="campo mix"><td><span class="lbl">Alquiler de la tierra por hectárea y por año</span><span class="hint">Aunque el campo sea propio: es lo que se deja de cobrar por no alquilarlo. Ref. Salado: ~3,5 kg de novillo/ha/mes ≈ $178.000/ha/año</span></td>
+      <tr class="campo-row" data-sis="campo mix"><td><span class="lbl">¿El campo es propio o alquilado?</span><span class="hint">Propio: no se cobra alquiler y la ganancia es lo que te queda. Alquilado: se descuenta el alquiler por hectárea</span></td><td><div class="seg" role="group" aria-label="El campo es"><button type="button" id="camp-pro" aria-pressed="true">Propio</button><button type="button" id="camp-alq" aria-pressed="false">Alquilado</button></div></td></tr>
+      <tr data-sis="campo mix" class="arr-row"><td><span class="lbl">Alquiler de la tierra por hectárea y por año</span><span class="hint">Lo que pagás por hectárea. Ref. Salado: ~3,5 kg de novillo/ha/mes ≈ $178.000/ha/año</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="arrR" inputmode="decimal"><span class="u">/ha</span></span><span class="eq" id="e-arrR"></span></td></tr>
       <tr><td><span class="lbl">Estructura y administración</span><span class="hint">Asesor, camioneta, alambrados, aguadas, impuestos del campo. Por cabeza y por mes</span></td>
           <td><span class="field"><span class="u">$</span><input class="in" id="estMes" inputmode="decimal"><span class="u">/mes</span></span><span class="eq" id="e-estMes"></span></td></tr>
@@ -1894,8 +1896,9 @@ html body section,html body #veredicto{scroll-margin-top:calc(var(--tbh) + var(-
     <tr><td><span class="lbl">Mano de obra</span></td><td><span class="field"><span class="u">$</span><input class="in " id="mobV" inputmode="decimal"></span><span class="eq" id="e-mobV"></span></td></tr>
     <tr><td><span class="lbl">Costo anual por toro</span><span class="hint">Amortización (precio del toro ÷ años de uso) + mantenimiento</span></td><td><span class="field"><span class="u">$</span><input class="in " id="ctoro" inputmode="decimal"><span class="u">/toro</span></span><span class="eq" id="e-ctoro"></span></td></tr>
     <tr><td><span class="lbl">Otros gastos</span></td><td><span class="field"><span class="u">$</span><input class="in " id="otrosV" inputmode="decimal"></span><span class="eq" id="e-otrosV"></span></td></tr>
-    <tr><td><span class="lbl">Alquiler de la tierra por hectárea y por año</span><span class="hint">Si alquilás, o para comparar contra alquilar tu campo. 0 si es propio y no lo querés contar</span></td><td><span class="field"><span class="u">$</span><input class="in " id="arrHa" inputmode="decimal"><span class="u">/ha</span></span><span class="eq" id="e-arrHa"></span></td></tr>
-    <tr class="total"><td><span class="lbl">Costo por vaca</span><span class="hint">Incluye los toros y el alquiler</span></td><td class="calc" id="o-cvaca">—</td></tr>
+    <tr class="campo-row"><td><span class="lbl">¿El campo es propio o alquilado?</span><span class="hint">Propio: no se cobra alquiler y la ganancia es lo que te queda. Alquilado: se descuenta el alquiler por hectárea</span></td><td><div class="seg" role="group" aria-label="El campo es"><button type="button" id="campc-pro" aria-pressed="true">Propio</button><button type="button" id="campc-alq" aria-pressed="false">Alquilado</button></div></td></tr>
+    <tr class="arr-row"><td><span class="lbl">Alquiler de la tierra por hectárea y por año</span><span class="hint">Lo que pagás por hectárea</span></td><td><span class="field"><span class="u">$</span><input class="in " id="arrHa" inputmode="decimal"><span class="u">/ha</span></span><span class="eq" id="e-arrHa"></span></td></tr>
+    <tr class="total"><td><span class="lbl">Costo por vaca</span><span class="hint">Incluye los toros y, si el campo es alquilado, el alquiler</span></td><td class="calc" id="o-cvaca">—</td></tr>
     <tr class="total"><td><span class="lbl">Costo de todo el rodeo</span></td><td class="calc" id="o-crodeo">—</td></tr>
   </tbody></table></div>
   <div class="mini" id="mini-c-costos"></div>
@@ -2053,7 +2056,7 @@ const EMPTY={cat:null,cab:null,pc:null,precioPor:'kg',pCkg:null,pCcab:null,cc:nu
   tasa:null,inf:null,vista:'cab',fijo:'gdp',
   tipo:'recria',sistema:'campo',mesesF:null,gdpF:null,conv:null,pRac:null,diaF:null,
   vacas:null,toros:null,ha:null,carga:null,valVaca:null,mortV:null,destC:null,pdesC:null,machos:null,desc:null,pVd:null,
-  pTro:null,pTra:null,pVdKg:null,sanV:null,alV:null,mobV:null,ctoro:null,otrosV:null,arrHa:null,
+  pTro:null,pTra:null,pVdKg:null,sanV:null,alV:null,mobV:null,ctoro:null,otrosV:null,arrHa:null,campo:'pro',
   estac:false,gdpVer:null,gdpOto:null,gdpInv:null,gdpPri:null,supKg:null,supDias:null,supPrecio:null,dC:null,dV:null,sanDet:false,sanPlan:null,destTor:'rep'};
 const TIPOS={cria:'Cría',recria:'Recría',invernada:'Invernada / engorde'};
 const SISTEMAS={campo:'a campo',feed:'a corral (feedlot)',mix:'mix campo + corral'};
@@ -2182,7 +2185,7 @@ function modelCria(s){
   r.ingTer=(r.mach*pdes*N('pTro')+r.hemV*pdes*Z('pTra'))*v; r.ingVd=r.vd*Z('pVd')*Z('pVdKg')*v; r.ing=r.ingTer+r.ingVd;
   r.kgV=(r.mach+r.hemV)*pdes+r.vd*Z('pVd');
   const tR=isNum(s.toros)?s.toros:TOROS_REF; r.nToros=V>0&&tR>0?Math.max(1,Math.round(V*tR/100)):0;
-  r.dir=V*(Z('sanV')+Z('alV')+Z('mobV')+Z('otrosV'))+r.nToros*Z('ctoro')+(HA(s)||0)*Z('arrHa');
+  r.dir=V*(Z('sanV')+Z('alV')+Z('mobV')+Z('otrosV'))+r.nToros*Z('ctoro')+(s.campo==='alq'?(HA(s)||0)*Z('arrHa'):0);
   r.cvp=Z('cv')/100; r.cv=r.ing*r.cvp; r.gv=(r.mach+r.hemV+r.vd)*Z('gv'); r.gven=r.cv+r.gv;
   r.ct=r.dir+r.gven; r.mb=r.ing-r.ct;
   r.compraCab=N('valVaca'); r.cpra=V*r.compraCab; r.cp=0; r.gr=r.mb; // sin comparar contra otra inversión
@@ -2263,7 +2266,7 @@ function model(s){
   r.cPasto=r.n*(T.kC*Z('alKg')+Z('alMes')*T.mC); r.cCorral=r.n*(T.kF*Z('conv')*Z('pRac')+Z('diaF')*T.mF*D); r.cSup=r.n*r.sup;
   r.cSan=r.n*Z('san'); r.cServ=r.pren?r.n*(Z('serv')+Z('tacto')):0; r.cMob=r.n*Z('mob'); r.cOtros=r.n*Z('otros');
   // tierra (lo que cuesta, o lo que se dejaría de cobrar alquilándola) mientras está a campo, y estructura
-  r.ha=Z('cargaR')>0&&r.n>0?r.n/Z('cargaR'):0; r.tierra=r.ha*Z('arrHa')*T.mC/12; r.estr=r.n*Z('estMes')*(isNum(r.meses)?r.meses:0);
+  r.ha=Z('cargaR')>0&&r.n>0?r.n/Z('cargaR'):0; r.tierra=s.campo==='alq'?r.ha*Z('arrHa')*T.mC/12:0; r.estr=r.n*Z('estMes')*(isNum(r.meses)?r.meses:0);
   r.tie=r.tierra+r.estr; r.rec=r.campo+r.tie;
   r.cvp=Z('cv')/100; r.cv=r.ing*r.cvp; r.gv=r.viv*Z('gv'); r.gven=r.cv+r.gv;
   r.ct=r.cpra+r.rec+r.gven; r.mb=r.ing-r.ct; r.rent=r.mb/r.ct;
@@ -2580,7 +2583,7 @@ selC.addEventListener('change',()=>{
 ['rep','gen','fae'].forEach(d=>$('dt-'+d).addEventListener('click',()=>{ if((st.destTor||'rep')===d) return; st.destTor=d; selC.dispatchEvent(new Event('change')); }));
 $('conCria').addEventListener('change',e=>{st.conCria=e.target.checked; applyUI(); save();});
 const seg=(a,b,key,va,vb)=>{$(a).addEventListener('click',()=>{st[key]=va; applyUI(); save();}); $(b).addEventListener('click',()=>{st[key]=vb; applyUI(); save();});};
-seg('f-gdp','f-peso','fijo','gdp','peso'); seg('v-cab','v-jaula','vista','cab','jaula'); seg('mv-kilo','mv-prenada','modoVenta','kilo','prenada');
+seg('f-gdp','f-peso','fijo','gdp','peso'); seg('camp-pro','camp-alq','campo','pro','alq'); seg('campc-pro','campc-alq','campo','pro','alq'); seg('v-cab','v-jaula','vista','cab','jaula'); seg('mv-kilo','mv-prenada','modoVenta','kilo','prenada');
 $('mv-vcc').addEventListener('click',()=>{ st.modoVenta='vcc'; const a=new Set(st.auto||[]); if(!isNum(st.pVcc)){st.pVcc=CG.vacaNuevaCria;a.add('pVcc');} if(!isNum(st.pcria)){st.pcria=90;a.add('pcria');} if(!isNum(st.pVac)){st.pVac=MG.vaca;a.add('pVac');} st.auto=[...a]; applyUI(); save(); });
 // completa datos vacíos o sugeridos; no toca lo que cargaste vos
 function fillAuto(v){ const a=autoSet(); for(const [k,val] of Object.entries(v)){ if(!isNum(st[k])||a.has(k)){ st[k]=val; a.add(k);} } st.auto=[...a]; }
@@ -2607,7 +2610,7 @@ $('refYes').addEventListener('click',()=>{ const r=refFor(st); if(!r)return;
 function applyUI(){
   if(editing) document.querySelectorAll('[data-ro]').forEach(el=>{ el.disabled=false; delete el.dataset.ro; });
   const pr=(id,on)=>$(id).setAttribute('aria-pressed',on);
-  pr('f-gdp',st.fijo==='gdp'); pr('f-peso',st.fijo==='peso'); pr('v-cab',st.vista==='cab'); pr('v-jaula',st.vista==='jaula');
+  { const al=st.campo==='alq'; ['camp','campc'].forEach(x=>{ pr(x+'-pro',!al); pr(x+'-alq',al); }); document.querySelectorAll('.arr-row').forEach(tr=>tr.classList.toggle('arr-off',!al)); } pr('f-gdp',st.fijo==='gdp'); pr('f-peso',st.fijo==='peso'); pr('v-cab',st.vista==='cab'); pr('v-jaula',st.vista==='jaula');
   pr('mv-kilo',st.modoVenta==='kilo'||!st.modoVenta); pr('mv-prenada',st.modoVenta==='prenada'); pr('mv-vcc',st.modoVenta==='vcc');
   $('c-head').textContent=st.vista==='cab'?'Por cabeza comprada':'Toda la jaula';
   const sis=st.sistema||'campo', esCria=st.tipo==='cria';
@@ -2764,7 +2767,7 @@ function calc(except){
   setT('r-pren',R.pren||R.vcc?nf(R.nPren,0)+' cab':'—'); setT('r-vac',R.pren||R.vcc?nf(R.nVac,0)+' cab':'—'); setT('r-pren-l',R.vcc?'Vacas con cría al pie':'Preñadas');
   setT('r-main-l',R.mixto?(R.pren?'Venta de terneros, preñadas y vacías':'Venta de terneros y terneras'):R.vcc?'Venta de vacas con cría y vacías':R.pren?'Venta de preñadas y vacías':'Venta de la hacienda');
   setT('r-main',money(R.ingMain)); setT('r-cria',money(R.ingCria)); setT('r-cria-h',R.cria?nf(R.nTer,0)+' terneros':'');
-  setT('r-ing',money(R.ing)); setT('r-cpra',money(R.cpra)); setT('r-rec',money(R.campo)); setT('r-tie',money(R.tie)); setT('r-tie-h',R.ha>0?nf(R.ha,0)+' ha de campo + estructura':'Alquiler de la tierra y gastos fijos'); setT('r-gven',money(R.gven)); setT('r-ct',money(R.ct));
+  setT('r-ing',money(R.ing)); setT('r-cpra',money(R.cpra)); setT('r-rec',money(R.campo)); setT('r-tie',money(R.tie)); setT('r-tie-h',R.tierra>0?nf(R.ha,0)+' ha alquiladas + estructura':'Estructura (el campo es propio)'); setT('r-gven',money(R.gven)); setT('r-ct',money(R.ct));
   setT('r-mb',money(R.mb),R.mb); setT('r-rent',pct(R.rent),R.rent); setT('r-rm',pct(R.rm,2),R.rm);
   setT('r-be',isNum(R.be)?money(R.be)+R.beU:'—');
   setT('r-pmax',R.pmaxTxt?R.pmaxTxt:isNum(R.pmaxCab)?money(R.pmaxCab)+'/cab'+(st.pc>0?' ('+money(R.pmaxKg)+'/kg)':''):'—');
@@ -3187,7 +3190,7 @@ function paintMini(R){
     const Z=k=>isNum(st[k])?st[k]:0;
     set('mini-c-costos',bars('Cómo se reparte el costo',[
       ['Alimentación',Z('alV')*V],['Toros',Z('ctoro')*R.nToros],['Mano de obra',Z('mobV')*V],['Sanidad',Z('sanV')*V],
-      ['Alquiler',Z('arrHa')*(HA(st)||0)],['Otros gastos',Z('otrosV')*V],['Comercialización',R.gven]]));
+      ['Alquiler',st.campo==='alq'?Z('arrHa')*(HA(st)||0):0],['Otros gastos',Z('otrosV')*V],['Comercialización',R.gven]]));
   } else {
     const kgc=R.n*R.pc, vend=R.viv;
     set('mini-hacienda',kv('Resumen de la compra',[
@@ -3239,7 +3242,7 @@ function flujo(s,R){
     const gm=estOn(s)?gdpMes(s,t0):T.gC;
     let al=n*(gm*D*camp*Z('alKg')+Z('alMes')*camp)+n*(T.gF*D*feed*Z('conv')*Z('pRac')+Z('diaF')*D*feed);
     add(k,-al,null); add(k,-n*(Z('mob')+Z('otros'))*len/M,null);
-    add(k,-((R.ha||0)*Z('arrHa')/12*camp+n*Z('estMes')*len),k===1?'Tierra y estructura (todos los meses)':null);
+    add(k,-((s.campo==='alq'?(R.ha||0)*Z('arrHa')/12*camp:0)+n*Z('estMes')*len),k===1?(s.campo==='alq'?'Tierra y estructura (todos los meses)':'Estructura (todos los meses)'):null);
   }
   if(R.sup>0){ // suplemento: en los meses de invierno (jun–ago) que caen en el campo; si no hay, repartido
     const m0=isNum(s.mesCompra)?s.mesCompra:0, inv=[]; for(let k=1;k<=Mc;k++){ const mm=(m0+k-1)%12; if(k-1<T.mC&&mm>=5&&mm<=7) inv.push(k); }
@@ -3277,14 +3280,13 @@ function renderCap(R){
     +row('Compra de la hacienda',R.cpra,null,{h:'Con comisión y flete'})
     +row('Gastos directos',c.dir*c.gs,c.dir*(1-c.gs),{h:'Sanidad, suplemento, servicio, tacto, corral, otros'})
     +row('Pasto, mano de obra y estructura',null,c.propios)
-    +row('Tierra',null,R.tierra,{h:'Lo que valdría alquilar el campo ese tiempo'})
+    +(R.tierra>0?row('Alquiler del campo',null,R.tierra,{h:'Lo que paga el campo por las hectáreas que ocupa'}):'')
     +row('Total que pone',c.sPone,c.cPoneT,{k:1})
     +sub('Lo que recibe cada uno al vender')
     +row('Recupera la compra',R.cpra,null)
     +row('Parte de lo que aumentó el valor',c.va*c.pct,c.va*(1-c.pct),{h:'Aumento total: '+mill(c.va)+' (venta neta '+mill(c.venta)+' menos la compra)',sa:nf(c.pct*100,0)+' %',sb:nf((1-c.pct)*100,0)+' %'})
     +sub('Resultado')
-    +row('Ganancia',c.sGan,c.cGan,{k:1,sg:1,sb:'sin contar la tierra'})
-    +row('Ganancia contra alquilar el campo',null,c.cGanT,{sg:1,h:'Lo que gana el campo descontando lo que cobraría alquilándolo'})
+    +(R.tierra>0 ? row('Ganancia',c.sGan,c.cGanT,{k:1,sg:1,sb:'después del alquiler'}) : row('Ganancia',c.sGan,c.cGan,{k:1,sg:1}))
     +row('Rentabilidad sobre lo que pone',pct(c.rS),pct(c.rC),{k:1,sa:pm(c.rS),sb:pm(c.rC)})
     +'</tbody>';
   [...T.querySelectorAll('tbody tr')].slice(-1)[0].querySelectorAll('td').forEach((td,i)=>{ if(i) td.className=cls(i===1?c.rS:c.rC); });
@@ -3292,7 +3294,7 @@ function renderCap(R){
     : !(R.mb>0)||!(c.pctIg>=0&&c.pctIg<=1) ? 'Con estos números el negocio <b>pierde plata</b> ('+mill(R.mb)+'): no hay reparto que deje ganando a los dos. Primero tiene que cerrar el negocio.'
     : 'Con <b>'+nf(c.pctIg*100,0)+' % para los socios</b> y '+nf((1-c.pctIg)*100,0)+' % para el campo, los dos ganan lo mismo por cada peso que ponen: <b>'+pct(c.rIg)+'</b> en '+nf(m,1)+' meses. '
       +(Math.abs(c.pctIg-c.pct)<0.005?'Es el porcentaje que cargaste.':c.pct>c.pctIg?'Con el '+nf(c.pct*100,0)+' % que cargaste, les conviene más a los socios.':'Con el '+nf(c.pct*100,0)+' % que cargaste, le conviene más al campo.'))+'</span>';
-  $('capNote').textContent='La tierra se cuenta como aporte del campo, por lo que valdría alquilarlo. Ganancia de socios + ganancia del campo contra alquilar = ganancia del negocio ('+mill(R.mb)+').';
+  $('capNote').textContent=(R.tierra>0?'El campo es alquilado: el alquiler lo paga el campo. ':'El campo es propio: no se cobra alquiler. ')+'Ganancia de los socios + ganancia del campo = ganancia del negocio ('+mill(R.mb)+').';
 }
 const pr2=(id,on)=>{ const e=$(id); if(e) e.setAttribute('aria-pressed',on); };
 $('cap-no').addEventListener('click',()=>{ st.capOn=false; applyUI(); save(); });
@@ -3367,7 +3369,7 @@ $('sanPlan').addEventListener('change',e=>{ const t=e.target; if(!t.dataset||t.d
 // ================= ⓘ explicaciones de términos =================
 const GLOS=[
  ['Mes y año de compra','Cuándo entra la hacienda. Define en qué estaciones está en el campo y las fechas del calendario y del flujo. Los precios son siempre los de hoy (no se proyectan al año que elijas).'],
- ['Tierra y estructura','El alquiler de las hectáreas que ocupa la hacienda (aunque el campo sea propio, es lo que se deja de cobrar por no alquilarlo) más los gastos fijos del campo: asesor, camioneta, alambrados, aguadas e impuestos.'],
+ ['Tierra y estructura','Si el campo es alquilado, lo que se paga por las hectáreas que ocupa la hacienda. Siempre suma los gastos fijos del campo: asesor, camioneta, alambrados, aguadas, impuestos.'],
  ['Cabezas por hectárea','Carga: cuántos animales entran en cada hectárea mientras están a campo. Con esto se calcula cuántas hectáreas ocupa el negocio y cuánto cuesta la tierra.'],
  ['Ganancia','Lo que vendés menos todo lo que gastás: compra, campo, tierra, estructura y venta.'],
  ['Rentabilidad total','Ganancia dividida por todo lo que se puso en el negocio.'],
