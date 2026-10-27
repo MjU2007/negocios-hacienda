@@ -1391,6 +1391,49 @@ html body :is(.board,.zoompanel) table tr.sub td{background:rgba(255,255,255,.04
 html body :is(.board,.zoompanel) td .hint{display:none!important}
 #infoPop .ip-hint{display:block;margin-top:6px;padding-top:6px;border-top:1px solid color-mix(in srgb,var(--bg) 25%,transparent);opacity:.9}
 #infoPop b + .ip-hint{margin-top:0;padding-top:0;border-top:0}
+
+/* ===================== MÁS FÁCIL PARA CUALQUIERA ===================== */
+html{font-size:17px}
+body{font-size:17px}
+/* guía de la foto: lo que hay que hacer ahora */
+html body .hero .guia{margin:0;max-width:52ch;font-size:1.05rem;line-height:1.55;color:#E6EEDF;background:rgba(10,20,13,.55);border-left:3px solid var(--acc);padding:10px 14px}
+html body .hero .guia b{color:var(--acc)}
+html body .hero .guia[hidden]{display:none!important}
+html body[data-view="neg"] .hero .lead{display:none!important}
+html body.lectura .hero .legend{display:none!important}
+/* aviso de sugeridos corto, el detalle se abre si querés */
+.ref-det{margin-top:6px}
+.ref-det summary{cursor:pointer;color:var(--acc);font-weight:600;display:inline}
+.ref-det[open] summary{margin-bottom:6px;display:block}
+html body.lectura #refBtn{display:none!important}
+/* pie de cada cuadro: el paso siguiente */
+.sigue{margin-top:auto;padding-top:14px;display:flex;justify-content:flex-end}
+.sigue-b{font:inherit;font-weight:700;font-size:.95rem;background:transparent;color:var(--acc);border:1.5px solid var(--acc);padding:9px 16px;cursor:pointer}
+.sigue-b:hover{background:var(--acc);color:#1B1A10}
+.zoompanel .sigue{display:none}
+@media print{.sigue,.ref-det summary,.guia{display:none!important}}
+/* cómo se usa: arriba de todo en Inicio */
+html body #inicio .ini-sec.como .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+html body #inicio .ini-sec.como .steps li{font-size:.98rem;padding:14px 16px;line-height:1.45}
+.ini-sec.como .steps li{align-items:flex-start}
+.ini-sec.como .steps strong{color:var(--ink)}
+@media (max-width:820px){html body #inicio .ini-sec.como .steps{grid-template-columns:minmax(0,1fr)}}
+/* botón EDITAR bien visible */
+.editfloat .btn.edit,.editfloat .btn.save{font-size:1.05rem}
+
+/* lista: un poco más ancha en compu para que la barra de arriba respire */
+@media (min-width:1100px){body:not(.cuadros){--wmax:1040px}}
+/* la cinta de precios siempre de borde a borde */
+html body .ticker{margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important}
+html body .tk-track{padding-left:0}
+.tb-sem{white-space:nowrap}
+.editfloat .em-s{display:none}
+@media (max-width:560px){.editfloat .em-l{display:none}.editfloat .em-s{display:inline}}
+/* en el celular la foto del negocio no deja huecos */
+@media (max-width:820px){html body[data-view="neg"] .hero{min-height:0!important}html body[data-view="neg"] .hero-row{padding-bottom:6px}}
+@media (min-width:821px){html body .secnav{flex-wrap:wrap!important;overflow:visible!important;row-gap:0}html body .secnav a{padding:11px 10px!important}}
+html body section,html body #veredicto{scroll-margin-top:calc(var(--tbh) + var(--navh,52px) + 14px)!important}
+@media (max-width:1100px){html body .hero .negbar{flex:0 0 auto!important;flex-basis:auto!important}}
 </style>
 
 <div class="wrap">
@@ -1442,6 +1485,7 @@ html body :is(.board,.zoompanel) td .hint{display:none!important}
   </div>
   <button type="button" class="volver vneg" id="volverIni">← Volver a Inicio</button>
   <h1 id="negTitle">Mi negocio</h1>
+  <p class="guia vneg" id="guia"></p>
   <p class="lead">Simulá un negocio antes de hacerlo: hacienda, tiempo, precios y costos. Obtenés la ganancia, la rentabilidad mensual, puntos de equilibrio y sensibilidad, con precios de referencia de mercado.</p>
   <div class="hero-cta vini" hidden>
     <button type="button" class="cta-1" id="ctaNuevo">Armar un negocio nuevo</button>
@@ -1526,7 +1570,7 @@ html body :is(.board,.zoompanel) td .hint{display:none!important}
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <nav class="secnav vneg" aria-label="Secciones">
   <div class="seg lay" role="group" aria-label="Forma de ver"><button type="button" id="lay-lista" aria-pressed="false">Lista</button><button type="button" id="lay-cuadros" aria-pressed="true">Cuadros</button></div>
-  <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a><a class="no-cria" href="#capital">Socios</a><a href="#flujo">Flujo de fondos</a><a href="#sens">Sensibilidad</a>
+  <a href="#veredicto">Resumen</a><a class="no-cria" href="#hacienda">Hacienda</a><a class="no-cria" href="#kilos">Tiempo y kilos</a><a class="no-cria" href="#venta">Venta</a><a class="no-cria" href="#costos">Costos</a><a class="no-cria" href="#resultado">Resultado</a><a class="only-cria" href="#c-rodeo">Rodeo</a><a class="only-cria" href="#c-prod">Producción</a><a class="only-cria" href="#c-venta">Venta</a><a class="only-cria" href="#c-costos">Costos</a><a class="only-cria" href="#c-res">Resultado</a><a class="no-cria" href="#capital">Socios</a><a href="#flujo">Plata mes a mes</a><a href="#sens">Si cambian los precios</a>
 </nav>
 <div class="refbar vneg">
   <div class="no-cria">
@@ -1881,7 +1925,7 @@ html body :is(.board,.zoompanel) td .hint{display:none!important}
 </section>
 
 <section id="capital" class="vneg no-cria">
-  <div class="sec-head"><h2><svg class="sec-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5M10.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5"/></svg>Capitalización: reparto con socios</h2><button type="button" class="zoom-btn" data-zoom="capital" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
+  <div class="sec-head"><h2><svg class="sec-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5M10.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5"/></svg>Reparto con socios</h2><button type="button" class="zoom-btn" data-zoom="capital" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
   <div class="tbar">
     <p class="note">Los socios capitalistas ponen la plata para comprar la hacienda; el campo pone el pasto, el trabajo y la tierra. Al vender, lo que aumentó el valor de la hacienda se reparte.</p>
     <div class="seg" role="group" aria-label="Hay socios capitalistas"><button type="button" id="cap-no" aria-pressed="true">Sin socios</button><button type="button" id="cap-si" aria-pressed="false">Con socios</button></div>
@@ -1901,7 +1945,7 @@ html body :is(.board,.zoompanel) td .hint{display:none!important}
   </div>
 </section>
 <section id="flujo" class="vneg">
-  <div class="sec-head"><h2><svg class="sec-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h14l-3-3M21 16H7l3 3"/></svg>Flujo de fondos e inversión</h2><button type="button" class="zoom-btn" data-zoom="flujo" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
+  <div class="sec-head"><h2><svg class="sec-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h14l-3-3M21 16H7l3 3"/></svg>La plata mes a mes</h2><button type="button" class="zoom-btn" data-zoom="flujo" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
   <p class="note" id="fluNote"></p>
   <div class="flu-kpis" id="fluKpis"></div>
   <div class="flu-chart" id="fluChart"></div>
@@ -1909,7 +1953,7 @@ html body :is(.board,.zoompanel) td .hint{display:none!important}
 </section>
 
 <section id="sens" class="vneg">
-  <div class="sec-head"><h2><svg class="sec-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Análisis de sensibilidad</h2><button type="button" class="zoom-btn" data-zoom="sens" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
+  <div class="sec-head"><h2><svg class="sec-ic" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>¿Y si cambian los precios?</h2><button type="button" class="zoom-btn" data-zoom="sens" aria-label="Ver este cuadro en grande">⤢ Ampliar</button></div>
   <p class="note" id="sensNote"></p>
   <div class="tbl-wrap"><table class="sens" id="sensTbl"></table></div>
 </section>
@@ -1933,6 +1977,14 @@ html body :is(.board,.zoompanel) td .hint{display:none!important}
   <p class="note" id="preHistNote"></p>
 </section>
 <section id="inicio" class="vini" hidden>
+  <div class="ini-sec como">
+    <div class="ini-head"><h2>Cómo se usa</h2></div>
+    <ol class="steps" aria-label="Cómo se usa">
+      <li><b>1</b><span><strong>Abrí un negocio</strong> de la lista de abajo, o armá uno nuevo eligiendo Cría, Recría o Invernada.</span></li>
+      <li><b>2</b><span><strong>Tocá EDITAR</strong> y cambiá los números que sean distintos en tu campo. Los demás ya vienen cargados con precios de esta semana.</span></li>
+      <li><b>3</b><span><strong>Mirá cuánto deja</strong> arriba de todo y tocá <strong>GUARDAR</strong> para no perderlo.</span></li>
+    </ol>
+  </div>
   <div class="ini-actions">
     <article class="ini-card ini-new">
       <span class="ini-ico" aria-hidden="true">＋</span>
@@ -1948,15 +2000,6 @@ html body :is(.board,.zoompanel) td .hint{display:none!important}
   <div class="ini-sec">
     <div class="ini-head"><h2>Tus negocios</h2><span class="note" id="iniCount"></span></div>
     <div class="ini-list" id="iniList"></div>
-  </div>
-  <div class="ini-sec">
-    <div class="ini-head"><h2>Cómo funciona</h2></div>
-    <ol class="steps" aria-label="Cómo usar">
-  <li><b>1</b><span>Elegí el tipo de negocio y el sistema</span></li>
-  <li><b>2</b><span>Elegí la categoría: se cargan precios y valores sugeridos</span></li>
-  <li><b>3</b><span>Ajustá las casillas con los datos de tu campo</span></li>
-  <li><b>4</b><span>Revisá resultado, equilibrio y sensibilidad</span></li>
-</ol>
   </div>
 </section>
 
@@ -2258,7 +2301,7 @@ const snapN=n=>{ const s={...EMPTY,...JSON.parse(JSON.stringify(n.st||{}))}; if(
 const newId=()=>'n'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const cur=()=>negs.find(n=>n.id===active);
 function status(t){const el=$('negStatus'); if(!el) return; el.textContent=t; const fijo=/^Sin cuenta/.test(String(t||''));
-  el.classList.toggle('quieto',/^Guardado\.?$/.test(String(t).trim())); clearTimeout(status.t);
+  el.classList.toggle('quieto',/^Guardado\.?$/.test(String(t).trim())||fijo); clearTimeout(status.t);
   if(t&&!fijo) status.t=setTimeout(()=>{ if(el.textContent===t){ el.textContent=''; } },5000); }
 // Los negocios viejos (terneras vs. terneros en la misma página) se convierten en dos negocios nuevos.
 const isOld=st=>st&&('h-cab' in st||'m-cab' in st);
@@ -2353,6 +2396,7 @@ const nuevoSt=()=>({...EMPTY,...BASE,mesCompra:new Date().getMonth(),anioCompra:
 const LOCK='#negName,#tp-cria,#tp-recria,#tp-inv,#sy-campo,#sy-feed,#sy-mix,.refbar button,.board input,.board select,.board textarea,.board button:not(.zoom-btn):not(.info-b):not(#v-cab):not(#v-jaula)';
 function paintEdit(){
   document.body.classList.toggle('lectura',!editing); document.body.classList.toggle('editando',editing);
+  { const g=$('guia'); if(g) g.innerHTML= editing ? 'Cambiá los números de las <b>casillas amarillas</b> en los cuadros <b>1 a 4</b>. El resultado se calcula solo. Cuando termines, tocá <b>GUARDAR</b> (abajo).' : 'Estos son los números de este negocio. Bajá para ver cuánto deja y cómo se arma. Para cambiar algo, tocá <b>EDITAR</b> (abajo).'; }
   if(!editing) document.querySelectorAll(LOCK).forEach(el=>{ if(!el.disabled){ el.disabled=true; el.dataset.ro='1'; } });
   // en lectura cada número ocupa solo su ancho, para que quede pegado a su unidad como un texto
   document.querySelectorAll('.board input.in, .zoompanel input.in').forEach(el=>{ if(!editing&&el.dataset.ro){ el.size=Math.max(1,(el.value||el.placeholder||'—').length); } else el.removeAttribute('size'); });
@@ -2360,7 +2404,7 @@ function paintEdit(){
 function paintBars(){
   const n=cur(), fl=$('editFloat'); if(!fl) return;
   const eb='<button class="btn edit" type="button" data-act="edit"'+(listo?'':' disabled')+'>'+(listo?'EDITAR':'Conectando…')+'</button>';
-  if(!editing) fl.innerHTML='<span class="em">Modo lectura</span>'+eb;
+  if(!editing) fl.innerHTML='<span class="em"><span class="em-l">¿Querés cambiar algún número?</span><span class="em-s">¿Cambiar algo?</span></span>'+eb;
   else {
     const nuevo=n&&n.nuevo, otro=editBase&&editSnap&&JSON.stringify(editBase)!==JSON.stringify(editSnap);
     const d=otro?'<span class="dirty">⚠ Otra persona guardó cambios mientras editabas</span>':dirty?'<span class="dirty">'+(nuevo?'negocio nuevo sin guardar':'cambios sin guardar')+'</span>':'sin cambios todavía';
@@ -2601,10 +2645,10 @@ function applyUI(){
   $('l-gdp').textContent= (sis==='feed'?'Aumento diario en el corral': sis==='mix'?'Aumento diario a campo':'Aumento diario de peso')+(mixto?' (terneros)':'');
   $('h-gdp').textContent= sis==='feed'?'Recría a corral: 0,8–1,0 · terminación: 1,2–1,4':'A campo: terneros 0,6–0,8 · terneras 0,4–0,55 · vacas casi nada';
   $('c-sub-campo').textContent= sis==='campo'?'En el campo': sis==='feed'?'En el corral':'A campo y en el corral';
-  $('refCria').textContent='Sugeridos: '+REF_CRIA.txt;
+  $('refCria').innerHTML='<b>Los números vienen sugeridos</b> con precios de la semana del '+esc(PRECIOS.semana)+'. Cambiá lo que sea distinto en tu campo.<details class="ref-det"><summary>Ver de dónde salen</summary>'+esc(REF_CRIA.txt)+'</details>';
   $('h-vac').textContent=st.modoVenta==='vcc'?'Las que no salen con cría':'Las que no preñan';
   const r=refFor(st);
-  $('refTxt').textContent= !st.cat?'Elegí una categoría: se completan solos el precio de mercado, los pesos, los meses y los costos típicos. Después cambiás lo que quieras.': r? (Object.keys(r.v).length?'Sugeridos para esta categoría: ':'')+r.txt : '';
+  $('refTxt').innerHTML= !st.cat?'<b>Primero elegí la categoría</b> en el cuadro 1: se completan solos los precios de esta semana, los pesos, los meses y los costos típicos.': r? '<b>Los números vienen sugeridos</b> con precios de la semana del '+esc(PRECIOS.semana)+'. Cambiá lo que sea distinto en tu campo.<details class="ref-det"><summary>Ver de dónde salen</summary>'+esc(r.txt)+'</details>' : '';
   $('refBtn').disabled=!r||!Object.keys(r.v).length; $('refConfirm').hidden=true;
   calc(); paintEdit(); numerarPasos(); pintarTipoHero();
 }
@@ -2627,10 +2671,10 @@ function notasAlPie(){
     if(sec.id==='veredicto') return;
     const items=[];
     sec.querySelectorAll('td .eq').forEach(eq=>{ if(eq.querySelector('.pill')) return; const t=eq.textContent.trim(); if(!t) return; const tr=eq.closest('tr'); if(!tr||tr.hidden||!tr.getClientRects().length) return;
-      const l=tr.querySelector('.lbl'); let lab=''; if(l){ const c=l.cloneNode(true); c.querySelectorAll('button,.info-b').forEach(x=>x.remove()); lab=c.textContent.trim(); } items.push(notaClara(lab,t.replace(/^=\s*/,''))); });
+      const l=tr.querySelector('.lbl'); let lab=''; if(l){ const c=l.cloneNode(true); c.querySelectorAll('button,.info-b').forEach(x=>x.remove()); lab=c.textContent.trim(); } const it=notaClara(lab,t.replace(/^=\s*/,'')); const mini=sec.querySelector('.mini'); if(mini&&mini.textContent.replace(/\s/g,'').includes(it[1].replace(/\s/g,''))) return; items.push(it); });
     let box=sec.querySelector(':scope > .notas-pie');
     if(!items.length){ if(box) box.remove(); return; }
-    if(!box){ box=document.createElement('div'); box.className='notas-pie'; sec.appendChild(box); }
+    if(!box){ box=document.createElement('div'); box.className='notas-pie'; const sg=sec.querySelector(':scope > .sigue'); sec.insertBefore(box,sg||null); }
     const html='<h4>Detalle</h4><dl>'+items.map(([a,b])=>'<div><dt>'+esc(a)+'</dt><dd>'+esc(b)+'</dd></div>').join('')+'</dl>';
     if(box.innerHTML!==html) box.innerHTML=html;
   });
@@ -2661,8 +2705,15 @@ function numerarPasos(){
     if(!num[id]){ if(pn) pn.remove(); return; }
     if(!pn){ pn=document.createElement('span'); pn.className='pn'; a.insertBefore(pn,a.firstChild); } pn.textContent=num[id]; pn.classList.toggle('sal',!ENTRADAS.includes(id)); });
   let ultEntrada=0; for(const id in num) if(ENTRADAS.includes(id)) ultEntrada=Math.max(ultEntrada,num[id]);
+  { const orden=Object.keys(num).sort((a,b)=>num[a]-num[b]);
+    const nombre=id=>{ const h=$(id)&&$(id).querySelector('.sec-head h2'); if(!h) return ''; const c=h.cloneNode(true); c.querySelectorAll('.paso,svg,button').forEach(x=>x.remove()); return c.textContent.trim(); };
+    document.querySelectorAll('.board > section, .zoompanel > section').forEach(sec=>{ let f=sec.querySelector(':scope > .sigue'); const i=orden.indexOf(sec.id), nx=orden[i+1];
+      if(i<0||!nx){ if(f) f.remove(); return; }
+      if(!f){ f=document.createElement('div'); f.className='sigue'; f.innerHTML='<button type="button" class="sigue-b"></button>'; f.firstChild.addEventListener('click',()=>{ const to=f.dataset.to; if(zoomed&&zoomed===sec){ zoomGo(1); return; } const t=$(to); if(t) t.scrollIntoView({behavior:'smooth',block:'start'}); }); }
+      f.dataset.to=nx; const txt='Seguir con '+num[nx]+'. '+nombre(nx)+' ↓'; if(f.firstChild.textContent!==txt) f.firstChild.textContent=txt;
+      if(sec.lastElementChild!==f) sec.appendChild(f); }); }
   const old=document.querySelector('.leyenda'); if(old) old.remove();
-  const nav=document.querySelector('.secnav'); if(nav&&!document.querySelector('.leyenda')){ const l=document.createElement('span'); l.className='leyenda vneg'; l.innerHTML='<span>Seguí los pasos en orden:</span><span><i></i>1 a '+ultEntrada+': cargás los datos</span><span><i class="sal"></i>'+(ultEntrada+1)+' en adelante: la página te da el resultado</span>'; nav.after(l); }
+  const nav=document.querySelector('.secnav'); if(nav&&!document.querySelector('.leyenda')){ const l=document.createElement('span'); l.className='leyenda vneg'; l.innerHTML='<span><i></i>Cuadros 1 a '+ultEntrada+': los datos del negocio</span><span><i class="sal"></i>Cuadros '+(ultEntrada+1)+' en adelante: lo que calcula la página</span>'; nav.after(l); }
 }
 // ================= pintar =================
 function setT(id,txt,sign){const el=$(id); if(!el)return; el.textContent=txt; if(sign!==undefined){el.classList.toggle('pos',isNum(sign)&&sign>0);el.classList.toggle('neg',isNum(sign)&&sign<0);}}
@@ -2903,7 +2954,7 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeZoom(); });
 const LAYKEY='recria-vista-v1';
 function setLay(l){ document.body.classList.toggle('cuadros',l==='cuadros'); $('lay-lista').setAttribute('aria-pressed',l==='lista'); $('lay-cuadros').setAttribute('aria-pressed',l==='cuadros'); try{localStorage.setItem(LAYKEY,l);}catch(e){} }
 $('lay-lista').addEventListener('click',()=>setLay('lista')); $('lay-cuadros').addEventListener('click',()=>setLay('cuadros'));
-{ let l='cuadros'; try{ l=localStorage.getItem(LAYKEY)||'cuadros'; }catch(e){} setLay(l); }
+{ let l='lista'; try{ l=localStorage.getItem(LAYKEY)||'lista'; }catch(e){} setLay(l); }
 $('tab-neg').addEventListener('click',()=>setView('neg')); $('tab-pre').addEventListener('click',()=>setView('pre'));
 
 // ================= pestaña Precios =================
@@ -3018,6 +3069,7 @@ $('volverIni').addEventListener('click',()=>setView('ini'));
 $('lupaBtn').addEventListener('click',()=>{ const tb=document.querySelector('.topbar'); const ab=!tb.classList.contains('busca-abierta'); tb.classList.toggle('busca-abierta',ab); $('lupaBtn').setAttribute('aria-expanded',ab); if(ab) $('busca').focus(); });
 $('busca').addEventListener('blur',()=>setTimeout(()=>{ if(!$('busca').value){ document.querySelector('.topbar').classList.remove('busca-abierta'); $('lupaBtn').setAttribute('aria-expanded','false'); } },150));
 // alto de la barra fija, para que la barra de pasos y los saltos queden justo debajo
+(function(){ const sn=document.querySelector('.secnav'); if(!sn) return; const set=()=>{ if(sn.offsetHeight) document.documentElement.style.setProperty('--navh',sn.offsetHeight+'px'); }; set(); if(window.ResizeObserver) new ResizeObserver(set).observe(sn); })();
 (function(){ const tb=document.querySelector('.topbar'); const set=()=>document.documentElement.style.setProperty('--tbh',tb.offsetHeight+'px'); set(); if(window.ResizeObserver) new ResizeObserver(set).observe(tb); window.addEventListener('resize',set); })();
 $('negMas').addEventListener('click',e=>{ if(e.target.closest('.mas-menu button')) $('negMas').open=false; });
 document.addEventListener('click',e=>{ const m=$('negMas'); if(m.open&&!m.contains(e.target)) m.open=false; });
@@ -3094,7 +3146,7 @@ function renderTicker(){
     ['vp','vcc','mno','mva'].forEach(k=>{ const s=PRE_SER.find(x=>x.k===k); if(!s) return; const v=s.f(cur); if(!isNum(v)) return;
       it.push('<span class="tk-i">'+s.l+' <b>'+money(v)+'</b><small>'+s.u+'</small> '+vv(v,prev?s.f(prev):null)+'</span>'); });
     const h=it.join(''); $('tkTrack').innerHTML=h+'<span aria-hidden="true" style="display:contents">'+h+'</span>';
-    $('tbSem').innerHTML='Precios: semana del <b>'+esc(PRECIOS.semana)+'</b>';
+    $('tbSem').innerHTML='Precios de la semana <b>'+esc(PRECIOS.semana.replace(/\/20\d\d$/,''))+'</b>';
   }catch(e){ console.error(e); }
 }
 renderTicker();
