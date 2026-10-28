@@ -1527,6 +1527,15 @@ html body #inicio .ini-list{row-gap:14px}
   html body #inicio .ini-neg>.tag{justify-self:start}
   html body #inicio .ini-neg>.upd{align-self:end}
 }
+
+/* fuentes plegadas: solo el título y "Ver fuentes" */
+#fuentes .fu-det>summary{list-style:none;cursor:pointer;display:inline-block;font-size:.82rem;color:var(--tb-mut)!important;text-decoration:underline;text-decoration-color:rgba(255,255,255,.25);text-underline-offset:3px;margin-top:-6px}
+#fuentes .fu-det>summary::-webkit-details-marker{display:none}
+#fuentes .fu-det>summary:hover{color:var(--tb-ink)!important}
+#fuentes .fu-det[open]>summary{margin-bottom:12px}
+#fuentes .fu-det[open]>summary::after{content:" (ocultar)"}
+#fuentes .sec-head{margin-bottom:0!important;padding-bottom:4px!important}
+@media print{#fuentes .fu-det>summary{display:none}#fuentes .fu-det>.src{display:block}}
 </style>
 
 <div class="wrap">
@@ -2105,6 +2114,7 @@ html body #inicio .ini-list{row-gap:14px}
 
 <section id="fuentes">
   <div class="sec-head"><h2>Fuentes de los valores de referencia</h2></div>
+  <details class="fu-det"><summary>Ver fuentes</summary>
   <div class="src">
     <ol>
       <li id="fuCG"></li>
@@ -2116,6 +2126,7 @@ html body #inicio .ini-list{row-gap:14px}
     </ol>
     <p>Los resultados son antes de impuestos (Ganancias e Ingresos Brutos). Estructura y administración, carga por hectárea, sanidad, servicio, tacto, mano de obra, fletes, comisiones, mortandad y aumentos diarios son estimaciones de un sistema pastoril típico: reemplazalos por los de tu campo. El flete sugerido supone ~$1,2 M por jaula a ~300 km. En feedlot, la ración se toma a precio de maíz (~$296.000/t, De Campo a Campo sem. 39) con conversiones de ~8 kg (recría) y ~6,5 kg (terminación) por kilo ganado, en línea con los costos de Engormix ($2.500 y $1.900 por kilo producido); los gastos de corral por día son estimados. En cría, los costos por vaca, el costo de los toros y el destete sugerido (80%) son estimaciones de un rodeo bien manejado. El precio de compra de toritos y toros reproductores y del toro flaco son estimados. No hay precio publicado de “otra hacienda”. No es asesoramiento financiero.</p>
   </div>
+  </details>
 </section>
 
 </div>
