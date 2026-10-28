@@ -1536,6 +1536,28 @@ html body #inicio .ini-list{row-gap:14px}
 #fuentes .fu-det[open]>summary::after{content:" (ocultar)"}
 #fuentes .sec-head{margin-bottom:0!important;padding-bottom:4px!important}
 @media print{#fuentes .fu-det>summary{display:none}#fuentes .fu-det>.src{display:block}}
+
+/* ===================== MÁS CLARA: VERDE MONTE MEDIO (la barra y el pie siguen oscuros) ===================== */
+:root,:root:not([data-theme="light"]){
+  --bg:#2B3B30; --surface:#35483B; --chip:#405546; --line:#55695A;
+  --tb2:#3F5747; --tb3:#5A4E33; --verde-hondo:#2C5E3B;
+  --muted:#B4C2B7; --ink:#F0F4EE;
+}
+html body .secnav{background:#3A5041!important}
+html body .board>section.es-res:not(#veredicto){background:#433F2C!important;border-color:#5E5838!important}
+html body .board>section.es-res:not(#veredicto) .mini{background:#4D4831!important}
+html body #veredicto{background:linear-gradient(135deg,#43402B 0%,#36493B 55%,#2F4A37 100%)!important}
+html body .kpis .kpi:nth-child(n):not(.main){background:rgba(20,30,23,.28)!important;border-color:#5A6650!important}
+html body .refbar{background:#423F2A!important;border-color:#615A35!important}
+html body .steps li{background:#3A4C3E!important}
+html body #inicio .ini-neg,html body #inicio .ini-neg.t-cria,html body #inicio .ini-neg.t-recria,html body #inicio .ini-neg.t-inv{background:#223026!important;border-color:#4C5F50!important}
+@media (hover:hover){html body #inicio .ini-neg:hover{background:#26362B!important}}
+html body .pre-kpi:nth-child(odd),html body .pre-kpi:nth-child(even){background:var(--surface)!important}
+html body .pre-t table thead th{background:#3F5747!important}
+html body .board table tr.sub td,html body .board tr.grp td{background:rgba(255,255,255,.06)!important}
+html body .notas-pie{background:rgba(20,30,23,.25)}
+html body .editfloat{background:#3F5747!important;border-color:#5B7564!important}
+html body #inicio .ini-sec.como .steps li{background:#36493C!important}
 </style>
 
 <div class="wrap">
