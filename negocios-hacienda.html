@@ -1510,10 +1510,23 @@ html body #inicio .ini-tipo:has(.dib) small{padding-right:84px}
 html body #inicio .ini-neg.t-recria .neg-dib{color:var(--c-recria)}
 html body #inicio .ini-neg.t-inv .neg-dib{color:var(--c-inv)}
 html body #inicio .ini-tipo small{padding-right:96px!important}
-html body #inicio .ini-neg.t-inv .tag{max-width:calc(100% - 92px)}
+
 html body #inicio .ini-neg.t-recria h3{padding-right:72px}
 html body #inicio .ini-neg.t-cria h3{padding-right:78px}
 html body #inicio .ini-neg.t-inv h3{padding-right:92px}
+
+/* fichas de Mis negocios: la etiqueta nunca pisa el dibujo y las filas quedan alineadas entre fichas */
+html body #inicio .ini-neg.t-recria .tag{max-width:calc(100% - 72px)}
+html body #inicio .ini-neg.t-cria .tag{max-width:calc(100% - 78px)}
+html body #inicio .ini-neg.t-inv .tag{max-width:calc(100% - 92px)}
+html body #inicio .ini-list{row-gap:14px}
+@supports (grid-template-rows:subgrid){
+  html body #inicio .ini-list{grid-auto-rows:auto}
+  html body #inicio .ini-neg{display:grid!important;grid-row:span 5;grid-template-rows:subgrid;row-gap:10px;align-content:start}
+  html body #inicio .ini-neg>*:not(.neg-dib){align-self:start}
+  html body #inicio .ini-neg>.tag{justify-self:start}
+  html body #inicio .ini-neg>.upd{align-self:end}
+}
 </style>
 
 <div class="wrap">
