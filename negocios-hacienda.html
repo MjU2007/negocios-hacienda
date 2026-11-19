@@ -1413,11 +1413,11 @@ html body.lectura #refBtn{display:none!important}
 .zoompanel .sigue{display:none}
 @media print{.sigue,.ref-det summary,.guia{display:none!important}}
 /* cómo se usa: arriba de todo en Inicio */
-html body #inicio .ini-sec.como .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-html body #inicio .ini-sec.como .steps li{font-size:.98rem;padding:14px 16px;line-height:1.45}
-.ini-sec.como .steps li{align-items:flex-start}
-.ini-sec.como .steps strong{color:var(--ink)}
-@media (max-width:820px){html body #inicio .ini-sec.como .steps{grid-template-columns:minmax(0,1fr)}}
+html body #inicio #armarNuevo .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+html body #inicio #armarNuevo .steps li{font-size:.98rem;padding:14px 16px;line-height:1.45}
+#armarNuevo .steps li{align-items:flex-start}
+#armarNuevo .steps strong{color:var(--ink)}
+@media (max-width:820px){html body #inicio #armarNuevo .steps{grid-template-columns:minmax(0,1fr)}}
 /* botón EDITAR bien visible */
 .editfloat .btn.edit,.editfloat .btn.save{font-size:1.05rem}
 
@@ -1557,7 +1557,39 @@ html body .pre-t table thead th{background:#3F5747!important}
 html body .board table tr.sub td,html body .board tr.grp td{background:rgba(255,255,255,.06)!important}
 html body .notas-pie{background:rgba(20,30,23,.25)}
 html body .editfloat{background:#3F5747!important;border-color:#5B7564!important}
-html body #inicio .ini-sec.como .steps li{background:#36493C!important}
+html body #inicio #armarNuevo .steps li{background:#36493C!important}
+
+/* ===================== ORDEN TIPO "SITIO INSTITUCIONAL": BANDAS A TODO EL ANCHO, TÍTULOS CENTRADOS, PIE EN COLUMNAS ===================== */
+html body .wrap>#inicio{margin-left:0!important;margin-right:0!important;padding:0!important;display:block}
+.ini-band{padding:64px 0;background:var(--bg)}
+.ini-band.alt{background:#33463A;box-shadow:0 0 0 100vmax #33463A;clip-path:inset(0 -100vmax)}
+.band-head{text-align:center;max-width:62ch;margin:0 auto 34px}
+.band-head h2{font-family:var(--display);font-size:2.1rem;line-height:1.1;margin:0;color:var(--ink);font-weight:700}
+.band-head h2::after{content:"";display:block;width:44px;height:3px;background:var(--acc);margin:14px auto 0}
+.band-head p{margin:14px 0 0;color:var(--muted);font-size:1.02rem;line-height:1.55}
+.band-head #iniCount{white-space:nowrap}
+.band-head #iniCount:not(:empty)::before{content:"· "}
+html body #inicio .ini-band .steps{margin:0}
+html body #inicio .ini-band .ini-tipos{margin:0}
+html body #inicio .ini-band .ini-list{margin:0}
+/* pie oscuro en cuatro columnas */
+html body #fuentes{padding-top:52px!important;padding-bottom:28px!important}
+.pie-cols{display:grid;grid-template-columns:1.3fr 1fr 1.2fr 1fr;gap:28px 40px;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.1)}
+.pie-col h3{margin:0 0 12px;font-family:var(--display);font-size:1.05rem;color:#fff!important;font-weight:700;letter-spacing:.02em}
+.pie-col p{margin:0 0 8px;font-size:.92rem;line-height:1.55;color:var(--tb-mut)!important}
+.pie-col p b{color:#fff!important}
+html body #fuentes .pie-marca{font-family:"Outfit",var(--body),sans-serif;font-size:1.3rem!important;line-height:1.1;color:#fff!important;margin:-3px 0 12px!important}
+.pie-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+html body #fuentes .pie-col a{color:var(--tb-mut)!important;text-decoration:none;font-size:.95rem}
+html body #fuentes .pie-col a:hover{color:var(--acc)!important;text-decoration:underline}
+.pie-ver{font:inherit;font-size:.92rem;font-weight:600;background:transparent;color:var(--acc);border:1.5px solid var(--acc);padding:7px 14px;cursor:pointer;margin-top:4px}
+.pie-ver:hover{background:var(--acc);color:#1B1A10}
+#fuentes .fu-det>summary{display:none!important}
+#fuentes .fu-det[open]{padding-top:24px}
+html body #fuentes .pie-legal{margin:20px auto 0!important;padding:0!important;max-width:none!important;width:100%;font-size:.8rem;color:var(--tb-mut)!important;text-align:center!important}
+@media (max-width:900px){.pie-cols{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.pie-cols{grid-template-columns:1fr}.ini-band{padding-top:44px;padding-bottom:44px}.band-head h2{font-size:1.7rem}}
+@media print{.pie-cols,.pie-legal{display:none}.ini-band{padding:0}}
 </style>
 
 <div class="wrap">
@@ -2106,28 +2138,24 @@ html body #inicio .ini-sec.como .steps li{background:#36493C!important}
   <p class="note" id="preHistNote"></p>
 </section>
 <section id="inicio" class="vini" hidden>
-  <div class="ini-sec como" id="armarNuevo">
-    <div class="ini-head"><h2>Cómo se usa</h2></div>
+  <div class="ini-band" id="armarNuevo">
+    <div class="band-head"><h2>Cómo se usa</h2><p>Tres pasos y tenés los números de cualquier negocio.</p></div>
     <ol class="steps" aria-label="Cómo se usa">
       <li><b>1</b><span><strong>Abrí un negocio</strong> de la lista de abajo, o armá uno nuevo eligiendo Cría, Recría o Invernada.</span></li>
       <li><b>2</b><span><strong>Tocá EDITAR</strong> y cambiá los números que sean distintos en tu campo. Los demás ya vienen cargados con precios de esta semana.</span></li>
       <li><b>3</b><span><strong>Mirá cuánto deja</strong> arriba de todo y tocá <strong>GUARDAR</strong> para no perderlo.</span></li>
     </ol>
   </div>
-  <div class="ini-actions">
-    <article class="ini-card ini-new">
-      <span class="ini-ico" aria-hidden="true">＋</span>
-      <h2>Armar un negocio nuevo</h2>
-      <p>Elegí qué tipo de negocio querés evaluar. Se cargan precios de mercado y costos sugeridos para que ajustes con los datos de tu campo.</p>
-      <div class="ini-tipos">
-        <button type="button" class="ini-tipo" data-new="cria"><span class="dib dib-cria" aria-hidden="true"></span><b>Cría</b><small>Rodeo de vacas, venta de terneros</small></button>
-        <button type="button" class="ini-tipo" data-new="recria"><span class="dib dib-recria" aria-hidden="true"></span><b>Recría</b><small>Terneros o terneras hasta novillito o vaquillona</small></button>
-        <button type="button" class="ini-tipo" data-new="invernada"><span class="dib dib-inv" aria-hidden="true"></span><b>Invernada</b><small>Terminación para faena</small></button>
-      </div>
-    </article>
+  <div class="ini-band alt">
+    <div class="band-head"><h2>Armar un negocio nuevo</h2><p>Elegí el tipo de negocio. Se cargan solos los precios de la semana y costos típicos, y después ajustás con los datos de tu campo.</p></div>
+    <div class="ini-tipos">
+      <button type="button" class="ini-tipo" data-new="cria"><span class="dib dib-cria" aria-hidden="true"></span><b>Cría</b><small>Rodeo de vacas, venta de terneros</small></button>
+      <button type="button" class="ini-tipo" data-new="recria"><span class="dib dib-recria" aria-hidden="true"></span><b>Recría</b><small>Terneros o terneras hasta novillito o vaquillona</small></button>
+      <button type="button" class="ini-tipo" data-new="invernada"><span class="dib dib-inv" aria-hidden="true"></span><b>Invernada</b><small>Terminación para faena</small></button>
+    </div>
   </div>
-  <div class="ini-sec" id="misNeg">
-    <div class="ini-head"><h2>Mis negocios</h2><span class="note" id="iniCount"></span></div>
+  <div class="ini-band" id="misNeg">
+    <div class="band-head"><h2>Mis negocios</h2><p>Tocá uno para abrirlo. <span id="iniCount"></span></p></div>
     <div class="ini-list" id="iniList"></div>
   </div>
 </section>
@@ -2135,8 +2163,27 @@ html body #inicio .ini-sec.como .steps li{background:#36493C!important}
 
 
 <section id="fuentes">
-  <div class="sec-head"><h2>Fuentes de los valores de referencia</h2></div>
-  <details class="fu-det"><summary>Ver fuentes</summary>
+  <div class="pie-cols">
+    <div class="pie-col">
+      <p class="pie-marca">Negocios de hacienda</p>
+      <p>Para hacer los números de cría, recría e invernada antes de comprar, con precios de mercado de cada semana.</p>
+    </div>
+    <div class="pie-col">
+      <h3>Secciones</h3>
+      <ul><li><a href="#" data-ir="ini">Inicio</a></li><li><a href="#" data-ir="mis">Mis negocios</a></li><li><a href="#" data-ir="nuevo">Armar un negocio</a></li><li><a href="#" data-ir="pre">Precios</a></li></ul>
+    </div>
+    <div class="pie-col">
+      <h3>Precios</h3>
+      <p id="pieSem"></p>
+      <p>Se actualizan solos cada viernes. Los negocios guardados conservan sus precios.</p>
+    </div>
+    <div class="pie-col">
+      <h3>Fuentes</h3>
+      <p>De dónde sale cada valor sugerido.</p>
+      <button type="button" class="pie-ver" id="pieVer" aria-expanded="false" aria-controls="fuDet">Ver fuentes</button>
+    </div>
+  </div>
+  <details class="fu-det" id="fuDet"><summary>Ver fuentes</summary>
   <div class="src">
     <ol>
       <li id="fuCG"></li>
@@ -2149,6 +2196,7 @@ html body #inicio .ini-sec.como .steps li{background:#36493C!important}
     <p>Los resultados son antes de impuestos (Ganancias e Ingresos Brutos). Estructura y administración, carga por hectárea, sanidad, servicio, tacto, mano de obra, fletes, comisiones, mortandad y aumentos diarios son estimaciones de un sistema pastoril típico: reemplazalos por los de tu campo. El flete sugerido supone ~$1,2 M por jaula a ~300 km. En feedlot, la ración se toma a precio de maíz (~$296.000/t, De Campo a Campo sem. 39) con conversiones de ~8 kg (recría) y ~6,5 kg (terminación) por kilo ganado, en línea con los costos de Engormix ($2.500 y $1.900 por kilo producido); los gastos de corral por día son estimados. En cría, los costos por vaca, el costo de los toros y el destete sugerido (80%) son estimaciones de un rodeo bien manejado. El precio de compra de toritos y toros reproductores y del toro flaco son estimados. No hay precio publicado de “otra hacienda”. No es asesoramiento financiero.</p>
   </div>
   </details>
+  <p class="pie-legal">Resultados antes de impuestos. No es asesoramiento financiero.</p>
 </section>
 
 </div>
@@ -3271,6 +3319,12 @@ function irA(id,foco){ const go=()=>{ const el=$(id); if(!el) return; const y=el
 $('ctaNuevo').addEventListener('click',()=>irA('armarNuevo','[data-new]'));
 $('ctaMis').addEventListener('click',()=>irA('misNeg','[data-open]'));
 $('tab-mis').addEventListener('click',()=>irA('misNeg','[data-open]'));
+// pie: secciones y "Ver fuentes"
+document.querySelectorAll('#fuentes [data-ir]').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); const d=a.dataset.ir;
+  if(d==='ini'){ setView('ini'); window.scrollTo({top:0,behavior:'smooth'}); } else if(d==='mis') irA('misNeg','[data-open]'); else if(d==='nuevo') irA('armarNuevo','[data-new]'); else setView('pre'); }));
+$('pieVer').addEventListener('click',()=>{ const d=$('fuDet'); d.open=!d.open; });
+$('fuDet').addEventListener('toggle',()=>{ const o=$('fuDet').open; $('pieVer').textContent=o?'Ocultar fuentes':'Ver fuentes'; $('pieVer').setAttribute('aria-expanded',o); if(o) $('fuDet').scrollIntoView({behavior:'smooth',block:'start'}); });
+try{ $('pieSem').innerHTML='Semana del <b>'+esc(PRECIOS.semana)+'</b> (Círculo Ganadero y Mercado Agroganadero).'; }catch(e){}
 // en Inicio, se marca "Mis negocios" cuando la lista está a la vista
 window.addEventListener('scroll',()=>{ if(curView!=='ini') return; const m=$('misNeg'); if(!m) return; const r=m.getBoundingClientRect(), en=r.top<window.innerHeight*0.55&&r.bottom>120;
   $('tab-mis').setAttribute('aria-selected',en); $('tab-ini').setAttribute('aria-selected',!en); },{passive:true});
