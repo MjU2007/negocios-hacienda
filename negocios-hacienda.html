@@ -2243,16 +2243,16 @@ const ARR_REF=178000, EST_REF=6000;
 // Precios de referencia para los negocios NUEVOS. Se actualizan solos cada semana (tarea programada).
 // Los negocios ya guardados no cambian: guardan sus propios precios.
 const PRECIOS={
-  semana:'16 al 22/10/2026', urlCG:'https://www.circuloganadero.com/precios',
-  magFecha:'21/10/2026', urlMAG:'https://ruralnet.com.ar/mag-7197-cabezas-novillitos-4184/',
+  semana:'18 al 24/11/2026', urlCG:'https://www.circuloganadero.com/precios',
+  magFecha:'24/11/2026', urlMAG:'https://ruralnet.com.ar/canuelas-precios-hacienda-24-noviembre-2026/',
   rangos:{
-    terneros:{'100-130':8333, '130-160':7170, '160-180':6523, '180-200':6373, '200-230':6229, '230-260':5677},
-    terneras:{'130-160':6548, '160-180':6215, '180-200':5711},
-    novillitos:{'260-280':5480, '300-330':5259, '330-360':5146, '380-400':4820},
-    vaquillonas:{'260-280':5381, '300-330':4852, '330-360':5000}
+    terneros:{'100-130':6638, '130-160':6687, '160-180':6461, '180-200':6110, '200-230':6006, '230-260':5708},
+    terneras:{'100-130':6150, '130-160':6147, '160-180':5817, '180-200':5482},
+    novillitos:{'260-280':5266, '300-330':5082, '330-360':4945, '380-400':4681, '400-430':4574},
+    vaquillonas:{'260-280':4804, '300-330':4815, '330-360':4425}
   },
-  cg:{vaqPren:2567000, vacaNuevaPren:2557000, vacaMedioPren:2100000, vacaNuevaCria:1584000},
-  mag:{novillito:4184, vaquillona:3930, novillo:3926, vaca:2892, toro:3399, mej:3835, vacaConserva:2563}
+  cg:{vaqPren:2497000, vacaNuevaPren:2370000, vacaMedioPren:2136000, vacaNuevaCria:1587000},
+  mag:{novillito:4434, vaquillona:4111, novillo:4091, vaca:2766, toro:3256, mej:4124, vacaConserva:2531}
 };
 /*PRECIOS:FIN*/
 /*HISTORIAL:INICIO*/
@@ -2263,7 +2263,10 @@ const HIST=[
    cg:{vaqPren:2580000, vacaNuevaPren:2346000, vacaMedioPren:2251000, vacaNuevaCria:1691000}, mag:{novillito:4427, vaquillona:4194, novillo:4214, vaca:3169, toro:3562, mej:3901, vacaConserva:2674}},
   {semana:'16 al 22/10/2026', fin:'2026-10-22', magFecha:'21/10/2026',
    rangos:{terneros:{'100-130':8333, '130-160':7170, '160-180':6523, '180-200':6373, '200-230':6229, '230-260':5677}, terneras:{'130-160':6548, '160-180':6215, '180-200':5711}, novillitos:{'260-280':5480, '300-330':5259, '330-360':5146, '380-400':4820}, vaquillonas:{'260-280':5381, '300-330':4852, '330-360':5000}},
-   cg:{vaqPren:2567000, vacaNuevaPren:2557000, vacaMedioPren:2100000, vacaNuevaCria:1584000}, mag:{novillito:4184, vaquillona:3930, novillo:3926, vaca:2892, toro:3399, mej:3835, vacaConserva:2563}}
+   cg:{vaqPren:2567000, vacaNuevaPren:2557000, vacaMedioPren:2100000, vacaNuevaCria:1584000}, mag:{novillito:4184, vaquillona:3930, novillo:3926, vaca:2892, toro:3399, mej:3835, vacaConserva:2563}},
+  {semana:'18 al 24/11/2026', fin:'2026-11-24', magFecha:'24/11/2026',
+   rangos:{terneros:{'100-130':6638, '130-160':6687, '160-180':6461, '180-200':6110, '200-230':6006, '230-260':5708}, terneras:{'100-130':6150, '130-160':6147, '160-180':5817, '180-200':5482}, novillitos:{'260-280':5266, '300-330':5082, '330-360':4945, '380-400':4681, '400-430':4574}, vaquillonas:{'260-280':4804, '300-330':4815, '330-360':4425}},
+   cg:{vaqPren:2497000, vacaNuevaPren:2370000, vacaMedioPren:2136000, vacaNuevaCria:1587000}, mag:{novillito:4434, vaquillona:4111, novillo:4091, vaca:2766, toro:3256, mej:4124, vacaConserva:2531}}
 ];
 /*HISTORIAL:FIN*/
 // precio por kilo según el peso: se interpola entre los rangos publicados (al centro de cada rango)
